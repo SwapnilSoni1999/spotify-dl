@@ -12,11 +12,23 @@ var GLOBAL_ARGS = [
     '-a', '--album',
     '-p', '--playlist'
 ];
+var FLAGS = {
+    _SONG: '--song', _S: '-s',
+    _ALBUM: '--album', _A: '-a',
+    _PLAYLIST:'--playlist', _P: '-p'
+};
+
+var RES = {};
 var ONE_ARG=false, EK_BARI=false;
 process.argv.forEach(function (val, index, array) {
     if(!EK_BARI) {        
-        if(!ONE_ARG && index > 1) {
-            ONE_ARG = validArg(val);
+        if(!ONE_ARG) {
+            var res;
+            // console.log("sed");
+            res = validArg(val);  
+            RES = res;
+            ONE_ARG = res.bool;
+            // console.log(res.ARG);
         }
         else {
             EK_BARI = true;
@@ -32,8 +44,9 @@ process.argv.forEach(function (val, index, array) {
                     spotifyURL.includes("/album/") ) 
                     {
                         //console.log("Valid Spotify URL");
+                        // console.log(RES);
                         
-                        if (spotifyURL.includes("/track/")) {
+                        if (spotifyURL.includes("/track/") && RES.ARG === 'song') {
                             request({ url:spotifyURL, json: true}, function(error, response, body) {
                                 // console.log(body);
                                 var $ = cheerio.load(body);
@@ -57,6 +70,9 @@ process.argv.forEach(function (val, index, array) {
                                 }); 
                                 // console.log($('title').text());
                             });
+                        }
+                        else {
+                            console.error("Error: -s or --song requires a spotify Track URL.");
                         }
                 }
                 else {
@@ -138,13 +154,24 @@ function bytesToSize(bytes) {
 
 function validArg(arg) {
     // console.debug("Recieved arg:",arg);
-    let i,found=false;
-    for(i=0; i<GLOBAL_ARGS.length; i++) {
+    let found = {
+        bool: false,
+        ARG: ''
+    };
+    for(let i=0; i<GLOBAL_ARGS.length; i++) {
         // console.debug("loop:",GLOBAL_ARGS[i]);
         if(arg == GLOBAL_ARGS[i]) {
             // console.log("Valid arg found!");
-            found = true;
+            if(arg == FLAGS._SONG || arg == FLAGS._S) {
+                found.ARG = 'song';
+            } else if (arg == FLAGS._ALBUM || arg == FLAGS._A) {
+                found.ARG = 'album';
+            } else if (arg == FLAGS._PLAYLIST || arg == FLAGS._P) {
+                found.ARG = 'playlist';
+            }
+            found.bool = true;
         }
     }
+    // console.log(found);
     return found;
 }
