@@ -107,7 +107,7 @@ function downlaodFile(ytLink) {
     
 
     var size = 0;
-    var song = ytdl(ytLink, ['-x', '--audio-format', 'mp3', '--audio-quality', '0']);
+    var song = ytdl(ytLink, ['-f', 'bestaudio','-x', '--audio-format', 'mp3', '--audio-quality', '0']);
     song.on('info', function (info) {
         'use strict';
         // console.log("Downloading :", info._filename);
