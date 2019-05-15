@@ -1,18 +1,40 @@
 {
   "name": "spotify-dl",
-  "version": "1.0.0",
-  "description": "Spotify song downloader based on yt-dl and nodejs",
-  "main": "main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "0.0.1",
+  "description": "",
+  "main": "cli.js",
+  "bin": {
+    "spotifydl": "cli.js"
   },
+  "scripts": {
+    "test": "xo",
+    "fix": "xo --fix",
+    "start": "./cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mayoku/spotify-dl.git"
+  },
+  "keywords": [],
   "author": "Swapnil Soni",
   "license": "ISC",
   "dependencies": {
-    "@microlink/youtube-dl": "^1.13.2",
+    "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.3",
-    "cli-progress": "^2.1.1",
-    "request-promise": "^4.2.4",
-    "yt-search": "^0.4.1"
+    "meow": "^5.0.0",
+    "ora": "^3.4.0",
+    "yt-search": "^0.4.1",
+    "ytdl-core": "^0.29.2"
+  },
+  "xo": {
+    "space": true,
+    "prettier": true,
+    "envs": [
+      "node"
+    ]
+  },
+  "devDependencies": {
+    "prettier": "^1.17.1",
+    "xo": "^0.24.0"
   }
 }
