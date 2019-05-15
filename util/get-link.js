@@ -1,7 +1,7 @@
 'use strict';
+const { promisify } = require('util');
 const youtubeSearch = require('yt-search');
 
-const { promisify } = require('util');
 const search = promisify(youtubeSearch);
 
 /**
