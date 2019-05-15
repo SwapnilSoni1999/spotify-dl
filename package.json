@@ -19,6 +19,7 @@
   "author": "Swapnil Soni",
   "license": "ISC",
   "dependencies": {
+    "@microlink/youtube-dl": "^1.13.2",
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.3",
     "meow": "^5.0.0",
