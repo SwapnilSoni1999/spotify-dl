@@ -12,23 +12,28 @@ const cli = meow(
   Usage
       $ spotifydl <link> …
 
+	Options
+	  --vid, -v  Download music video of given spotify track
+
   Examples
       $ spotifydl https://open.spotify.com/track/5tz69p7tJuGPeMGwNTxYuV
-      $ spotifydl https://open.spotify.com/playlist/4hOKQuZbraPDIfaGbM3lKI
+      $ spotifydl -v https://open.spotify.com/playlist/4hOKQuZbraPDIfaGbM3lKI
 `,
   {
     flags: {
       help: {
         alias: 'h',
       },
-      version: {
+      video: {
         alias: 'v',
+        type: 'boolean',
       },
     },
   }
 );
 
-const { input } = cli;
+const { input, flags } = cli;
+const isVideo = flags.video;
 
 if (!input[0]) {
   console.log('See spotifydl --help for instructions');
@@ -38,17 +43,24 @@ if (!input[0]) {
 (async () => {
   try {
     for (const link of input) {
-      const spinner = ora(`Searching…`).start();
+      const spinner = ora(`Searching spotify...`).start();
 
       const { title, artist } = await getTrack(link);
       const songName = title + artist;
 
-      spinner.text = title;
+      spinner.succeed(`Song: ${title}`);
 
+      spinner.start('Searching youtube...');
       const youtubeLink = await getLink(songName);
-      const output = path.resolve(__dirname, `${title} - ${artist}.mp3`);
 
-      download(youtubeLink, output, spinner);
+      spinner.succeed('Got youtube link...');
+
+      spinner.start('Downloading...');
+
+      const ext = isVideo ? 'mp4' : 'mp3';
+      const output = path.resolve(__dirname, `${title} - ${artist}.${ext}`);
+
+      download(youtubeLink, output, isVideo, spinner);
     }
   } catch (error) {
     console.log('Something failed');
