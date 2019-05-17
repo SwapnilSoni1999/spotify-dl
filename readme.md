@@ -1,33 +1,70 @@
-# Spotify Downloader Script
-A spotify song,playlist and album downloader **without using API.**
+<p align="center">
+  <img src="./hero.png" height="200px"/>
+  <br><br>
+  <b>Download audio and video files from spotify links</b>
+  <br>
+</p>
 
-Prerequisites
-> Latest Node version. (if you dont have, then download from [Nodejs.org](https://nodejs.org/))
->
-> A terminal (MINGW/Git on windows,cmd will work too OR Linux(not tested on linux yet))
+&nbsp;
 
+#### spotifydl
 
-### How to install
+A simple commandline utility that allows you to download audio and video files
+from one or more spotify links
+
+Note: This project works without the need of any api keys or registeration
+
+&nbsp;
+
+#### demo
+
+<p align="center">
+  <img src="./demo.svg">
+</p>
+
+&nbsp;
+
+#### installation
 
 ```sh
-$ git clone https://github.com/SwapnilSoni1999/spotify-dl 
-$ cd spotify-dl
-$ npm install
+git clone https://github.com/SwapnilSoni1999/spotify-dl
+cd spotify-dl
+npm install
+npm link
 ```
 
-### How to use
+&nbsp;
 
+#### usage
+
+To download highest quality audio file
 ```sh
-node spotify.js [OPTION] [URL]
+spotifydl <spotify track link> ...
 ```
-| Options | Description |
-| ------ | ------ |
-| -s, --song | takes arg a valid spotify URL with <url>/track/<track-id> |
 
-### Note
-- This project is under development (keep checking for updates)
+&nbsp;
 
-License
-----
+To download highest quality video file
+```sh
+spotifydl -v <spotify track link> ...
+```
 
-MIT
+&nbsp;
+
+Example
+```sh
+$ spotifydl https://open.spotify.com/track/xyz
+$ spotifydl -v https://open.spotify.com/track/abc
+```
+
+&nbsp;
+
+#### acknowledgements
+
+thanks to [icons8](icons8.com) for icons in hero image
+
+&nbsp;
+
+#### license
+
+MIT © [Swapnil Soni](https://github.com/SwapnilSoni1999)
