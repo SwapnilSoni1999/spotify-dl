@@ -1,23 +1,7 @@
 'use strict';
-const axios = require('axios');
-const scrape = require('./scrape');
+const Spotify = require('../lib/api');
 
-/**
- * This function takes spotify link and returns the title and artist name of song
- * from given spotify link
- *
- * @param {String} url spotify track url
- * @returns {Object} mapping title and artist
- */
-const trackinfo = async url => {
-  try {
-    const response = await axios(url);
-    const html = response.data;
-
-    return scrape(html);
-  } catch (error) {
-    return error;
-  }
-};
-
-module.exports = trackinfo;
+var spotify = new Spotify({
+  id: 'acc6302297e040aeb6e4ac1fbdfd62c3',
+  secret: '68d6b1b5b32d463c889944515e42bb1c'
+});

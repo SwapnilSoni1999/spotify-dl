@@ -36,22 +36,13 @@ if (!input[0]) {
 }
 
 (async () => {
+  const spinner = ora(`Searching…`).start();
   try {
     for (const link of input) {
-      const spinner = ora(`Searching…`).start();
-
-      const { title, artist } = await getTrack(link);
-      const songName = title + artist;
-
-      spinner.text = title;
-
-      const youtubeLink = await getLink(songName);
-      const output = path.resolve(__dirname, `${title} - ${artist}.mp3`);
-
-      download(youtubeLink, output, spinner);
+      
     }
   } catch (error) {
-    console.log('Something failed');
+    spinner.fail(`Something went wrong!`);
     process.exit(1);
   }
 })();

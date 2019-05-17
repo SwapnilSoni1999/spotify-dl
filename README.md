@@ -1,5 +1,5 @@
 # Spotify Downloader Script
-A spotify song,playlist and album downloader **without using API.**
+A spotify song,playlist and album downloader.
 
 Prerequisites
 > Latest Node version. (if you dont have, then download from [Nodejs.org](https://nodejs.org/))

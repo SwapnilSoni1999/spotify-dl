@@ -23,6 +23,7 @@
     "cheerio": "^1.0.0-rc.3",
     "meow": "^5.0.0",
     "ora": "^3.4.0",
+    "spotify-web-api-node": "^4.0.0",
     "yt-search": "^0.4.1",
     "ytdl-core": "^0.29.2"
   },
