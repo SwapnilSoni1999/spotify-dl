@@ -16,6 +16,7 @@ class Spotifye {
   }
   async getPlaylist(url) {
     const ID = await this.getID(url);
+    
     return ID;
   }
 
@@ -38,6 +39,9 @@ class Spotifye {
   async extrTrack(trackId) {
     const trackData = await spotify.extractTrack(trackId);    
     return trackData;
+  }
+  async extrPlaylist(playlistId) {
+    
   }
 }
 

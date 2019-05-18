@@ -48,12 +48,12 @@ if (!input[0]) {
       switch(urlType) {
         case 'song': {
           songData = await spotifye.getTrack(URL);
-          const songName = songData.name + songData.artist;
+          const songName = songData.name + songData.artists[0];
           
-          spinner.succeed(`Song: ${songData.name} - ${songData.artist}`);
+          spinner.succeed(`Song: ${songData.name} - ${songData.artists[0]}`);
           
           const youtubeLink = await getLink(songName);
-          const output = path.resolve(__dirname, `${songData.name} - ${songData.artist}.mp3`);
+          const output = path.resolve(__dirname, `${songData.name} - ${songData.artists[0]}.mp3`);
           spinner.start("Downloading...");
           
           await download(youtubeLink, output, spinner);
