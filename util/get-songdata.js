@@ -1,14 +1,10 @@
 'use strict';
-const Spotify = require('../lib/api');
-
-var spotify = new Spotify({
-  id: 'acc6302297e040aeb6e4ac1fbdfd62c3',
-  secret: '68d6b1b5b32d463c889944515e42bb1c'
-});
+const spotify = require('../lib/api');
 
 class Spotifye {
   async getTrack(url) {
     const ID = await this.getID(url);
+    this.extrTrack(ID);
     return ID;
   }
   async getAlbum(url) {
@@ -25,6 +21,8 @@ class Spotifye {
   }
 
   async getID(url) {
+    var token = await spotify.setup();
+    spotify.setToken(token);
     var id;
     for (let i = 0; i < url.length; i++) {
       if (i > 10 && url[i] == '/') {
@@ -38,7 +36,10 @@ class Spotifye {
     return id;
   }
 
-
+  async extrTrack(trackId) {
+    const trackData = await spotify.extractTrack(trackId);    
+    console.log(trackData);
+  }
 }
 
 module.exports = Spotifye;

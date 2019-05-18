@@ -48,22 +48,22 @@ if (!input[0]) {
       switch(urlType) {
         case 'song': {
           songData = await spotifye.getTrack(URL);
-          console.log(songData);
+          
           break;
         }
         case 'playlist': {
           songData = await spotifye.getPlaylist(URL);
-          console.log(songData);
+          
           break;
         }
         case 'album': {
           songData = await spotifye.getAlbum(URL);
-          console.log(songData);
+          
           break;
         }
         case 'artist': {
           songData = await spotifye.getArtist(URL);
-          console.log(songData);
+          
           break;
         }
         default: {
