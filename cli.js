@@ -4,7 +4,7 @@ const path = require('path');
 const ora = require('ora');
 const meow = require('meow');
 const getLink = require('./util/get-link');
-const getTrack = require('./util/get-track');
+const songdata = require('./util/get-songdata');
 const urlParser = require('./util/url-parser');
 
 const download = require('./lib/downloader');
@@ -40,23 +40,30 @@ if (!input[0]) {
 (async () => {
   const spinner = ora(`Searching…`).start();
   try {
+    var spotifye = new songdata();
     for (const link of input) {
       const urlType = await urlParser(link);
+      var songData = {};
+      const URL = link;
       switch(urlType) {
         case 'song': {
-          console.log('Song');
+          songData = await spotifye.getTrack(URL);
+          console.log(songData);
           break;
         }
         case 'playlist': {
-          console.log('Playlist');
+          songData = await spotifye.getPlaylist(URL);
+          console.log(songData);
           break;
         }
         case 'album': {
-          console.log('Album');
+          songData = await spotifye.getAlbum(URL);
+          console.log(songData);
           break;
         }
         case 'artist': {
-          console.log('Artist');
+          songData = await spotifye.getArtist(URL);
+          console.log(songData);
           break;
         }
         default: {
