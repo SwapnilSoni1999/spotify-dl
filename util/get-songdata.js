@@ -4,7 +4,7 @@ const spotify = require('../lib/api');
 class Spotifye {
   async getTrack(url) {
     const ID = await this.getID(url);
-    return this.extrTrack(ID);
+    return await this.extrTrack(ID);
   }
   async getAlbum(url) {
     const ID = await this.getID(url);
@@ -16,8 +16,7 @@ class Spotifye {
   }
   async getPlaylist(url) {
     const ID = await this.getID(url);
-    
-    return ID;
+    return await this.extrPlaylist(ID);
   }
 
   async getID(url) {
@@ -41,7 +40,8 @@ class Spotifye {
     return trackData;
   }
   async extrPlaylist(playlistId) {
-    
+    const playlistData = await spotify.extractPlaylist(playlistId);
+    return playlistData;
   }
 }
 
