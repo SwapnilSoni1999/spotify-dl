@@ -61,22 +61,7 @@ if (!input[0]) {
         }
         case 'playlist': {
           songData = await spotifye.getPlaylist(URL);
-          // console.log(songData);
-          spinner.warn("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
-          var counter=1;
-          var songName, youtubeLink;
-          var output,trackData;
-
-          for (const track of songData.tracks) {
-            trackData = await spotifye.extrTrack(track);
-            songName = trackData.name + trackData.artists[0];
-            spinner.start(`${counter}: ${trackData.name} - ${trackData.artists[0]}`);
-
-            output = path.resolve(__dirname, `${trackData.name} - ${trackData.artists[0]}.mp3`);
-            youtubeLink = await getLink(songName);
-            await download(youtubeLink, output, spinner);
-            counter++;
-          }
+          
           break;
         }
         case 'album': {

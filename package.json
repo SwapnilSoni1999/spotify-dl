@@ -1,7 +1,7 @@
 {
   "name": "spotify-dl",
   "version": "0.0.1",
-  "description": "Spotify Downloader utility which can download Songs,Playlists and Albums",
+  "description": "",
   "main": "cli.js",
   "bin": {
     "spotifydl": "cli.js"
@@ -19,8 +19,8 @@
   "author": "Swapnil Soni",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.3",
-    "ffi": "^2.3.0",
     "meow": "^5.0.0",
     "ora": "^3.4.0",
     "spotify-web-api-node": "^4.0.0",
