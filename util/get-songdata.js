@@ -16,8 +16,7 @@ class Spotifye {
   }
   async getPlaylist(url) {
     const ID = await this.getID(url);
-    
-    return ID;
+    return this.extrPlaylist(ID);
   }
 
   async getID(url) {
@@ -41,7 +40,8 @@ class Spotifye {
     return trackData;
   }
   async extrPlaylist(playlistId) {
-    
+    const trackData = await spotify.extractPlaylist(playlistId);
+    return trackData;
   }
 }
 

@@ -61,6 +61,8 @@ if (!input[0]) {
         }
         case 'playlist': {
           songData = await spotifye.getPlaylist(URL);
+          spinner.warn("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
+          console.log(songData);
           
           break;
         }
