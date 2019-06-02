@@ -49,10 +49,11 @@ if (!input[0]) {
         case 'song': {
           songData = await spotifye.getTrack(URL);
           const songName = songData.name + songData.artists[0];
-          
+
           spinner.succeed(`Song: ${songData.name} - ${songData.artists[0]}`);
           
           const youtubeLink = await getLink(songName);
+
           const output = path.resolve(__dirname, `${songData.name} - ${songData.artists[0]}.mp3`);
           spinner.start("Downloading...");
           
@@ -62,8 +63,23 @@ if (!input[0]) {
         case 'playlist': {
           songData = await spotifye.getPlaylist(URL);
           spinner.warn("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
-          console.log(songData);
           
+          async function downloadLoop(trackIds, counter) {
+            const songNam = await spotifye.extrTrack(trackIds[counter]);
+            spinner.succeed(`Song: ${songNam.name} - ${songNam.artists[0]}`);
+
+            const ytLink = await getLink(songNam.name + songNam.artists[0]);
+
+            const output = path.resolve(__dirname, `${songNam.name} - ${songNam.artists[0]}.mp3`);
+            spinner.start("Downloading...");
+
+            download(ytLink, output, spinner, function() {
+              downloadLoop(trackIds, ++counter);
+            })
+
+          }
+          downloadLoop(songData.tracks, 0);
+
           break;
         }
         case 'album': {
