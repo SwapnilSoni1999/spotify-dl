@@ -66,7 +66,9 @@ if (!input[0]) {
           
           async function downloadLoop(trackIds, counter) {
             const songNam = await spotifye.extrTrack(trackIds[counter]);
-            spinner.succeed(`Song: ${songNam.name} - ${songNam.artists[0]}`);
+            counter++;
+            spinner.succeed(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
+            counter--;
 
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
