@@ -6,6 +6,7 @@ const meow = require('meow');
 const getLink = require('./util/get-link');
 const songdata = require('./util/get-songdata');
 const urlParser = require('./util/url-parser');
+const filter = require('./util/filters');
 
 const download = require('./lib/downloader');
 
@@ -54,7 +55,7 @@ if (!input[0]) {
           
           const youtubeLink = await getLink(songName);
 
-          const output = path.resolve(__dirname, `${songData.name} - ${songData.artists[0]}.mp3`);
+          const output = path.resolve(__dirname, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
           spinner.start("Downloading...");
           
           await download(youtubeLink, output, spinner);
@@ -72,7 +73,7 @@ if (!input[0]) {
 
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
-            const output = path.resolve(__dirname, `${songNam.name} - ${songNam.artists[0]}.mp3`);
+            const output = path.resolve(__dirname, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, function() {
