@@ -1,6 +1,6 @@
 {
   "name": "spotify-dl",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "cli.js",
   "bin": {
@@ -19,7 +19,6 @@
   "author": "Swapnil Soni",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.3",
     "meow": "^5.0.0",
     "ora": "^3.4.0",
