@@ -3,6 +3,8 @@
 const path = require('path');
 const ora = require('ora');
 const meow = require('meow');
+const fs = require('fs');
+const chalk = require('chalk');
 const getLink = require('./util/get-link');
 const songdata = require('./util/get-songdata');
 const urlParser = require('./util/url-parser');
@@ -62,26 +64,53 @@ if (!input[0]) {
           break;
         }
         case 'playlist': {
+          var cacheCounter = 0;
           songData = await spotifye.getPlaylist(URL);
           spinner.warn("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
+          var dir = __dirname + '/' + songData.name;
+          
+          spinner.info(chalk.underline(`Saving Playlist:`) + ` ${ __dirname }/${ songData.name }/`);
+          
+          if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+            dir = path.resolve(dir, ".spdlcache");
+          }
+          else {
+            dir = path.resolve(dir, ".spdlcache");
+            spinner.info("Fetching cache to resume Download\n");
+            cacheCounter = Number(fs.readFileSync(dir, 'utf-8'));
+          }
           
           async function downloadLoop(trackIds, counter) {
             const songNam = await spotifye.extrTrack(trackIds[counter]);
             counter++;
-            spinner.succeed(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
+            spinner.info(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
             counter--;
 
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
-            const output = path.resolve(__dirname, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
+            const output = path.resolve(__dirname, songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, function() {
+              if (fs.existsSync(dir)) {
+                fs.unlink(dir, function () {
+                  fs.writeFile(dir, counter, function (err) {
+                    if (err) throw err;
+                  });
+                });
+              }
+              else {
+                fs.writeFile(dir, counter, function (err) {
+                  if (err) throw err;
+                });
+              }
               downloadLoop(trackIds, ++counter);
             })
 
           }
-          downloadLoop(songData.tracks, 0);
+
+          downloadLoop(songData.tracks, cacheCounter);
 
           break;
         }
