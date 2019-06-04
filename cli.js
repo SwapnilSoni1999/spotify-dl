@@ -78,8 +78,10 @@ if (!input[0]) {
           }
           else {
             dir = path.resolve(dir, ".spdlcache");
-            spinner.info("Fetching cache to resume Download\n");
-            cacheCounter = Number(fs.readFileSync(dir, 'utf-8'));
+            if(fs.existsSync(`${dir}/.spdlcache`)) {
+              spinner.info("Fetching cache to resume Download\n");
+              cacheCounter = Number(fs.readFileSync(dir, 'utf-8'));
+            }            
           }
           
           async function downloadLoop(trackIds, counter) {
@@ -116,8 +118,10 @@ if (!input[0]) {
           }
           else {
             dir = path.resolve(dir, ".spdlcache");
-            spinner.info("Fetching cache to resume Download\n");
-            cacheCounter = Number(fs.readFileSync(dir, 'utf-8'));
+            if (fs.existsSync(`${dir}/.spdlcache`)) {
+              spinner.info("Fetching cache to resume Download\n");
+              cacheCounter = Number(fs.readFileSync(dir, 'utf-8'));
+            }
           }
 
           async function downloadLoop(trackIds, counter) {
