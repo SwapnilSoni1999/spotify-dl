@@ -1,7 +1,7 @@
 {
   "name": "spotify-dl",
   "version": "0.0.2",
-  "description": "",
+  "description": "Spotify Songs, Playlist & Album Downloader",
   "main": "cli.js",
   "bin": {
     "spotifydl": "cli.js"
@@ -15,7 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/SwapnilSoni1999/spotify-dl.git"
   },
-  "keywords": [],
+  "keywords": ["spotify-dl", "spotifydl", "spotify-downloader"],
   "author": "Swapnil Soni",
   "license": "ISC",
   "dependencies": {
