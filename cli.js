@@ -45,7 +45,7 @@ if (!input[0]) {
   try {
     var spotifye = new songdata();
     for (const link of input) {
-      const urlType = await urlParser(link);
+      const urlType = await urlParser(await filter.removeQuery(link));
       var songData = {};
       const URL = link;
       switch(urlType) {
