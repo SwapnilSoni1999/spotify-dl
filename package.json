@@ -7,8 +7,7 @@
     "spotifydl": "cli.js"
   },
   "scripts": {
-    "test": "xo",
-    "fix": "xo --fix",
+    "test": "echo \"Type spotifydl for help.\"",
     "start": "./cli.js"
   },
   "repository": {
