@@ -10,10 +10,6 @@ class Spotifye {
     const ID = await this.getID(url);
     return this.extrAlbum(ID);
   }
-  async getArtist(url) {
-    const ID = await this.getID(url);
-    return ID;
-  }
   async getPlaylist(url) {
     const ID = await this.getID(url);
     return this.extrPlaylist(ID);

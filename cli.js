@@ -141,8 +141,7 @@ if (!input[0]) {
           break;
         }
         case 'artist': {
-          songData = await spotifye.getArtist(URL);
-          
+          spinner.warn("To download artists list, add them to a separate Playlist and download.");
           break;
         }
         default: {
