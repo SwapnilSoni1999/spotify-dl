@@ -99,14 +99,45 @@ if (!input[0]) {
             })
 
           }
-
           downloadLoop(songData.tracks, cacheCounter);
-
           break;
         }
         case 'album': {
+          var cacheCounter = 0;
           songData = await spotifye.getAlbum(URL);
           
+          var dir = __dirname + '/' + songData.name;
+
+          spinner.info(chalk.underline(`Saving Album:`) + ` ${__dirname}/${songData.name}/`);
+
+          if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+            dir = path.resolve(dir, ".spdlcache");
+          }
+          else {
+            dir = path.resolve(dir, ".spdlcache");
+            spinner.info("Fetching cache to resume Download\n");
+            cacheCounter = Number(fs.readFileSync(dir, 'utf-8'));
+          }
+
+          async function downloadLoop(trackIds, counter) {
+            const songNam = await spotifye.extrTrack(trackIds[counter]);
+            counter++;
+            spinner.info(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
+            counter--;
+
+            const ytLink = await getLink(songNam.name + songNam.artists[0]);
+
+            const output = path.resolve(__dirname, songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
+            spinner.start("Downloading...");
+
+            download(ytLink, output, spinner, function () {
+              cache.write(dir, counter);
+              downloadLoop(trackIds, ++counter);
+            })
+
+          }
+          downloadLoop(songData.tracks, cacheCounter);
           break;
         }
         case 'artist': {
