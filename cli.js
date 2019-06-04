@@ -11,6 +11,7 @@ const urlParser = require('./util/url-parser');
 const filter = require('./util/filters');
 
 const download = require('./lib/downloader');
+const cache = require('./lib/cache');
 
 const cli = meow(
   `
@@ -93,18 +94,7 @@ if (!input[0]) {
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, function() {
-              if (fs.existsSync(dir)) {
-                fs.unlink(dir, function () {
-                  fs.writeFile(dir, counter, function (err) {
-                    if (err) throw err;
-                  });
-                });
-              }
-              else {
-                fs.writeFile(dir, counter, function (err) {
-                  if (err) throw err;
-                });
-              }
+              cache.write(dir, counter);
               downloadLoop(trackIds, ++counter);
             })
 
