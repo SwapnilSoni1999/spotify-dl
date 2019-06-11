@@ -58,7 +58,7 @@ if (!input[0]) {
           
           const youtubeLink = await getLink(songName);
 
-          const output = path.resolve(__dirname, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
+          const output = path.resolve(process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
           spinner.start("Downloading...");
           
           await download(youtubeLink, output, spinner);
@@ -68,9 +68,9 @@ if (!input[0]) {
           var cacheCounter = 0;
           songData = await spotifye.getPlaylist(URL);
           spinner.warn("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
-          var dir = __dirname + '/' + songData.name;
+          var dir = process.cwd() + '/' + songData.name;
           
-          spinner.info(chalk.underline(`Saving Playlist:`) + ` ${ __dirname }/${ songData.name }/`);
+          spinner.info(chalk.underline(`Saving Playlist:`) + ` ${ process.cwd() }/${ songData.name }/`);
           
           if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
@@ -92,7 +92,7 @@ if (!input[0]) {
 
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
-            const output = path.resolve(__dirname, songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
+            const output = path.resolve(process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, function() {
@@ -108,9 +108,9 @@ if (!input[0]) {
           var cacheCounter = 0;
           songData = await spotifye.getAlbum(URL);
           
-          var dir = __dirname + '/' + songData.name;
+          var dir = process.cwd() + '/' + songData.name;
 
-          spinner.info(chalk.underline(`Saving Album:`) + ` ${__dirname}/${songData.name}/`);
+          spinner.info(chalk.underline(`Saving Album:`) + ` ${process.cwd()}/${songData.name}/`);
 
           if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
@@ -132,7 +132,7 @@ if (!input[0]) {
 
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
-            const output = path.resolve(__dirname, songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
+            const output = path.resolve(process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, function () {
