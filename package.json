@@ -1,6 +1,6 @@
 {
   "name": "spotify-dl",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Spotify Songs, Playlist & Album Downloader",
   "main": "cli.js",
   "bin": {
@@ -14,14 +14,21 @@
     "type": "git",
     "url": "git+https://github.com/SwapnilSoni1999/spotify-dl.git"
   },
-  "keywords": ["spotify-dl", "spotifydl", "spotify-downloader"],
+  "keywords": [
+    "spotify-dl",
+    "spotifydl",
+    "spotify-downloader"
+  ],
   "author": "Swapnil Soni",
   "license": "ISC",
   "dependencies": {
     "chalk": "^2.4.2",
     "cheerio": "^1.0.0-rc.3",
+    "ffmetadata": "^1.5.0",
+    "fluent-ffmpeg": "^2.1.2",
     "meow": "^5.0.0",
     "ora": "^3.4.0",
+    "request": "^2.88.0",
     "spotify-web-api-node": "^4.0.0",
     "yt-search": "^0.4.1",
     "ytdl-core": "^0.29.2"
