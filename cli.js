@@ -12,6 +12,15 @@ const filter = require('./util/filters');
 
 const download = require('./lib/downloader');
 const cache = require('./lib/cache');
+const mergeMetadata = require('./lib/metadata');
+
+// export ffmpeg
+if(process.platform == 'win32') {
+  process.env.PATH = path.resolve(__dirname, 'bin;') + process.env.PATH;
+}
+else if(process.platform == 'linux' || 'debian') {
+  process.env.PATH = path.resolve(__dirname, 'bin') + process.env.PATH;
+}
 
 const cli = meow(
   `
@@ -61,7 +70,9 @@ if (!input[0]) {
           const output = path.resolve(process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
           spinner.start("Downloading...");
           
-          await download(youtubeLink, output, spinner);
+          await download(youtubeLink, output, spinner, async function() {
+            await mergeMetadata(output, songData, spinner);
+          });
           break;
         }
         case 'playlist': {
@@ -95,8 +106,9 @@ if (!input[0]) {
             const output = path.resolve(process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
-            download(ytLink, output, spinner, function() {
-              cache.write(dir, counter);
+            download(ytLink, output, spinner, async function() {
+              await cache.write(dir, counter);
+              await mergeMetadata(output, songNam, spinner);
               downloadLoop(trackIds, ++counter);
             })
 
@@ -135,8 +147,9 @@ if (!input[0]) {
             const output = path.resolve(process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
-            download(ytLink, output, spinner, function () {
-              cache.write(dir, counter);
+            download(ytLink, output, spinner, async function () {
+              await cache.write(dir, counter);
+              await mergeMetadata(output, songNam, spinner);
               downloadLoop(trackIds, ++counter);
             })
 
