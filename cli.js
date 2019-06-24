@@ -81,7 +81,7 @@ if (!input[0]) {
           spinner.warn("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
           var dir = process.cwd() + '/' + songData.name;
           
-          spinner.info(chalk.underline(`Saving Playlist:`) + ` ${ process.cwd() }/${ songData.name }/`);
+          spinner.info(chalk.underline(`Saving Playlist:`) + path.resolve(` ${ process.cwd() }`, `${ songData.name }`));
           
           if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
@@ -108,8 +108,9 @@ if (!input[0]) {
 
             download(ytLink, output, spinner, async function() {
               await cache.write(dir, counter);
-              await mergeMetadata(output, songNam, spinner);
-              downloadLoop(trackIds, ++counter);
+              await mergeMetadata(output, songNam, spinner, function() {
+                downloadLoop(trackIds, ++counter);
+              });
             })
 
           }
@@ -122,7 +123,7 @@ if (!input[0]) {
           
           var dir = process.cwd() + '/' + songData.name;
 
-          spinner.info(chalk.underline(`Saving Album:`) + ` ${process.cwd()}/${songData.name}/`);
+          spinner.info(chalk.underline(`Saving Album:`) + path.resolve(` ${process.cwd()}`, `${songData.name}`));
 
           if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
@@ -149,8 +150,9 @@ if (!input[0]) {
 
             download(ytLink, output, spinner, async function () {
               await cache.write(dir, counter);
-              await mergeMetadata(output, songNam, spinner);
-              downloadLoop(trackIds, ++counter);
+              await mergeMetadata(output, songNam, spinner, function() {
+                downloadLoop(trackIds, ++counter);
+              });
             })
 
           }
