@@ -94,7 +94,7 @@ if (!input[0]) {
           spinner.warn("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
           var dir = process.cwd() + '/' + songData.name;
           
-          spinner.info(chalk.underline(`Saving Playlist:`) + path.resolve(` ${ process.cwd() }`, `${ songData.name }`));
+          spinner.info(chalk.underline(`Saving Playlist:`) + (cli.flags.output == null) ? path.resolve(`${process.cwd()}`, `${songData.name}`) : path.resolve(`${cli.flags.output}`, `${songData.name}`));
           
           if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
@@ -117,9 +117,9 @@ if (!input[0]) {
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
             if (cli.flags.output == null) {
-              output = path.resolve(process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
+              output = path.resolve(process.cwd(), await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             } else {
-              output = path.resolve(cli.flags.output, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
+              output = path.resolve(cli.flags.output, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             }
             spinner.start("Downloading...");
 
@@ -140,7 +140,7 @@ if (!input[0]) {
           
           var dir = process.cwd() + '/' + songData.name;
 
-          spinner.info(chalk.underline(`Saving Album:`) + path.resolve(` ${process.cwd()}`, `${songData.name}`));
+          spinner.info(chalk.underline(`Saving Album:`) + (cli.flags.output == null) ? path.resolve(`${process.cwd()}`, `${songData.name}`) : path.resolve(`${cli.flags.output}`, `${songData.name}`));
 
           if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
@@ -163,9 +163,9 @@ if (!input[0]) {
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
             if (cli.flags.output == null) {
-              output = path.resolve(process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
+              output = path.resolve(process.cwd(), await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             } else {
-              output = path.resolve(cli.flags.output, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
+              output = path.resolve(cli.flags.output, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             }
             spinner.start("Downloading...");
 

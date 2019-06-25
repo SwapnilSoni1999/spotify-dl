@@ -2,7 +2,7 @@
 
 module.exports = {
     validateOutput: async function (output) {
-        output = output.replace(/[&\/\\#+$~%":*?<>{}]/g, '');      
+        output = output.replace(/[&\/\\#+$~%":!*?<>{}]/g, '');
         return output;
     },
     removeQuery: async function (url) {
