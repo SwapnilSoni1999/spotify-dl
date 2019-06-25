@@ -75,10 +75,10 @@ if (!input[0]) {
           
           const youtubeLink = await getLink(songName);
         
-          if(cli.flags.output === '') {
+          if(cli.flags.output == null) {
             output = path.resolve(process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
           } else {
-            output = path.resolve(cli.flags.o, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
+            output = path.resolve(cli.flags.output, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
           }
 
           spinner.start("Downloading...");
@@ -116,10 +116,10 @@ if (!input[0]) {
 
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
-            if (cli.flags.output === '') {
+            if (cli.flags.output == null) {
               output = path.resolve(process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
             } else {
-              output = path.resolve(cli.flags.o, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
+              output = path.resolve(cli.flags.output, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
             }
             spinner.start("Downloading...");
 
@@ -162,10 +162,10 @@ if (!input[0]) {
 
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
-            if (cli.flags.output === '') {
+            if (cli.flags.output == null) {
               output = path.resolve(process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
             } else {
-              output = path.resolve(cli.flags.o, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
+              output = path.resolve(cli.flags.output, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
             }
             spinner.start("Downloading...");
 
