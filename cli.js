@@ -25,10 +25,7 @@ else if(process.platform == 'linux' || 'debian') {
 const cli = meow(
   `
   Usage
-      $ spotifydl [optiions] <link> …
-
-  Options
-    -o,--output   sets an output path if valid path is provided
+      $ spotifydl <link> …
 
   Examples
       $ spotifydl https://open.spotify.com/track/5tz69p7tJuGPeMGwNTxYuV
@@ -41,10 +38,6 @@ const cli = meow(
       },
       version: {
         alias: 'v',
-      },
-      output: {
-        type: 'string',
-        alias: 'o'
       },
     },
   }
@@ -64,7 +57,6 @@ if (!input[0]) {
     for (const link of input) {
       const urlType = await urlParser(await filter.removeQuery(link));
       var songData = {};
-      var output;
       const URL = link;
       switch(urlType) {
         case 'song': {
@@ -74,13 +66,8 @@ if (!input[0]) {
           spinner.succeed(`Song: ${songData.name} - ${songData.artists[0]}`);
           
           const youtubeLink = await getLink(songName);
-        
-          if(cli.flags.output === '') {
-            output = path.resolve(process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
-          } else {
-            output = path.resolve(cli.flags.o, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
-          }
 
+          const output = path.resolve(process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
           spinner.start("Downloading...");
           
           await download(youtubeLink, output, spinner, async function() {
@@ -116,11 +103,7 @@ if (!input[0]) {
 
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
-            if (cli.flags.output === '') {
-              output = path.resolve(process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
-            } else {
-              output = path.resolve(cli.flags.o, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
-            }
+            const output = path.resolve(process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, async function() {
@@ -162,11 +145,7 @@ if (!input[0]) {
 
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
-            if (cli.flags.output === '') {
-              output = path.resolve(process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
-            } else {
-              output = path.resolve(cli.flags.o, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
-            }
+            const output = path.resolve(process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, async function () {
