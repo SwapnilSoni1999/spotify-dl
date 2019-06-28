@@ -8,6 +8,9 @@
 
 &nbsp;
 
+#### Required
+Get [FFMPEG](https://ffmpeg.org/download.html) (PS: Not needed for Windows)
+
 #### spotifydl
 
 A simple commandline utility that allows you to download Spotify Songs,Playlist and Albums.
@@ -26,7 +29,9 @@ npm link
 
 &nbsp;
 
-#### usage
+
+
+#### Usage
 
 To download highest quality audio file
 ```sh
@@ -49,6 +54,6 @@ thanks to [icons8](https://icons8.com) for icons in hero image
 
 &nbsp;
 
-#### license
+#### License
 
 MIT © [Swapnil Soni](https://github.com/SwapnilSoni1999)

@@ -13,14 +13,10 @@ const filter = require('./util/filters');
 const download = require('./lib/downloader');
 const cache = require('./lib/cache');
 const mergeMetadata = require('./lib/metadata');
+const setup = require('./lib/setup');
 
-// export ffmpeg
-if(process.platform == 'win32') {
-  process.env.PATH = path.resolve(__dirname, 'bin;') + process.env.PATH;
-}
-else if(process.platform == 'linux' || 'debian') {
-  process.env.PATH = path.resolve(__dirname, 'bin') + process.env.PATH;
-}
+// setup ffmpeg
+setup.ffmpeg(process.platform);
 
 const cli = meow(
   `
