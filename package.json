@@ -1,6 +1,6 @@
 {
   "name": "spotify-dl",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "Spotify Songs, Playlist & Album Downloader",
   "main": "cli.js",
   "bin": {
