@@ -4,7 +4,6 @@ const path = require('path');
 const ora = require('ora');
 const meow = require('meow');
 const fs = require('fs');
-const chalk = require('chalk');
 const getLink = require('./util/get-link');
 const songdata = require('./util/get-songdata');
 const urlParser = require('./util/url-parser');
@@ -77,7 +76,7 @@ if (!input[0]) {
           spinner.warn("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
           var dir = process.cwd() + '/' + songData.name;
           
-          spinner.info(chalk.underline(`Saving Playlist:`) + path.resolve(` ${ process.cwd() }`, `${ songData.name }`));
+          spinner.info(`Saving Playlist: ` + path.join( process.cwd(), songData.name));
           
           if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
@@ -119,7 +118,7 @@ if (!input[0]) {
           
           var dir = process.cwd() + '/' + songData.name;
 
-          spinner.info(chalk.underline(`Saving Album:`) + path.resolve(` ${process.cwd()}`, `${songData.name}`));
+          spinner.info(`Saving Album: ` + path.join(process.cwd(), songData.name));
 
           if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
