@@ -74,21 +74,12 @@ if (!input[0]) {
           var cacheCounter = 0;
           songData = await spotifye.getPlaylist(URL);
           spinner.warn("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
-          var dir = process.cwd() + '/' + songData.name;
+          var dir = path.join(process.cwd(), songData.name);
           
           spinner.info(`Saving Playlist: ` + path.join( process.cwd(), songData.name));
           
-          if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-            dir = path.resolve(dir, ".spdlcache");
-          }
-          else {
-            dir = path.resolve(dir, ".spdlcache");
-            if(fs.existsSync(`${dir}/.spdlcache`)) {
-              spinner.info("Fetching cache to resume Download\n");
-              cacheCounter = Number(fs.readFileSync(dir, 'utf-8'));
-            }            
-          }
+          cacheCounter = await cache.read(dir, spinner);
+          dir = path.join(dir, '.spdlcache');
           
           async function downloadLoop(trackIds, counter) {
             const songNam = await spotifye.extrTrack(trackIds[counter]);
@@ -102,9 +93,9 @@ if (!input[0]) {
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, async function() {
-              await cache.write(dir, counter);
+              await cache.write(dir, ++counter);
               await mergeMetadata(output, songNam, spinner, function() {
-                downloadLoop(trackIds, ++counter);
+                downloadLoop(trackIds, counter);
               });
             })
 
@@ -120,19 +111,8 @@ if (!input[0]) {
 
           spinner.info(`Saving Album: ` + path.join(process.cwd(), songData.name));
 
-          if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-            dir = path.join(dir, ".spdlcache");
-          }
-          else {
-            dir = path.join(dir, ".spdlcache");
-            if (fs.existsSync(path.join(dir, '.spdlcache'))) {
-              console.log('cache file exists');
-              spinner.info("Fetching cache to resume Download\n");
-              cacheCounter = Number(fs.readFileSync(dir, 'utf-8'));
-            }
-          }
-          console.log(dir);
+          cacheCounter = await cache.read(dir, spinner);
+          dir = path.join(dir, '.spdlcache');
 
           async function downloadLoop(trackIds, counter) {
             const songNam = await spotifye.extrTrack(trackIds[counter]);
@@ -146,9 +126,9 @@ if (!input[0]) {
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, async function () {
-              await cache.write(dir, counter);
+              await cache.write(dir, ++counter);
               await mergeMetadata(output, songNam, spinner, function() {
-                downloadLoop(trackIds, ++counter);
+                downloadLoop(trackIds, counter);
               });
             })
 
