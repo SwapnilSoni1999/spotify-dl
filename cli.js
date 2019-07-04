@@ -20,11 +20,15 @@ setup.ffmpeg(process.platform);
 const cli = meow(
   `
   Usage
-      $ spotifydl <link> …
+      $ spotifydl [Options] <link> …
 
   Examples
       $ spotifydl https://open.spotify.com/track/5tz69p7tJuGPeMGwNTxYuV
       $ spotifydl https://open.spotify.com/playlist/4hOKQuZbraPDIfaGbM3lKI
+
+  Options
+    -o    -takes valid path argument 
+          eg. $ spotifydl -o ~/songs https://open.spotify.com/playlist/3PrZvfOSNShOC2JxgIhvL1
 `,
   {
     flags: {
@@ -33,6 +37,10 @@ const cli = meow(
       },
       version: {
         alias: 'v',
+      },
+      output: {
+        alias: 'o',
+        type: 'string'
       },
     },
   }
@@ -62,7 +70,7 @@ if (!input[0]) {
           
           const youtubeLink = await getLink(songName);
 
-          const output = path.resolve(process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
+          const output = path.resolve((cli.flags.output != null) ? cli.flags.output : process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
           spinner.start("Downloading...");
           
           await download(youtubeLink, output, spinner, async function() {
@@ -74,9 +82,9 @@ if (!input[0]) {
           var cacheCounter = 0;
           songData = await spotifye.getPlaylist(URL);
           spinner.warn("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
-          var dir = path.join(process.cwd(), songData.name);
+          var dir = path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name);
           
-          spinner.info(`Saving Playlist: ` + path.join( process.cwd(), songData.name));
+          spinner.info(`Saving Playlist: ` + path.join( (cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
           
           cacheCounter = await cache.read(dir, spinner);
           dir = path.join(dir, '.spdlcache');
@@ -89,7 +97,7 @@ if (!input[0]) {
 
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
-            const output = path.resolve(process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
+            const output = path.resolve((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, async function() {
@@ -107,9 +115,9 @@ if (!input[0]) {
           var cacheCounter = 0;
           songData = await spotifye.getAlbum(URL);
           
-          var dir = path.join(process.cwd(), songData.name);
+          var dir = path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name);
 
-          spinner.info(`Saving Album: ` + path.join(process.cwd(), songData.name));
+          spinner.info(`Saving Album: ` + path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
 
           cacheCounter = await cache.read(dir, spinner);
           dir = path.join(dir, '.spdlcache');
@@ -122,7 +130,7 @@ if (!input[0]) {
 
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
-            const output = path.resolve(process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
+            const output = path.resolve((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, async function () {
