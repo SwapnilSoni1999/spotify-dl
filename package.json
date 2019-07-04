@@ -2,13 +2,13 @@
   "name": "spotify-dl",
   "version": "0.0.6",
   "description": "Spotify Songs, Playlist & Album Downloader",
-  "main": "cli.js",
+  "main": "app.js",
   "bin": {
     "spotifydl": "cli.js"
   },
   "scripts": {
     "test": "echo \"Type spotifydl for help.\"",
-    "start": "./cli.js"
+    "start": "electron ."
   },
   "repository": {
     "type": "git",
@@ -22,9 +22,13 @@
   "author": "Swapnil Soni",
   "license": "ISC",
   "dependencies": {
+    "bootstrap": "^4.3.1",
     "cheerio": "^1.0.0-rc.3",
+    "electron": "^5.0.6",
     "ffmetadata": "^1.5.0",
     "fluent-ffmpeg": "^2.1.2",
+    "font-awesome": "^4.7.0",
+    "material-design-lite": "^1.3.0",
     "meow": "^5.0.0",
     "ora": "^3.4.0",
     "request": "^2.88.0",
