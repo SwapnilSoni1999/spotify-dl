@@ -116,21 +116,23 @@ if (!input[0]) {
           var cacheCounter = 0;
           songData = await spotifye.getAlbum(URL);
           
-          var dir = process.cwd() + '/' + songData.name;
+          var dir = path.join(process.cwd(), songData.name);
 
           spinner.info(`Saving Album: ` + path.join(process.cwd(), songData.name));
 
           if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
-            dir = path.resolve(dir, ".spdlcache");
+            dir = path.join(dir, ".spdlcache");
           }
           else {
-            dir = path.resolve(dir, ".spdlcache");
-            if (fs.existsSync(`${dir}/.spdlcache`)) {
+            dir = path.join(dir, ".spdlcache");
+            if (fs.existsSync(path.join(dir, '.spdlcache'))) {
+              console.log('cache file exists');
               spinner.info("Fetching cache to resume Download\n");
               cacheCounter = Number(fs.readFileSync(dir, 'utf-8'));
             }
           }
+          console.log(dir);
 
           async function downloadLoop(trackIds, counter) {
             const songNam = await spotifye.extrTrack(trackIds[counter]);
