@@ -46,6 +46,11 @@ $ spotifydl https://open.spotify.com/track/xyz
 
 ```
 
+#### Options
+| Flag | Usage | 
+| ------ | ------ | 
+| -o | takes valid output path argument | 
+
 &nbsp;
 
 #### Acknowledgements
