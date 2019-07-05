@@ -3,7 +3,6 @@
 const path = require('path');
 const ora = require('ora');
 const meow = require('meow');
-const fs = require('fs');
 const getLink = require('./util/get-link');
 const songdata = require('./util/get-songdata');
 const urlParser = require('./util/url-parser');
@@ -65,12 +64,14 @@ if (!input[0]) {
         case 'song': {
           songData = await spotifye.getTrack(URL);
           const songName = songData.name + songData.artists[0];
+          
+          const output = path.resolve((cli.flags.output != null) ? cli.flags.output : process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
+          spinner.info(`Saving Song to: ${output}`);
 
           spinner.succeed(`Song: ${songData.name} - ${songData.artists[0]}`);
           
           const youtubeLink = await getLink(songName);
 
-          const output = path.resolve((cli.flags.output != null) ? cli.flags.output : process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
           spinner.start("Downloading...");
           
           await download(youtubeLink, output, spinner, async function() {
