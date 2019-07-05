@@ -57,6 +57,21 @@
                 </div>
             </div>
 
+            
+            <div class="col-md-12" style="margin-top:120px" id="output-container">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-inline-block">
+                            <i class="fas fa-music d-inline"></i>
+                            <h6 class="card-title d-inline" style="margin-top: 0px; padding-left: 8px">Song Title</h6>
+                        </div>
+                        <small class="card-subtitle d-block mt-2 text-muted">Artist 1, artist 2</small>
+                        <p class="card-text">Saved in Path/to/the/song.mp3</p>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
         <footer class="fixed-bottom text-center text-muted">
             SpotifyDL made with yt-dl and Spotify-api &copy;Swapnil Soni
@@ -64,7 +79,7 @@
     </div>
 
     <script>
-        require('./main.js');
+        require('./js/main.js');
         function updatePath() {
             const box = document.getElementById('select-path');
             document.getElementById('output-path').value = box.files[0].path;

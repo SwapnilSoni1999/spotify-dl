@@ -2,6 +2,7 @@ const electron = require('electron');
 const path = require('path');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const ipc = electron.ipcMain;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -9,7 +10,7 @@ let win;
 
 function createWindow() {
     // Create the browser window.
-    win = new BrowserWindow({ width: 900, height: 780, resizable: false, frame: false, webPreferences: { nodeIntegration: true } });
+    win = new BrowserWindow({ width: 900, height: 780, resizable: false, webPreferences: { nodeIntegration: true } });
     // and load the index.html of the app.
     win.loadFile(path.join(__dirname,'win/main.html'));
     // win.removeMenu();

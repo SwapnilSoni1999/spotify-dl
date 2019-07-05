@@ -7,3 +7,9 @@ body {
 *:focus {
     outline: none !important;
 }
+
+footer {
+    height: 20px;
+    background-color: white;
+    border-top: 1px grey solid;
+}
