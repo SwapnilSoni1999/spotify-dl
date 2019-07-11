@@ -7,13 +7,15 @@ const ipc = electron.ipcMain;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+let checkerWin;
 
 function createWindow() {
     // Create the browser window.
+    checkerWin.close();
     win = new BrowserWindow({ width: 900, height: 780, resizable: false, webPreferences: { nodeIntegration: true } });
     // and load the index.html of the app.
     win.loadFile(path.join(__dirname,'win/main.html'));
-    // win.removeMenu();
+    win.removeMenu();
     // Open the DevTools.
     win.webContents.openDevTools();
 
@@ -27,10 +29,30 @@ function createWindow() {
     });
 }
 
+function checkCLI() {
+    checkerWin = new BrowserWindow({ width: 300, height:350, resizable: false, frame: false ,webPreferences: { nodeIntegration: true } });
+
+    checkerWin.loadFile(path.join(__dirname, 'win/checker.html'));
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', checkCLI);
+
+ipc.on('invalid-url', () => {
+    setTimeout(() => {
+        win.reload();
+        console.log('window reloaded');
+    },1500);
+});
+ipc.on('checking-ok', async () => {
+    console.log("Well Done!");    
+    createWindow();
+});
+ipc.on('cli-fail', () => {
+
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
