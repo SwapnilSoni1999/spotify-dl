@@ -20,6 +20,12 @@ A simple commandline utility that allows you to download Spotify Songs,Playlist 
 
 #### Installation
 
+Install from [npm](https://www.npmjs.com/package/spotify-dl) registry
+
+```sh
+npm install -g spotify-dl
+```
+or You can do manually
 ```sh
 git clone https://github.com/SwapnilSoni1999/spotify-dl
 cd spotify-dl

@@ -51,18 +51,18 @@ const cli = meow(
 
 const { input } = cli;
 var spinner;
-if (cli.flags.spin == true) {
-  spinner = ora(`Searching…`).start();
-}
-else if(cli.flags.spin == false) {
-  console.log("Spinner is disabled: Remove flag -s false to enable!");
-}
 if (!input[0]) {
-  console.lotg('See spotifydl --help for instructions');
+  console.log('See spotifydl --help for instructions');
   process.exit(1);
 }
 
 (async () => {
+  if (cli.flags.spin == true) {
+    spinner = ora(`Searching…`).start();
+  }
+  else if (cli.flags.spin == false) {
+    console.log("Spinner is disabled: Remove flag -s false to enable!");
+  }
   try {
     var spotifye = new songdata();
     for (const link of input) {
@@ -116,7 +116,7 @@ if (!input[0]) {
             console.log(`Saving Playlist: ` + path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
           }
           
-          cacheCounter = await cache.read(dir, spinner);
+          cacheCounter = await cache.read(dir, (cli.flags.spin == true) ? spinner : null);
           dir = path.join(dir, '.spdlcache');
           
           async function downloadLoop(trackIds, counter) {
@@ -161,7 +161,7 @@ if (!input[0]) {
             console.log(`Saving Album: ` + path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
           }
 
-          cacheCounter = await cache.read(dir, spinner);
+          cacheCounter = await cache.read(dir, (cli.flags.spin == true) ? spinner : null);
           dir = path.join(dir, '.spdlcache');
 
           async function downloadLoop(trackIds, counter) {

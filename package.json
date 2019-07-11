@@ -1,5 +1,6 @@
 {
   "name": "spotify-dl",
+  "productName": "Spotify Downloader",
   "version": "0.0.6",
   "description": "Spotify Songs, Playlist & Album Downloader",
   "main": "app.js",
@@ -24,7 +25,6 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "cheerio": "^1.0.0-rc.3",
-    "electron": "^5.0.6",
     "ffmetadata": "^1.5.0",
     "fluent-ffmpeg": "^2.1.2",
     "font-awesome": "^4.7.0",
@@ -44,6 +44,8 @@
     ]
   },
   "devDependencies": {
+    "electron": "^5.0.6",
+    "electron-packager": "^14.0.1",
     "prettier": "^1.17.1",
     "xo": "^0.24.0"
   }
