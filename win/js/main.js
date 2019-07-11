@@ -1,5 +1,7 @@
+const ipc = require('electron').ipcRenderer;
 const path = require('path');
 const exec = require('child_process').exec;
+const urlParse = require('./../../util/url-parser');
 
 const URL = document.getElementById('urlBox');
 const choose_file_btn = document.getElementById('choose-file');
@@ -8,35 +10,50 @@ const output_path = document.getElementById('output-path');
 const dload = document.getElementById('daunlood');
 //set default os music path
 output_path.value = getDefaultMusicFolder(process.platform);
-var counter = 0;
+var counter = 0, ONE_TIME = false;
 
 dload.addEventListener('click', function() {
     if(URL.value) {
         console.log("Clicked!");
         var progress;
-        var spotifydl = exec(`spotifydl ${URL.value} -o ${output_path.value} -s false`);
+        const spotifydl = exec(`spotifydl ${URL.value} -o ${output_path.value} -s false`);
         var execCounts = 0;
         spotifydl.stdout.on('data',async (data) => {
-            execCounts++;
-            if(data.includes('Song:')) {
-                // console.log(data.split(' '));
-                await appendCard(counter);
-                var songName = await getSong(data.split(' '));
-                var outputName = await getOutput(output_path.value, songName);
-                await setSong(songName, outputName, counter);
-            }
-            if(data.includes('Downloading')) {
-                if(execCounts < 5) {
-                    var total_size = data.split(' ')[3];
-                    console.log(total_size);
-                    await setTotal(total_size, counter);
+            const urlType = await urlParse(URL.value);
+            if(urlType == 'song') {
+                execCounts++;
+                if(data.includes('Song:')) {
+                    // console.log(data.split(' '));
+                    await appendCard(counter);
+                    var songName = await getSong(data.split(' '));
+                    var outputName = await getOutput(output_path.value, songName);
+                    await setSong(songName, outputName, counter);
                 }
-                progress = await getProgress(data.split(' '));
-                await updateProgress(progress, counter);
+                if(data.includes('Downloading')) {
+                    if(execCounts < 5) {
+                        var total_size = data.split(' ')[3];
+                        console.log(total_size);
+                        await setTotal(total_size, counter);
+                    }
+                    progress = await getProgress(data.split(' '));
+                    await updateProgress(progress, counter);
+                }
+                if(data.includes("complete")) {
+                    console.log("Thai gyu download");
+                    counter++;
+                }
             }
-            if(data.includes("complete")) {
-                console.log("Thai gyu download");
-                counter++;
+            else {
+                if(!ONE_TIME) {
+                    ONE_TIME = true;
+                    const template = `
+                                        <div class="text-center"><h4><b>Only Track URL is valid for input.</b></h4></div>
+                                    `;
+    
+                    document.getElementById('output-container').innerHTML += template;
+                    document.body.style.overflow = 'auto';
+                    ipc.send('invalid-url');
+                }
             }
         });
 
