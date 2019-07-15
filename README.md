@@ -9,7 +9,7 @@
 &nbsp;
 
 #### Required
-Get [FFMPEG](https://ffmpeg.org/download.html) (PS: Not needed for Windows)
+Get [FFMPEG](https://ffmpeg.org/download.html)
 
 #### spotifydl
 
