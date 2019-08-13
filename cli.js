@@ -152,6 +152,7 @@ if (!input[0]) {
         case 'album': {
           var cacheCounter = 0;
           songData = await spotifye.getAlbum(URL);
+          songData.name = songData.name.replace('/', '-');
           
           var dir = path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name);
 
