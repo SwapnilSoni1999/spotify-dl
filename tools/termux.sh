@@ -12,7 +12,7 @@ npm install -g spotify-dl
 # Setup app sharing script
 echo "[ spotifydl ] Setting up scripts..."
 
-if [ ! -d "$HOME/bin"]; then
+if [ ! -d "$HOME/bin" ]; then
     mkdir "$HOME/bin"
 fi
 
