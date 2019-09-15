@@ -141,7 +141,11 @@ if (!input[0]) {
             download(ytLink, output, (cli.flags.spin == true) ? spinner : null, async function() {
               await cache.write(dir, ++counter);
               await mergeMetadata(output, songNam, (cli.flags.spin == true) ? spinner : null, function() {
-                downloadLoop(trackIds, counter);
+                if(counter == trackIds.length) {
+                  console.log(`\nFinished. Saved ${counter} Songs at ${output}.`);
+                } else {
+                  downloadLoop(trackIds, counter);
+                }
               });
             })
 
@@ -187,7 +191,11 @@ if (!input[0]) {
             download(ytLink, output, (cli.flags.spin == true) ? spinner : null, async function () {
               await cache.write(dir, ++counter);
               await mergeMetadata(output, songNam, (cli.flags.spin == true) ? spinner : null, function() {
-                downloadLoop(trackIds, counter);
+                if(counter == trackIds.length) {
+                  console.log(`\nFinished. Saved ${counter} Songs at ${output}.`);
+                } else {
+                  downloadLoop(trackIds, counter);
+                }
               });
             })
 
