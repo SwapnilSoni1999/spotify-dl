@@ -15,8 +15,7 @@ Get [FFMPEG](https://ffmpeg.org/download.html)
 
 A simple commandline utility that allows you to download Spotify Songs,Playlist and Albums.
 
-
-&nbsp;
+<hr>
 
 # Installation
 
@@ -36,16 +35,14 @@ npm link
 ```
 
 #### Android (Termux)
-
+PS: You may need to type `termux-setup-storage` first and allow storage permission
 ```sh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/SwapnilSoni1999/spotify-dl/master/tools/termux.sh)"
 ```
 
-&nbsp;
+<hr>
 
-
-
-#### Usage
+# Usage
 
 To download highest quality audio file
 ```sh
@@ -65,11 +62,12 @@ $ spotifydl https://open.spotify.com/track/xyz
 | ------ | ------ | 
 | -o | takes valid output path argument | 
 
-&nbsp;
+<hr>
 
 #### Acknowledgements
 
 thanks to [icons8](https://icons8.com) for icons in hero image
+and all the contributors for PR,suggestions and testing :love:
 
 &nbsp;
 
