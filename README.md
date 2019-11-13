@@ -13,7 +13,7 @@ Get [FFMPEG](https://ffmpeg.org/download.html)
 
 #### spotifydl
 
-A simple commandline utility that allows you to download Spotify Songs,Playlist and Albums.
+A simple commandline utility that allows you to download Spotify Songs,Playlist and Albums from Youtube.
 
 <hr>
 
