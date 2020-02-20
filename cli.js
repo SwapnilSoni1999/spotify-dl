@@ -14,21 +14,6 @@
   copies or substantial portions of the Software.
 */
 
-// [TempFix] Fix include by copying lib folder from dist->lib (check: https://github.com/fent/node-ytdl-core/pull/520)
-try {
-  const execSync = require('child_process').execSync;
-  const plat = process.platform;
-  if(plat === 'android') {
-    execSync('cp -r /data/data/com.termux/files/usr/lib/node_modules/spotify-dl/node_modules/m3u8stream/dist /data/data/com.termux/files/usr/lib/node_modules/spotify-dl/node_modules/m3u8stream/lib')
-  }
-  else if(plat == 'linux' || plat == 'darwin') {
-    execSync('cp -r /usr/lib/node_modules/spotify-dl/node_modules/m3u8stream/dist /usr/lib/node_modules/spotify-dl/node_modules/m3u8stream/lib')
-  }
-} catch(err) {
-  console.error('Please report issue on Github. https://github.com/SwapnilSoni1999/spotify-dl/issues');
-  process.exit(-1);
-}
-
 const path = require('path');
 const ora = require('ora');
 const meow = require('meow');
