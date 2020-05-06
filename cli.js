@@ -55,29 +55,19 @@ const cli = meow(
         alias: 'o',
         type: 'string'
       },
-      spin: {
-        alias:'s',
-        type: 'boolean',
-        default: true
-      }
     },
   }
 );
 
 const { input } = cli;
-var spinner;
+
 if (!input[0]) {
   console.log('See spotifydl --help for instructions');
   process.exit(1);
 }
 
 (async () => {
-  if (cli.flags.spin == true) {
-    spinner = ora(`Searching…`).start();
-  }
-  else if (cli.flags.spin == false) {
-    console.log("Spinner is disabled: Remove flag -s false to enable!");
-  }
+  const spinner = ora(`Searching…`).start();
   try {
     var spotifye = new songdata();
     for (const link of input) {
@@ -90,46 +80,26 @@ if (!input[0]) {
           const songName = songData.name + songData.artists[0];
           
           const output = path.resolve((cli.flags.output != null) ? cli.flags.output : process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
-          if(cli.flags.spin == true) {
-            spinner.info(`Saving Song to: ${output}\n`);
-          } else if(cli.flags.spin == false) {
-            console.log(`Saving Song to: ${output}\n`);
-          }
+          spinner.info(`Saving Song to: ${output}`);
 
-          if(cli.flags.spin == true) {
-            spinner.succeed(`Song: ${songData.name} - ${songData.artists[0]}`);
-          } else if(cli.flags.spin == false) {
-            console.log(`Song: ${songData.name} - ${songData.artists[0]}`);
-          }
+          spinner.succeed(`Song: ${songData.name} - ${songData.artists[0]}`);
           
           const youtubeLink = await getLink(songName);
 
-          if(cli.flags.spin == true) {
-            spinner.start("Downloading...");
-          } else if(cli.flags.spin == false) {
-            console.log("Downloading...");
-          }
+          spinner.start("Downloading...");
           
-          await download(youtubeLink, output, (cli.flags.spin == true) ? spinner : null, async function() {
-            await mergeMetadata(output, songData, (cli.flags.spin == true) ? spinner : null);
+          await download(youtubeLink, output, spinner, async function() {
+            await mergeMetadata(output, songData, spinner);
           });
           break;
         }
         case 'playlist': {
           var cacheCounter = 0;
           songData = await spotifye.getPlaylist(URL);
-          if(cli.flags.spin == true) {
-            spinner.warn("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
-          } else if(cli.flags.spin == false) {
-            console.log("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
-          }
+          spinner.warn("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
           var dir = path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name);
           
-          if(cli.flags.spin == true) {
-            spinner.info(`Saving Playlist: ` + path.join( (cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
-          } else if(cli.flags.spin == false) {
-            console.log(`Saving Playlist: ` + path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
-          }
+          spinner.info(`Saving Playlist: ` + path.join( (cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
           
           cacheCounter = await cache.read(dir, (cli.flags.spin == true) ? spinner : null);
           dir = path.join(dir, '.spdlcache');
@@ -137,25 +107,18 @@ if (!input[0]) {
           async function downloadLoop(trackIds, counter) {
             const songNam = await spotifye.extrTrack(trackIds[counter]);
             counter++;
-            if(cli.flags.spin == true) {
-              spinner.info(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
-            } else if(cli.flags.spin == false) {
-              console.log(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
-            }
+            spinner.info(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
             counter--;
 
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
             const output = path.resolve((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
-            if(cli.flags.spin == true) {
-              spinner.start("Downloading...");
-            } else if(cli.flags.spin == false) {
-              console.log("Downloading...");
-            }
+            spinner.start("Downloading...");
 
-            download(ytLink, output, (cli.flags.spin == true) ? spinner : null, async function() {
+            download(ytLink, output, spinner, async function() {
               await cache.write(dir, ++counter);
-              await mergeMetadata(output, songNam, (cli.flags.spin == true) ? spinner : null, function() {
+
+              await mergeMetadata(output, songNam, spinner, function() {
                 if(counter == trackIds.length) {
                   console.log(`\nFinished. Saved ${counter} Songs at ${output}.`);
                 } else {
@@ -175,11 +138,7 @@ if (!input[0]) {
           
           var dir = path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name);
 
-          if(cli.flags.spin == true) {
-            spinner.info(`Saving Album: ` + path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
-          } else if(cli.flags.spin == false) {
-            console.log(`Saving Album: ` + path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
-          }
+          spinner.info(`Saving Album: ` + path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
 
           cacheCounter = await cache.read(dir, (cli.flags.spin == true) ? spinner : null);
           dir = path.join(dir, '.spdlcache');
@@ -187,25 +146,18 @@ if (!input[0]) {
           async function downloadLoop(trackIds, counter) {
             const songNam = await spotifye.extrTrack(trackIds[counter]);
             counter++;
-            if(cli.flags.spin == true) {
-              spinner.info(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
-            } else if(cli.flags.spin == false) {
-              console.log(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
-            }
+            spinner.info(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
             counter--;
 
             const ytLink = await getLink(songNam.name + songNam.artists[0]);
 
             const output = path.resolve((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
-            if(cli.flags.spin == true) {
-              spinner.start("Downloading...");
-            } else if(cli.flags.spin == false) {
-              console.log("Downloading...");
-            }
+            spinner.start("Downloading...");
 
-            download(ytLink, output, (cli.flags.spin == true) ? spinner : null, async function () {
+            download(ytLink, output, spinner, async function () {
               await cache.write(dir, ++counter);
-              await mergeMetadata(output, songNam, (cli.flags.spin == true) ? spinner : null, function() {
+
+              await mergeMetadata(output, songNam, spinner, function() {
                 if(counter == trackIds.length) {
                   console.log(`\nFinished. Saved ${counter} Songs at ${output}.`);
                 } else {
@@ -219,11 +171,7 @@ if (!input[0]) {
           break;
         }
         case 'artist': {
-          if(cli.flags.spin == true) {
-            spinner.warn("To download artists list, add them to a separate Playlist and download.");
-          } else if(cli.flags.spin == false) {
-            console.log("To download artists list, add them to a separate Playlist and download.");
-          }
+          spinner.warn("To download artists list, add them to a separate Playlist and download.");
           break;
         }
         default: {
@@ -232,7 +180,7 @@ if (!input[0]) {
       }
     }
   } catch (error) {
-    console.log(`Something went wrong!`);
+    spinner.fail(`Something went wrong!`);
     console.log(error);
     process.exit(1);
   }
