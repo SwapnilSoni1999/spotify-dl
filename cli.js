@@ -26,6 +26,7 @@ const download = require('./lib/downloader');
 const cache = require('./lib/cache');
 const mergeMetadata = require('./lib/metadata');
 const setup = require('./lib/setup');
+const versionChecker = require('./util/versionChecker');
 
 // setup ffmpeg
 setup.ffmpeg(process.platform);
@@ -67,6 +68,10 @@ if (!input[0]) {
 }
 
 (async () => {
+  const update = await versionChecker();
+  if (update) {
+    console.log(update);
+  }
   const spinner = ora(`Searching…`).start();
   try {
     var spotifye = new songdata();

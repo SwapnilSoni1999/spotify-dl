@@ -23,6 +23,7 @@
   "author": "Swapnil Soni",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "ffmetadata": "^1.5.0",
     "fluent-ffmpeg": "^2.1.2",
     "meow": "^5.0.0",
