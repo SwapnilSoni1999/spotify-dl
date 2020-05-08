@@ -82,7 +82,7 @@ if (!input[0]) {
       switch(urlType) {
         case 'song': {
           songData = await spotifye.getTrack(URL);
-          const songName = songData.name + songData.artists[0];
+          const songName = songData.name + ' ' + songData.artists[0];
           
           const output = path.resolve((cli.flags.output != null) ? cli.flags.output : process.cwd(), await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
           spinner.info(`Saving Song to: ${output}`);
@@ -101,9 +101,10 @@ if (!input[0]) {
         case 'playlist': {
           var cacheCounter = 0;
           songData = await spotifye.getPlaylist(URL);
-          spinner.warn("Warning: Providing Playlist will download first 100 songs from the list. This is a drawback right now and will be fixed later.");
+
           var dir = path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name);
           
+          spinner.info(`Total Songs: ${songData.total_tracks}`)
           spinner.info(`Saving Playlist: ` + path.join( (cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
           
           cacheCounter = await cache.read(dir, (cli.flags.spin == true) ? spinner : null);
@@ -115,7 +116,7 @@ if (!input[0]) {
             spinner.info(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
             counter--;
 
-            const ytLink = await getLink(songNam.name + songNam.artists[0]);
+            const ytLink = await getLink(songNam.name + ' ' + songNam.artists[0]);
 
             const output = path.resolve((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
@@ -143,6 +144,7 @@ if (!input[0]) {
           
           var dir = path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name);
 
+          spinner.info(`Total Songs: ${songData.total_tracks}`);
           spinner.info(`Saving Album: ` + path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
 
           cacheCounter = await cache.read(dir, (cli.flags.spin == true) ? spinner : null);
@@ -154,7 +156,7 @@ if (!input[0]) {
             spinner.info(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
             counter--;
 
-            const ytLink = await getLink(songNam.name + songNam.artists[0]);
+            const ytLink = await getLink(songNam.name + ' ' + songNam.artists[0]);
 
             const output = path.resolve((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name, await filter.validateOutput(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
