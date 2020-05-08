@@ -107,7 +107,7 @@ if (!input[0]) {
           spinner.info(`Total Songs: ${songData.total_tracks}`)
           spinner.info(`Saving Playlist: ` + path.join( (cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
           
-          cacheCounter = await cache.read(dir, (cli.flags.spin == true) ? spinner : null);
+          cacheCounter = await cache.read(dir, spinner);
           dir = path.join(dir, '.spdlcache');
           
           async function downloadLoop(trackIds, counter) {
@@ -147,7 +147,7 @@ if (!input[0]) {
           spinner.info(`Total Songs: ${songData.total_tracks}`);
           spinner.info(`Saving Album: ` + path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
 
-          cacheCounter = await cache.read(dir, (cli.flags.spin == true) ? spinner : null);
+          cacheCounter = await cache.read(dir, spinner);
           dir = path.join(dir, '.spdlcache');
 
           async function downloadLoop(trackIds, counter) {
