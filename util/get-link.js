@@ -16,7 +16,7 @@ const getLink = async (songName) => {
     
     const [topResult] = result.videos;
 
-    const youtubeLink = 'https://youtube.com' + topResult.url;
+    const youtubeLink = (topResult.url.includes('https://youtube.com')) ? topResult.url : 'https://youtube.com' + topResult.url;
 
     return youtubeLink;
   } catch (error) {

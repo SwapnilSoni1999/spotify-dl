@@ -90,7 +90,6 @@ if (!input[0]) {
           spinner.succeed(`Song: ${songData.name} - ${songData.artists[0]}`);
           
           const youtubeLink = await getLink(songName);
-
           spinner.start("Downloading...");
           
           await download(youtubeLink, output, spinner, async function() {
