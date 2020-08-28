@@ -101,7 +101,7 @@ if (!input[0]) {
           var cacheCounter = 0;
           songData = await spotifye.getPlaylist(URL);
 
-          var dir = path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name);
+          var dir = await filter.validateOutput(path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
           
           spinner.info(`Total Songs: ${songData.total_tracks}`)
           spinner.info(`Saving Playlist: ` + path.join( (cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
@@ -141,7 +141,7 @@ if (!input[0]) {
           songData = await spotifye.getAlbum(URL);
           songData.name = songData.name.replace('/', '-');
           
-          var dir = path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name);
+          var dir = await filter.validateOutput(path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
 
           spinner.info(`Total Songs: ${songData.total_tracks}`);
           spinner.info(`Saving Album: ` + path.join((cli.flags.output != null) ? cli.flags.output : process.cwd(), songData.name));
