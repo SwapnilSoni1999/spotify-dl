@@ -1,6 +1,10 @@
 'use strict';
 
 module.exports = {
+    validateOutputSync: function (output) {
+        output = output.replace(/[&\/\\#+$!"~%:*?<>{}\|]/g, '');
+        return output;
+    },
     validateOutput: async function (output) {
         output = output.replace(/[&\/\\#+$!"~%:*?<>{}\|]/g, '');      
         return output;
