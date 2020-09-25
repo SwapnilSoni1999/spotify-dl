@@ -26,12 +26,12 @@
     "axios": "^0.19.2",
     "ffmetadata": "^1.5.0",
     "fluent-ffmpeg": "^2.1.2",
-    "meow": "^7.1.0",
+    "meow": "^7.1.1",
     "ora": "^4.1.1",
     "request": "^2.88.2",
     "spotify-web-api-node": "^4.0.0",
-    "yt-search": "^2.2.4",
-    "ytdl-core": "^3.2.2"
+    "yt-search": "^2.3.1",
+    "ytdl-core": "^3.3.0"
   },
   "xo": {
     "space": true,
@@ -41,7 +41,7 @@
     ]
   },
   "devDependencies": {
-    "prettier": "^2.1.1",
+    "prettier": "^2.1.2",
     "xo": "^0.32.1"
   }
 }
