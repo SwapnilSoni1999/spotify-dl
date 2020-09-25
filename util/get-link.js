@@ -4,6 +4,10 @@ const youtubeSearch = require('yt-search');
 
 const search = promisify(youtubeSearch);
 
+function buildUrl(topResult) {
+  return (topResult.url.includes('https://youtube.com')) ? topResult.url : 'https://youtube.com' + topResult.url;
+}
+
 /**
  * This function searches youtube for given songname and returns the link of topmost result
  *
@@ -16,11 +20,21 @@ const getLink = async (songName) => {
     
     const [topResult] = result.videos;
 
-    const youtubeLink = (topResult.url.includes('https://youtube.com')) ? topResult.url : 'https://youtube.com' + topResult.url;
+    const youtubeLink = buildUrl(topResult)
 
     return youtubeLink;
-  } catch (error) {
-    return error;
+  } catch (_) {
+    try {
+      const result = await search(songName.replace('-', ' '))
+
+      const [topResult] = result.videos
+
+      const youtubeLink = buildUrl(topResult)
+
+      return youtubeLink
+    } catch (error) {
+      return error;
+    }
   }
 };
 
