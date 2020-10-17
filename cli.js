@@ -83,14 +83,14 @@ if (!input[0]) {
       switch(urlType) {
         case 'song': {
           songData = await spotifye.getTrack(URL);
-          const songName = songData.name + ' ' + songData.artists[0];
+          const songData = songData.name + ' ' + songData.artists[0];
           
           const output = path.resolve(outputDir, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
           spinner.info(`Saving Song to: ${output}`);
 
           spinner.succeed(`Song: ${songData.name} - ${songData.artists[0]}`);
           
-          const youtubeLink = await getLink(songName);
+          const youtubeLink = await getLink(songData);
           spinner.start("Downloading...");
           
           await download(youtubeLink, output, spinner, async function() {
@@ -110,14 +110,14 @@ if (!input[0]) {
           dir = path.join(dir, '.spdlcache');
           
           async function downloadLoop(trackIds, counter) {
-            const songNam = await spotifye.extrTrack(trackIds[counter]);
+            const songData = await spotifye.extrTrack(trackIds[counter]);
             counter++;
-            spinner.info(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
+            spinner.info(`${counter}. Song: ${songData.name} - ${songData.artists[0]}`);
             counter--;
 
-            const ytLink = await getLink(songNam.name + ' ' + songNam.artists[0]);
+            const ytLink = await getLink(songData.name + ' ' + songData.artists[0]);
 
-            const output = path.resolve(outputDir, filter.validateOutputSync(songData.name), filter.validateOutputSync(`${songNam.name} - ${songNam.artists[0]}.mp3`));
+            const output = path.resolve(outputDir, filter.validateOutputSync(songData.name), filter.validateOutputSync(`${songData.name} - ${songData.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, async function(withError) {
@@ -130,7 +130,7 @@ if (!input[0]) {
                   downloadLoop(trackIds, counter);
                 }
               } else {
-                await mergeMetadata(output, songNam, spinner, function() {
+                await mergeMetadata(output, songData, spinner, function() {
                   if(counter == trackIds.length) {
                     console.log(`\nFinished. Saved ${counter} Songs at ${output}.`);
                   } else {
@@ -158,26 +158,34 @@ if (!input[0]) {
           dir = path.join(dir, '.spdlcache');
 
           async function downloadLoop(trackIds, counter) {
-            const songNam = await spotifye.extrTrack(trackIds[counter]);
+            const songData = await spotifye.extrTrack(trackIds[counter]);
             counter++;
-            spinner.info(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
+            spinner.info(`${counter}. Song: ${songData.name} - ${songData.artists[0]}`);
             counter--;
 
-            const ytLink = await getLink(songNam.name + ' ' + songNam.artists[0]);
+            const ytLink = await getLink(songData.name + ' ' + songData.artists[0]);
 
-            const output = path.resolve(outputDir, await filter.validateOutput(songData.name, `${songNam.name} - ${songNam.artists[0]}.mp3`));
+            const output = path.resolve(outputDir, await filter.validateOutput(songData.name, `${songData.name} - ${songData.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
-            download(ytLink, output, spinner, async function () {
+            download(ytLink, output, spinner, async function (withError) {
               await cache.write(dir, ++counter);
 
-              await mergeMetadata(output, songNam, spinner, function() {
+              if (withError) {
                 if(counter == trackIds.length) {
                   console.log(`\nFinished. Saved ${counter} Songs at ${output}.`);
                 } else {
                   downloadLoop(trackIds, counter);
                 }
-              });
+              } else {
+                await mergeMetadata(output, songData, spinner, function() {
+                  if(counter == trackIds.length) {
+                    console.log(`\nFinished. Saved ${counter} Songs at ${output}.`);
+                  } else {
+                    downloadLoop(trackIds, counter);
+                  }
+                });
+              }
             })
 
           }
