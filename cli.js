@@ -120,16 +120,24 @@ if (!input[0]) {
             const output = path.resolve(outputDir, filter.validateOutputSync(songData.name), filter.validateOutputSync(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
-            download(ytLink, output, spinner, async function() {
+            download(ytLink, output, spinner, async function(withError) {
               await cache.write(dir, ++counter);
 
-              await mergeMetadata(output, songNam, spinner, function() {
+              if (withError) {
                 if(counter == trackIds.length) {
                   console.log(`\nFinished. Saved ${counter} Songs at ${output}.`);
                 } else {
                   downloadLoop(trackIds, counter);
                 }
-              });
+              } else {
+                await mergeMetadata(output, songNam, spinner, function() {
+                  if(counter == trackIds.length) {
+                    console.log(`\nFinished. Saved ${counter} Songs at ${output}.`);
+                  } else {
+                    downloadLoop(trackIds, counter);
+                  }
+                });
+              }
             })
 
           }
