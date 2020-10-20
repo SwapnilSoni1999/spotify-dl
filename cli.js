@@ -99,10 +99,11 @@ if (!input[0]) {
         }
         case 'playlist': {
           var cacheCounter = 0;
-          const songData = await spotifye.getPlaylist(URL);
+          const playlistData = await spotifye.getPlaylist(URL);
 
-          var dir = path.join(outputDir, filter.validateOutputSync(songData.name));
-          spinner.info(`Total Songs: ${songData.total_tracks}`)
+          var dir = path.join(outputDir, filter.validateOutputSync(playlistData.name));
+
+          spinner.info(`Total Songs: ${playlistData.total_tracks}`)
           spinner.info(`Saving Playlist: ${dir}`);
           
           cacheCounter = await cache.read(dir, spinner);
@@ -110,13 +111,13 @@ if (!input[0]) {
           
           async function downloadLoop(trackIds, counter) {
             const songData = await spotifye.extrTrack(trackIds[counter]);
-            counter++;
-            spinner.info(`${counter}. Song: ${songData.name} - ${songData.artists[0]}`);
-            counter--;
+            const songName = songData.name + ' ' + songData.artists[0];
 
-            const ytLink = await getLink(songData.name + ' ' + songData.artists[0]);
+            spinner.info(`${counter + 1}. Song: ${songName}`);
 
-            const output = path.resolve(outputDir, filter.validateOutputSync(songData.name), filter.validateOutputSync(`${songData.name} - ${songData.artists[0]}.mp3`));
+            const ytLink = await getLink(songName);
+
+            const output = path.resolve(outputDir, filter.validateOutputSync(playlistData.name), filter.validateOutputSync(`${songData.name} - ${songData.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, async function(withError) {
@@ -124,14 +125,14 @@ if (!input[0]) {
 
               if (withError) {
                 if(counter == trackIds.length) {
-                  console.log(`\nFinished. Saved ${counter} Songs at ${output}.`);
+                  console.log(`\nFinished. Saved ${counter} Songs at ${outputDir}.`);
                 } else {
                   downloadLoop(trackIds, counter);
                 }
               } else {
                 await mergeMetadata(output, songData, spinner, function() {
                   if(counter == trackIds.length) {
-                    console.log(`\nFinished. Saved ${counter} Songs at ${output}.`);
+                    console.log(`\nFinished. Saved ${counter} Songs at ${outputDir}.`);
                   } else {
                     downloadLoop(trackIds, counter);
                   }
@@ -140,7 +141,7 @@ if (!input[0]) {
             })
 
           }
-          downloadLoop(songData.tracks, cacheCounter);
+          downloadLoop(playlistData.tracks, cacheCounter);
           break;
         }
         case 'album': {
