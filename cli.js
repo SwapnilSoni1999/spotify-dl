@@ -105,7 +105,7 @@ if (!input[0]) {
 
           spinner.info(`Total Songs: ${playlistData.total_tracks}`)
           spinner.info(`Saving Playlist: ${dir}`);
-          
+
           cacheCounter = await cache.read(dir, spinner);
           dir = path.join(dir, '.spdlcache');
           
@@ -146,26 +146,26 @@ if (!input[0]) {
         }
         case 'album': {
           var cacheCounter = 0;          
-          const songData = await spotifye.getAlbum(URL);
-          songData.name = songData.name.replace('/', '-');
+          const albumData = await spotifye.getAlbum(URL);
+          albumData.name = albumData.name.replace('/', '-');
           
-          var dir = path.join(outputDir, await filter.validateOutput(songData.name));
+          var dir = path.join(outputDir, await filter.validateOutput(albumData.name));
 
-          spinner.info(`Total Songs: ${songData.total_tracks}`);
-          spinner.info(`Saving Album: ` + path.join(outputDir, songData.name));
+          spinner.info(`Total Songs: ${albumData.total_tracks}`);
+          spinner.info(`Saving Album: ` + path.join(outputDir, albumData.name));
 
           cacheCounter = await cache.read(dir, spinner);
           dir = path.join(dir, '.spdlcache');
 
           async function downloadLoop(trackIds, counter) {
             const songData = await spotifye.extrTrack(trackIds[counter]);
-            counter++;
-            spinner.info(`${counter}. Song: ${songData.name} - ${songData.artists[0]}`);
-            counter--;
+
+            spinner.info(`${counter + 1}. Song: ${songData.name} - ${songData.artists[0]}`);
 
             const ytLink = await getLink(songData.name + ' ' + songData.artists[0]);
 
-            const output = path.resolve(outputDir, await filter.validateOutput(songData.name, `${songData.name} - ${songData.artists[0]}.mp3`));
+            const output = path.resolve(outputDir, filter.validateOutputSync(albumData.name), filter.validateOutputSync(`${songData.name} - ${songData.artists[0]}.mp3`));
+
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, async function (withError) {
@@ -189,7 +189,7 @@ if (!input[0]) {
             })
 
           }
-          downloadLoop(songData.tracks, cacheCounter);
+          downloadLoop(albumData.tracks, cacheCounter);
           break;
         }
         case 'artist': {
