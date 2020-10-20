@@ -77,20 +77,19 @@ if (!input[0]) {
     var spotifye = new songdata();
     for (const link of input) {
       const urlType = await urlParser(await filter.removeQuery(link));
-      var songData = {};
       const URL = link;
       let outputDir = path.normalize((cli.flags.output != null) ? cli.flags.output : process.cwd());
       switch(urlType) {
         case 'song': {
-          songData = await spotifye.getTrack(URL);
-          const songData = songData.name + ' ' + songData.artists[0];
-          
+          const songData = await spotifye.getTrack(URL);
+          const songName = songData.name + ' ' + songData.artists[0];
+
           const output = path.resolve(outputDir, await filter.validateOutput(`${songData.name} - ${songData.artists[0]}.mp3`));
           spinner.info(`Saving Song to: ${output}`);
 
           spinner.succeed(`Song: ${songData.name} - ${songData.artists[0]}`);
           
-          const youtubeLink = await getLink(songData);
+          const youtubeLink = await getLink(songName);
           spinner.start("Downloading...");
           
           await download(youtubeLink, output, spinner, async function() {
@@ -100,7 +99,7 @@ if (!input[0]) {
         }
         case 'playlist': {
           var cacheCounter = 0;
-          songData = await spotifye.getPlaylist(URL);
+          const songData = await spotifye.getPlaylist(URL);
 
           var dir = path.join(outputDir, filter.validateOutputSync(songData.name));
           spinner.info(`Total Songs: ${songData.total_tracks}`)
@@ -145,8 +144,8 @@ if (!input[0]) {
           break;
         }
         case 'album': {
-          var cacheCounter = 0;
-          songData = await spotifye.getAlbum(URL);
+          var cacheCounter = 0;          
+          const songData = await spotifye.getAlbum(URL);
           songData.name = songData.name.replace('/', '-');
           
           var dir = path.join(outputDir, await filter.validateOutput(songData.name));
