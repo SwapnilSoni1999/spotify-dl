@@ -1,7 +1,7 @@
 {
   "name": "spotify-dl",
   "productName": "Spotify Downloader",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Spotify Songs, Playlist & Album Downloader",
   "main": "app.js",
   "bin": {
@@ -30,8 +30,8 @@
     "ora": "^4.1.1",
     "request": "^2.88.2",
     "spotify-web-api-node": "^4.0.0",
-    "yt-search": "^2.3.1",
-    "ytdl-core": "^3.3.0"
+    "yt-search": "^2.5.0",
+    "ytdl-core": "^3.4.2"
   },
   "xo": {
     "space": true,
@@ -41,7 +41,7 @@
     ]
   },
   "devDependencies": {
-    "prettier": "^2.1.2",
+    "prettier": "^2.2.0",
     "xo": "^0.32.1"
   }
 }
