@@ -23,15 +23,15 @@
   "author": "Swapnil Soni",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.0",
     "ffmetadata": "^1.5.0",
     "fluent-ffmpeg": "^2.1.2",
-    "meow": "^7.1.1",
-    "ora": "^4.1.1",
+    "meow": "^8.0.0",
+    "ora": "^5.1.0",
     "request": "^2.88.2",
-    "spotify-web-api-node": "^4.0.0",
+    "spotify-web-api-node": "^5.0.0",
     "yt-search": "^2.5.0",
-    "ytdl-core": "^3.4.2"
+    "ytdl-core": "^4.1.0"
   },
   "xo": {
     "space": true,
@@ -41,7 +41,7 @@
     ]
   },
   "devDependencies": {
-    "prettier": "^2.2.0",
-    "xo": "^0.32.1"
+    "prettier": "^2.2.1",
+    "xo": "^0.35.0"
   }
 }
