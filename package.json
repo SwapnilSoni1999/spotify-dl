@@ -1,7 +1,7 @@
 {
   "name": "spotify-dl",
   "productName": "Spotify Downloader",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "Spotify Songs, Playlist & Album Downloader",
   "main": "app.js",
   "bin": {
