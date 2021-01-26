@@ -157,7 +157,7 @@ if (!input[0]) {
 
             const ytLink = await getLink(songNam.name + ' ' + songNam.artists[0]);
 
-            const output = path.resolve(outputDir, await filter.validateOutput(songData.name, `${songNam.name} - ${songNam.artists[0]}.mp3`));
+            const output = path.resolve(outputDir, songData.name, filter.validateOutputSync(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
 
             download(ytLink, output, spinner, async function () {
