@@ -141,7 +141,7 @@ if (!input[0]) {
           songData = await spotifye.getAlbum(URL);
           songData.name = songData.name.replace('/', '-');
           
-          var dir = path.join(outputDir, await filter.validateOutput(songData.name));
+          var dir = path.join(outputDir, filter.validateOutputSync(songData.name));
 
           spinner.info(`Total Songs: ${songData.total_tracks}`);
           spinner.info(`Saving Album: ` + path.join(outputDir, songData.name));
@@ -157,9 +157,9 @@ if (!input[0]) {
 
             const ytLink = await getLink(songNam.name + ' ' + songNam.artists[0]);
 
-            const output = path.resolve(outputDir, songData.name, filter.validateOutputSync(`${songNam.name} - ${songNam.artists[0]}.mp3`));
+            const output = path.resolve(outputDir, filter.validateOutputSync(songData.name), filter.validateOutputSync(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
-
+            console.log("\n DIR:", songData.name)
             download(ytLink, output, spinner, async function () {
               await cache.write(dir, ++counter);
 
