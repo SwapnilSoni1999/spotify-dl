@@ -40,6 +40,15 @@ PS: You may need to type `termux-setup-storage` first and allow storage permissi
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/SwapnilSoni1999/spotify-dl/master/tools/termux.sh)"
 ```
 
+#### Docker
+
+Build docker image:
+```sh
+git clone https://github.com/SwapnilSoni1999/spotify-dl
+cd spotify-dl
+docker build -t spotify-dl .
+```
+
 <hr>
 
 # Usage
@@ -64,6 +73,12 @@ $ spotifydl https://open.spotify.com/track/xyz
 | --es | takes extra search string/term to be used for youtube search |
 
 <hr>
+
+## Docker
+```sh
+docker run -it --user=$(id -u):$(id -g) -v $(pwd):/download --rm spotify-dl <options-to-spotify-dl defaults to --help>
+docker run -it --user=$(id -u):$(id -g) -v $(pwd):/download --rm spotify-dl "https://open.spotify.com/...."
+```
 
 #### Acknowledgements
 
