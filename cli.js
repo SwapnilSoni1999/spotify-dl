@@ -41,8 +41,13 @@ const cli = meow(
       $ spotifydl https://open.spotify.com/playlist/4hOKQuZbraPDIfaGbM3lKI
 
   Options
-    -o    -takes valid path argument 
-          eg. $ spotifydl -o ~/songs https://open.spotify.com/playlist/3PrZvfOSNShOC2JxgIhvL1
+    --output "<path>"            -takes valid path argument 
+        or                         eg. $ spotifydl -o ~/songs https://open.spotify.com/playlist/3PrZvfOSNShOC2JxgIhvL1
+    -o "<path>"
+
+    --extra-search "<term>"      -takes string for extra search term which gets contcated to song search on youtube
+          or                       eg. $ spotifydl <url> --extra-search "lyrics"
+    --es "<term>"                -with playlist and albums it will concat with each song.
 `,
   {
     flags: {
@@ -56,6 +61,10 @@ const cli = meow(
         alias: 'o',
         type: 'string'
       },
+      extraSearch: {
+        alias: 'es',
+        type: 'string'
+      }
     },
   }
 );
@@ -89,8 +98,8 @@ if (!input[0]) {
           spinner.info(`Saving Song to: ${output}`);
 
           spinner.succeed(`Song: ${songData.name} - ${songData.artists[0]}`);
-          
-          const youtubeLink = await getLink(songName);
+
+          const youtubeLink = await getLink(songName + (cli.flags.extraSearch ? (" " + cli.flags.extraSearch) : ''));
           spinner.start("Downloading...");
           
           await download(youtubeLink, output, spinner, async function() {
@@ -115,7 +124,7 @@ if (!input[0]) {
             spinner.info(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
             counter--;
 
-            const ytLink = await getLink(songNam.name + ' ' + songNam.artists[0]);
+            const ytLink = await getLink((songNam.name + ' ' + songNam.artists[0]) + (cli.flags.extraSearch ? (" " + cli.flags.extraSearch) : ''));
 
             const output = path.resolve(outputDir, filter.validateOutputSync(songData.name), filter.validateOutputSync(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
@@ -155,7 +164,7 @@ if (!input[0]) {
             spinner.info(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
             counter--;
 
-            const ytLink = await getLink(songNam.name + ' ' + songNam.artists[0]);
+            const ytLink = await getLink((songNam.name + ' ' + songNam.artists[0]) + (cli.flags.extraSearch ? (" " + cli.flags.extraSearch) : ''));
 
             const output = path.resolve(outputDir, filter.validateOutputSync(songData.name), filter.validateOutputSync(`${songNam.name} - ${songNam.artists[0]}.mp3`));
             spinner.start("Downloading...");
