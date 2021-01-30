@@ -60,14 +60,15 @@ $ spotifydl https://open.spotify.com/track/xyz
 #### Options
 | Flag | Usage | 
 | ------ | ------ | 
-| -o | takes valid output path argument | 
+| -o | takes valid output path argument |
+| --es | takes extra search string/term to be used for youtube search |
 
 <hr>
 
 #### Acknowledgements
 
 thanks to [icons8](https://icons8.com) for icons in hero image
-and all the contributors for PR,suggestions and testing :love:
+and all the contributors for PR, suggestions and testing :love:
 
 &nbsp;
 
