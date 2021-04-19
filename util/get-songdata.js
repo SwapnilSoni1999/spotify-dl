@@ -10,6 +10,18 @@ class Spotifye {
     const ID = await this.getID(url);
     return this.extrAlbum(ID);
   }
+  async getArtistAlbums(url) {
+    const artistID = await this.getID(url);
+    const albumsResult = await spotify.extractAlbumsForArtist(artistID)
+    const albums = albumsResult.body.items
+    let albumInfos = []
+    
+    for (let x = 0; x < albums.length;x++) {
+      const album = await this.extrAlbum(albums[x].id).catch(e => console.log(e))
+      albumInfos.push(album)
+    }
+    return albumInfos
+  }
   async getPlaylist(url) {
     const ID = await this.getID(url);
     return this.extrPlaylist(ID);
