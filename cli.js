@@ -167,46 +167,14 @@ if (!input[0]) {
           break;
         }
         case 'artist': {
-          const albums = await spotifye.getArtistAlbums(URL)
-          console.log(albums)
-          // albums.map(async album => {
-          //   var cacheCounter = 0;
-          //   songData.name = songData.name.replace('/', '-');
-            
-          //   var dir = path.join(outputDir, filter.validateOutputSync(songData.name));
-
-          //   spinner.info(`Total Songs: ${songData.total_tracks}`);
-          //   spinner.info(`Saving Album: ` + path.join(outputDir, songData.name));
-
-          //   cacheCounter = await cache.read(dir, spinner);
-          //   dir = path.join(dir, '.spdlcache');
-
-          //   async function downloadLoop(trackIds, counter) {
-          //     const songNam = await spotifye.extrTrack(trackIds[counter]);
-          //     counter++;
-          //     spinner.info(`${counter}. Song: ${songNam.name} - ${songNam.artists[0]}`);
-          //     counter--;
-          //     spinner.info("wt2")
-
-          //     const ytLink = await getLink((songNam.name + ' ' + songNam.artists[0]) + (cli.flags.extraSearch ? (" " + cli.flags.extraSearch) : ''));
-
-          //     const output = path.resolve(outputDir, filter.validateOutputSync(songData.name), filter.validateOutputSync(`${songNam.name} - ${songNam.artists[0]}.mp3`));
-          //     spinner.start("Downloading...");
-          //     console.log("\n DIR:", songData.name)
-          //     download(ytLink, output, spinner, async function () {
-          //       await cache.write(dir, ++counter);
-
-          //       await mergeMetadata(output, songNam, spinner, function() {
-          //         if(counter == trackIds.length) {
-          //           console.log(`\nFinished. Saved ${counter} Songs at ${output}.`);
-          //         } else {
-          //           downloadLoop(trackIds, counter);
-          //         }
-          //       });
-          //     })
-          //   }
-          //   downloadLoop(songData.tracks, cacheCounter);
-          // })
+          const artistAlbumInfos = await spotifyExtractor
+            .getArtistAlbums(URL);
+          const artist = artistAlbumInfos.artist;
+          const albums = artistAlbumInfos.albums;
+          outputDir = path.join(outputDir, artist.name);
+          for (let x = 0; x < albums.length; x++) {
+            await downloadSongList(albums[x]);
+          }
           break;
         }
         default: {

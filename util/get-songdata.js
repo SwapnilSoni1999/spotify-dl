@@ -11,17 +11,26 @@ class SpotifyExtractor {
     const ID = await this.getID(url);
     return this.extractAlbum(ID);
   }
-  async getArtistAlbums(url) {
+
+  async getArtist(url) {
     const artistID = await this.getID(url);
-    const albumsResult = await spotify.extractAlbumsForArtist(artistID)
-    const albums = albumsResult.body.items
-    let albumInfos = []
-    
-    for (let x = 0; x < albums.length;x++) {
-      const album = await this.extrAlbum(albums[x].id).catch(e => console.log(e))
-      albumInfos.push(album)
+    return await this.extractArtist(artistID);
+  }
+
+  async getArtistAlbums(url) {
+    const artistResult = await this.getArtist(url);
+    const albumsResult = await this.extractArtistAlbums(
+      artistResult.id,
+    );
+    const albumIds = albumsResult.map(album => album.id);
+    let albumInfos = [];
+    for (let x = 0; x < albumIds.length; x++) {
+      albumInfos.push(await this.extractAlbum(albumIds[x]));
     }
-    return albumInfos
+    return {
+      albums: albumInfos,
+      artist: artistResult,
+    };
   }
 
   async getPlaylist(url) {
@@ -59,6 +68,12 @@ class SpotifyExtractor {
     return await spotify.extractAlbum(albumId);
   }
 
+  async extractArtist(artistId) {
+    return await spotify.extractArtist(artistId);
+  }
+
+  async extractArtistAlbums(artistId) {
+    return await spotify.extractArtistAlbums(artistId);
   }
 }
 
