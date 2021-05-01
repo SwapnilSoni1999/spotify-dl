@@ -29,7 +29,7 @@
     "meow": "^9.0.0",
     "ora": "^5.4.0",
     "request": "^2.88.2",
-    "spotify-web-api-node": "^4.0.0",
+    "spotify-web-api-node": "^5.0.0",
     "yt-search": "^2.7.5",
     "ytdl-core": "^4.5.0"
   },
