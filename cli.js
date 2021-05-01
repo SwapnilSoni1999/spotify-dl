@@ -59,14 +59,14 @@ const cli = meow(
       },
       output: {
         alias: 'o',
-        type: 'string'
+        type: 'string',
       },
       extraSearch: {
         alias: 'es',
-        type: 'string'
-      }
+        type: 'string',
+      },
     },
-  }
+  },
 );
 
 const { input } = cli;
@@ -234,15 +234,11 @@ if (!input[0]) {
       }
     }
   } catch (error) {
-    spinner.fail(`Something went wrong!`);
+    spinner.fail('Something went wrong!');
     console.log(error);
     process.exit(1);
   }
 })();
-
-const downloadAlbum = () => {
-  
-}
 
 process.on('SIGINT', () => {
   process.exit(1);

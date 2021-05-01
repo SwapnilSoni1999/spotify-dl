@@ -1,14 +1,15 @@
 'use strict';
 const spotify = require('../lib/api');
 
-class Spotifye {
+class SpotifyExtractor {
   async getTrack(url) {
     const ID = await this.getID(url);
-    return this.extrTrack(ID);
+    return this.extractTrack(ID);
   }
+
   async getAlbum(url) {
     const ID = await this.getID(url);
-    return this.extrAlbum(ID);
+    return this.extractAlbum(ID);
   }
   async getArtistAlbums(url) {
     const artistID = await this.getID(url);
@@ -22,9 +23,10 @@ class Spotifye {
     }
     return albumInfos
   }
+
   async getPlaylist(url) {
     const ID = await this.getID(url);
-    return this.extrPlaylist(ID);
+    return this.extractPlaylist(ID);
   }
 
   async getID(url) {
@@ -43,18 +45,21 @@ class Spotifye {
     return id;
   }
 
-  async extrTrack(trackId) {
-    const trackData = await spotify.extractTrack(trackId);    
+  async extractTrack(trackId) {
+    const trackData = await spotify.extractTrack(trackId);
+    trackData.id = trackId;
     return trackData;
   }
-  async extrPlaylist(playlistId) {
-    const trackData = await spotify.extractPlaylist(playlistId);
-    return trackData;
+
+  async extractPlaylist(playlistId) {
+    return await spotify.extractPlaylist(playlistId);
   }
-  async extrAlbum(albumId) {
-    const trackData = await spotify.extractAlbum(albumId);
-    return trackData;
+
+  async extractAlbum(albumId) {
+    return await spotify.extractAlbum(albumId);
+  }
+
   }
 }
 
-module.exports = Spotifye;
+module.exports = SpotifyExtractor;
