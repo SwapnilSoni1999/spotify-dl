@@ -111,7 +111,7 @@ if (!input[0]) {
         );
         spinner.start('Downloading...');
         spinner.info(`DIR: ${listData.name}`);
-        await download(ytLink, output, spinner, async function () {
+        await download(ytLink, output, spinner, async () => {
           await cache.write(path.join(dir, '.spdlcache'), ++counter);
           await mergeMetadata(output, songInfo, spinner, async () => {
             await downloadLoop(listData, dir, counter);
