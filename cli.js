@@ -111,7 +111,6 @@ if (!input[0]) {
             `${songInfo.name} - ${songInfo.artists[0]}.mp3`,
           ),
         );
-        spinner.start('Downloading...');
         spinner.info(`DIR: ${listData.name}`);
         await download(ytLink, output, spinner, async () => {
           await cache.write(path.join(dir, '.spdlcache'), trackId);
@@ -192,7 +191,6 @@ if (!input[0]) {
           break;
         }
         case 'youtube': {
-          spinner.start('Downloading...');
           const cleanedURL = filter.validateOutputSync(URL);
           let dir = path.join(
             outputDir,
@@ -209,6 +207,8 @@ if (!input[0]) {
             await download(URL, output, spinner, async () => {
               await cache.write(path.join(dir, '.spdlcache'), URL);
             });
+          } else {
+            spinner.succeed(`All songs already downloaded for ${URL}!\n`);
           }
           break;
         }
