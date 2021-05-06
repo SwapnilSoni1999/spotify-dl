@@ -198,14 +198,18 @@ if (!input[0]) {
             outputDir,
             cleanedURL,
           );
-          // this is just a dirty folder creation
-          await cache.read(dir, spinner);
-          dir = path.join(
-            dir,
-            `${cleanedURL}.mp3`,
-          );
+          const cacheFile = await cache.read(dir, spinner);
+          //assume if cache file then it was downloaded
+          if (!cacheFile) {
+            const output = path.join(
+              dir,
+              `${cleanedURL}.mp3`,
+            );
 
-          await download(URL, dir, spinner);
+            await download(URL, output, spinner, async () => {
+              await cache.write(path.join(dir, '.spdlcache'), URL);
+            });
+          }
           break;
         }
         default: {
