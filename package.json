@@ -31,7 +31,7 @@
     "request": "^2.88.2",
     "spotify-web-api-node": "^5.0.0",
     "yt-search": "^2.7.5",
-    "ytdl-core": "^4.5.0"
+    "ytdl-core": "^4.7.0"
   },
   "xo": {
     "space": true,
