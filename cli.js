@@ -177,6 +177,23 @@ if (!input[0]) {
           }
           break;
         }
+        case 'youtube': {
+          spinner.start('Downloading...');
+          const cleanedURL = filter.validateOutputSync(URL);
+          let dir = path.join(
+            outputDir,
+            cleanedURL,
+          );
+          // this is just a dirty folder creation
+          await cache.read(dir, spinner);
+          dir = path.join(
+            dir,
+            `${cleanedURL}.mp3`,
+          );
+
+          await download(URL, dir, spinner);
+          break;
+        }
         default: {
           throw new Error('Invalid URL type');
         }
