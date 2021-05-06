@@ -16,19 +16,21 @@ function buildUrl(topResult) {
  * @param {String} songName name of song
  * @returns {Promise<String>} youtube link of music video
  */
+// this roughly equates to a max of 120mb
+const MAX_MINUTES = 60;
 const getLink = async songName => {
-  // todo add ability to limit size of selection default to 50 mb?
-  try {
+  const tryLink = async () => {
     const result = await search(songName);
-    const [topResult] = result.videos;
+    const topResult = result.videos
+      .find(video => video.seconds < (MAX_MINUTES * 60));
     const youtubeLink = buildUrl(topResult);
     return youtubeLink;
+  };
+  try {
+    return await tryLink(songName);
   } catch (_) {
     try {
-      const result = await search(songName.replace('-', ' '));
-      const [topResult] = result.videos;
-      const youtubeLink = buildUrl(topResult);
-      return youtubeLink;
+      return await tryLink(songName.replace('-', ' '));
     } catch (error) {
       return error;
     }

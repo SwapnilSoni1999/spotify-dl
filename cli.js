@@ -77,7 +77,7 @@ if (!input[0]) {
 }
 
 (async () => {
-  const spinner = ora('Searching…');
+  const spinner = ora('Searching…').start();
   let outputDir;
   const spotifyExtractor = new SpotifyExtractor();
 
@@ -85,7 +85,6 @@ if (!input[0]) {
   if (update) {
     console.log(update);
   }
-  spinner.start();
   try {
     const downloadLoop = async (listData, dir) => {
       const tracks = listData.tracks;
