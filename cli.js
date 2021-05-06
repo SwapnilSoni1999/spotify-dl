@@ -87,16 +87,19 @@ if (!input[0]) {
   }
   spinner.start();
   try {
-    const downloadLoop = async (listData, dir, counter = 0) => {
-      const trackIds = listData.tracks;
-      if (counter == trackIds.length) {
+    const downloadLoop = async (listData, dir) => {
+      const tracks = listData.tracks;
+      const remainingTracks = tracks.filter(track => !track.cached);
+      const currentCount = tracks.length - remainingTracks.length;
+      if (!remainingTracks.length) {
         spinner.succeed(`All songs already downloaded for ${dir}!\n`);
       } else {
+        const trackId = remainingTracks[0].id;
         const songInfo = await spotifyExtractor.extractTrack(
-          trackIds[counter],
+          trackId,
         );
         spinner.info(
-          `${counter + 1}. Song: ${songInfo.name}` +
+          `${currentCount + 1}. Song: ${songInfo.name}` +
           ` - ${songInfo.artists[0]}`,
         );
         const ytLink = await getLink(
@@ -112,9 +115,15 @@ if (!input[0]) {
         spinner.start('Downloading...');
         spinner.info(`DIR: ${listData.name}`);
         await download(ytLink, output, spinner, async () => {
-          await cache.write(path.join(dir, '.spdlcache'), ++counter);
+          await cache.write(path.join(dir, '.spdlcache'), trackId);
           await mergeMetadata(output, songInfo, spinner, async () => {
-            await downloadLoop(listData, dir, counter);
+            listData.tracks = listData.tracks.map(track => {
+              if (track.id == trackId) {
+                track.cached = true;
+              }
+              return track;
+            });
+            await downloadLoop(listData, dir);
           });
         });
       }
@@ -128,11 +137,16 @@ if (!input[0]) {
       );
 
       spinner.info(`Total Songs: ${listData.total_tracks}`);
-      spinner.info(`Saving: ${path.join(outputDir, listData.name)}`);
+      spinner.info(`Saving: ${dir}`);
 
-      cacheCounter = await cache.read(dir, spinner);
+      const cacheFile = await cache.read(dir, spinner);
+      const cachedIds = (cacheFile && cacheFile.split('\n')) || [];
 
-      await downloadLoop(listData, dir, cacheCounter);
+      listData.tracks = listData.tracks.map(track => ({
+        id: track,
+        cached: cachedIds.find(id => id == track) && true,
+      }));
+      await downloadLoop(listData, dir);
     };
 
     for (const link of input) {
@@ -173,6 +187,7 @@ if (!input[0]) {
           const albums = artistAlbumInfos.albums;
           outputDir = path.join(outputDir, artist.name);
           for (let x = 0; x < albums.length; x++) {
+            spinner.info(`Starting album ${x}/${albums.length}`);
             await downloadSongList(albums[x]);
           }
           break;
