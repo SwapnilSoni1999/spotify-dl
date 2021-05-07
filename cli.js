@@ -148,8 +148,10 @@ if (!input[0]) {
     };
 
     for (const link of input) {
-      const urlType = await urlParser(await filter.removeQuery(link));
-      const URL = link;
+      const cleanedURL = await filter.removeQuery(link);
+      const urlType = await urlParser(cleanedURL);
+      // only use cleaned url for spotify to not break youtube support
+      const URL = link.includes('spotify') ? cleanedURL : link;
       outputDir = path.normalize(
         (cli.flags.output != null) ? cli.flags.output : process.cwd(),
       );
