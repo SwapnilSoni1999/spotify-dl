@@ -37,17 +37,8 @@ class SpotifyExtractor {
   async getID(url) {
     var token = await spotify.setup();
     spotify.setToken(token);
-    var id;
-    for (let i = 0; i < url.length; i++) {
-      if (i > 10 && url[i] == '/') {
-        for (let j = i; j < url.length; j++) {
-          if (url[j] == '/') {
-            id = url.slice(++j);
-          }
-        }
-      }
-    }
-    return id;
+    const splits = url.split('/');
+    return splits[splits.length - 1];
   }
 
   async extractTrack(trackId) {
