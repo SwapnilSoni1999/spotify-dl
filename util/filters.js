@@ -1,22 +1,10 @@
 'use strict';
 
 module.exports = {
-    validateOutputSync: function (output) {
-        output = output.replace(/[&\/\\#+$!"~%:*?<>{}\|]/g, '');
-        return output;
-    },
-    validateOutput: async function (output) {
-        output = output.replace(/[&\/\\#+$!"~%:*?<>{}\|]/g, '');      
-        return output;
-    },
-    removeQuery: async function (url) {
-        for(let i=0; i<url.length; i++) {
-            if(i > 15) {
-                if(url[i] == '?') {
-                    url = url.slice(0, i);
-                }
-            }
-        }
-        return url;
-    }
-}
+  validateOutputSync: function (output) {
+    return output.replace(/[&\/\\#+$!"~%:*?<>{}\|]/g, '');
+  },
+  removeQuery: async function (url) {
+    return url.split('?')[0];
+  },
+};
