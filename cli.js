@@ -187,7 +187,7 @@ if (!input[0]) {
           const albums = artistAlbumInfos.albums;
           outputDir = path.join(outputDir, artist.name);
           for (let x = 0; x < albums.length; x++) {
-            spinner.info(`Starting album ${x}/${albums.length}`);
+            spinner.info(`Starting album ${x + 1}/${albums.length}`);
             await downloadSongList(albums[x]);
           }
           break;
