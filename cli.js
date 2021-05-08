@@ -76,155 +76,157 @@ if (!input[0]) {
   process.exit(1);
 }
 
-(async () => {
-  const spinner = ora('Searching…').start();
-  let outputDir;
-  const spotifyExtractor = new SpotifyExtractor();
+let outputDir;
+let nextTokenRefreshTime;
+const spotifyExtractor = new SpotifyExtractor();
+const spinner = ora('Searching…').start();
 
-  const update = await versionChecker();
-  if (update) {
-    console.log(update);
-  }
-  try {
-    const downloadLoop = async (listData, dir) => {
-      const tracks = listData.tracks;
-      const remainingTracks = tracks.filter(track => !track.cached);
-      const tracksCount = tracks.length;
-      const remainingTracksCount = remainingTracks.length;
-      const currentCount = tracksCount - remainingTracksCount + 1;
-      if (!remainingTracksCount) {
-        spinner.succeed(`All songs already downloaded for ${dir}!\n`);
-      } else {
-        const trackId = remainingTracks[0].id;
-        const songInfo = await spotifyExtractor.extractTrack(
-          trackId,
-        );
-        spinner.info(`Folder: ${listData.name}`);
-        spinner.info(
-          `${currentCount}/${tracksCount} Song: ${songInfo.name}` +
-          ` - ${songInfo.artists[0]}`,
-        );
-        const ytLink = await getLink(
-          `${songInfo.name} ${songInfo.artists[0]}` +
-          (cli.flags.extraSearch ? ` ${cli.flags.extraSearch}` : ''),
-        );
-        const output = path.resolve(
-          dir,
-          filter.validateOutputSync(
-            `${songInfo.name} - ${songInfo.artists[0]}.mp3`,
-          ),
-        );
-        await downloader(ytLink, output, spinner);
-        await cache.write(path.join(dir, '.spdlcache'), trackId);
-        await mergeMetadata(output, songInfo, spinner);
-        listData.tracks = listData.tracks.map(track => {
-          if (track.id == trackId) {
-            track.cached = true;
-          }
-          return track;
-        });
-        await downloadLoop(listData, dir);
+const downloadLoop = async (listData, dir) => {
+  const tracks = listData.tracks;
+  const remainingTracks = tracks.filter(track => !track.cached);
+  const tracksCount = tracks.length;
+  const remainingTracksCount = remainingTracks.length;
+  const currentCount = tracksCount - remainingTracksCount + 1;
+  if (!remainingTracksCount) {
+    spinner.succeed(`All songs already downloaded for ${dir}!\n`);
+  } else {
+    // check if we need to reverify before each song
+    const trackId = remainingTracks[0].id;
+    const songInfo = await spotifyExtractor.extractTrack(
+      trackId,
+    );
+    spinner.info(`Folder: ${listData.name}`);
+    spinner.info(
+      `${currentCount}/${tracksCount} Song: ${songInfo.name}` +
+      ` - ${songInfo.artists[0]}`,
+    );
+    const ytLink = await getLink(
+      `${songInfo.name} ${songInfo.artists[0]}` +
+      (cli.flags.extraSearch ? ` ${cli.flags.extraSearch}` : ''),
+    );
+    const output = path.resolve(
+      dir,
+      filter.validateOutputSync(
+        `${songInfo.name} - ${songInfo.artists[0]}.mp3`,
+      ),
+    );
+    await downloader(ytLink, output, spinner);
+    await cache.write(path.join(dir, '.spdlcache'), trackId);
+    await mergeMetadata(output, songInfo, spinner);
+    listData.tracks = listData.tracks.map(track => {
+      if (track.id == trackId) {
+        track.cached = true;
       }
-    };
+      return track;
+    });
+    await downloadLoop(listData, dir);
+  }
+};
 
-    const downloadSongList = async listData => {
-      listData.name = listData.name.replace('/', '-');
-      var dir = path.join(
-        outputDir,
-        filter.validateOutputSync(listData.name),
-      );
+const downloadSongList = async listData => {
+  listData.name = listData.name.replace('/', '-');
+  var dir = path.join(
+    outputDir,
+    filter.validateOutputSync(listData.name),
+  );
 
-      spinner.info(`Total Songs: ${listData.total_tracks}`);
-      spinner.info(`Saving: ${dir}`);
+  spinner.info(`Total Songs: ${listData.total_tracks}`);
+  spinner.info(`Saving: ${dir}`);
 
-      const cacheFile = await cache.read(dir, spinner);
-      const cachedIds = (cacheFile && cacheFile.split('\n')) || [];
+  const cacheFile = await cache.read(dir, spinner);
+  const cachedIds = (cacheFile && cacheFile.split('\n')) || [];
 
-      listData.tracks = listData.tracks.map(track => ({
-        id: track,
-        cached: cachedIds.find(id => id == track) && true,
-      }));
-      await downloadLoop(listData, dir);
-    };
+  listData.tracks = listData.tracks.map(track => ({
+    id: track,
+    cached: cachedIds.find(id => id == track) && true,
+  }));
+  await downloadLoop(listData, dir);
+};
 
-    for (const link of input) {
-      const cleanedURL = await filter.removeQuery(link);
-      const urlType = await urlParser(cleanedURL);
-      // only use cleaned url for spotify to not break youtube support
-      const URL = link.includes('spotify') ? cleanedURL : link;
-      outputDir = path.normalize(
-        (cli.flags.output != null) ? cli.flags.output : process.cwd(),
-      );
-      switch (urlType) {
-        case 'song': {
-          const songData = await spotifyExtractor.getTrack(URL);
-          const listData = {
-            total_tracks: 1,
-            tracks: [
-              songData.id,
-            ],
-            name: songData.name + ' ' + songData.artists[0],
-          };
-          await downloadSongList(listData);
-          break;
+const run = async () => {
+  for (const link of input) {
+    const cleanedURL = await filter.removeQuery(link);
+    const urlType = await urlParser(cleanedURL);
+    // only use cleaned url for spotify to not break youtube support
+    const URL = link.includes('spotify') ? cleanedURL : link;
+    outputDir = path.normalize(
+      (cli.flags.output != null) ? cli.flags.output : process.cwd(),
+    );
+    switch (urlType) {
+      case 'song': {
+        const songData = await spotifyExtractor.getTrack(URL);
+        const listData = {
+          total_tracks: 1,
+          tracks: [
+            songData.id,
+          ],
+          name: songData.name + ' ' + songData.artists[0],
+        };
+        await downloadSongList(listData);
+        break;
+      }
+      case 'playlist': {
+        await downloadSongList(
+          await spotifyExtractor.getPlaylist(URL),
+        );
+        break;
+      }
+      case 'album': {
+        await downloadSongList(
+          await spotifyExtractor.getAlbum(URL),
+        );
+        break;
+      }
+      case 'artist': {
+        const artistAlbumInfos = await spotifyExtractor
+          .getArtistAlbums(URL);
+        const artist = artistAlbumInfos.artist;
+        const albums = artistAlbumInfos.albums;
+        outputDir = path.join(outputDir, artist.name);
+        for (let x = 0; x < albums.length; x++) {
+          spinner.info(`Starting album ${x + 1}/${albums.length}`);
+          await downloadSongList(albums[x]);
         }
-        case 'playlist': {
-          await downloadSongList(
-            await spotifyExtractor.getPlaylist(URL),
+        break;
+      }
+      case 'youtube': {
+        const cleanedURL = filter.validateOutputSync(URL);
+        let dir = path.join(
+          outputDir,
+          cleanedURL,
+        );
+        const cacheFile = await cache.read(dir, spinner);
+        //assume if cache file then it was downloaded
+        if (!cacheFile) {
+          const output = path.join(
+            dir,
+            `${cleanedURL}.mp3`,
           );
-          break;
-        }
-        case 'album': {
-          await downloadSongList(
-            await spotifyExtractor.getAlbum(URL),
-          );
-          break;
-        }
-        case 'artist': {
-          const artistAlbumInfos = await spotifyExtractor
-            .getArtistAlbums(URL);
-          const artist = artistAlbumInfos.artist;
-          const albums = artistAlbumInfos.albums;
-          outputDir = path.join(outputDir, artist.name);
-          for (let x = 0; x < albums.length; x++) {
-            spinner.info(`Starting album ${x + 1}/${albums.length}`);
-            await downloadSongList(albums[x]);
-          }
-          break;
-        }
-        case 'youtube': {
-          const cleanedURL = filter.validateOutputSync(URL);
-          let dir = path.join(
-            outputDir,
-            cleanedURL,
-          );
-          const cacheFile = await cache.read(dir, spinner);
-          //assume if cache file then it was downloaded
-          if (!cacheFile) {
-            const output = path.join(
-              dir,
-              `${cleanedURL}.mp3`,
-            );
 
-            await downloader(URL, output, spinner);
-            await cache.write(path.join(dir, '.spdlcache'), URL);
-          } else {
-            spinner.succeed(`All songs already downloaded for ${URL}!\n`);
-          }
-          break;
+          await downloader(URL, output, spinner);
+          await cache.write(path.join(dir, '.spdlcache'), URL);
+        } else {
+          spinner.succeed(`All songs already downloaded for ${URL}!\n`);
         }
-        default: {
-          throw new Error('Invalid URL type');
-        }
+        break;
+      }
+      default: {
+        throw new Error('Invalid URL type');
       }
     }
-  } catch (error) {
-    spinner.fail('Something went wrong!');
-    console.log(error);
-    process.exit(1);
   }
-})();
+};
 
 process.on('SIGINT', () => {
   process.exit(1);
 });
+
+versionChecker();
+
+try {
+  run();
+} catch (error) {
+  spinner.fail('Something went wrong!');
+  console.log(error);
+  process.exit(1);
+}
