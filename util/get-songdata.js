@@ -2,6 +2,10 @@
 const spotify = require('../lib/api');
 
 class SpotifyExtractor {
+  async checkCredentials() {
+    return await spotify.checkCredentials();
+  }
+
   async getTrack(url) {
     return await this.extractTrack(await this.getID(url));
   }

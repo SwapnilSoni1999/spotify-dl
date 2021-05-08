@@ -27,6 +27,8 @@ const cache = require('./lib/cache');
 const mergeMetadata = require('./lib/metadata');
 const setup = require('./lib/setup');
 const versionChecker = require('./util/versionChecker');
+// set to 55 minutes expires every 60 minutes
+const REFRESH_ACCESS_TOKEN_SECONDS = 55 * 60;
 
 // setup ffmpeg
 setup.ffmpeg(process.platform);
@@ -81,6 +83,16 @@ let nextTokenRefreshTime;
 const spotifyExtractor = new SpotifyExtractor();
 const spinner = ora('Searching…').start();
 
+const verifyCredentials = async () => {
+  if (!nextTokenRefreshTime || (nextTokenRefreshTime < new Date())) {
+    nextTokenRefreshTime = new Date();
+    nextTokenRefreshTime.setSeconds(
+      nextTokenRefreshTime.getSeconds() + REFRESH_ACCESS_TOKEN_SECONDS,
+    );
+    await spotifyExtractor.checkCredentials(URL);
+  }
+};
+
 const downloadLoop = async (listData, dir) => {
   const tracks = listData.tracks;
   const remainingTracks = tracks.filter(track => !track.cached);
@@ -91,6 +103,7 @@ const downloadLoop = async (listData, dir) => {
     spinner.succeed(`All songs already downloaded for ${dir}!\n`);
   } else {
     // check if we need to reverify before each song
+    await verifyCredentials();
     const trackId = remainingTracks[0].id;
     const songInfo = await spotifyExtractor.extractTrack(
       trackId,
@@ -152,6 +165,7 @@ const run = async () => {
     outputDir = path.normalize(
       (cli.flags.output != null) ? cli.flags.output : process.cwd(),
     );
+    await verifyCredentials();
     switch (urlType) {
       case 'song': {
         const songData = await spotifyExtractor.getTrack(URL);
