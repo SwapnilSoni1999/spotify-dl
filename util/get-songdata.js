@@ -7,15 +7,15 @@ class SpotifyExtractor {
   }
 
   async getTrack(url) {
-    return await this.extractTrack(await this.getID(url));
+    return await this.extractTrack(this.getID(url));
   }
 
   async getAlbum(url) {
-    return await this.extractAlbum(await this.getID(url));
+    return await this.extractAlbum(this.getID(url));
   }
 
   async getArtist(url) {
-    return await this.extractArtist(await this.getID(url));
+    return await this.extractArtist(this.getID(url));
   }
 
   async getArtistAlbums(url) {
@@ -35,12 +35,10 @@ class SpotifyExtractor {
   }
 
   async getPlaylist(url) {
-    return await this.extractPlaylist(await this.getID(url));
+    return await this.extractPlaylist(this.getID(url));
   }
 
-  async getID(url) {
-    var token = await spotify.setup();
-    spotify.setToken(token);
+  getID(url) {
     const splits = url.split('/');
     return splits[splits.length - 1];
   }
