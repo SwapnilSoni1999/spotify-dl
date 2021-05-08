@@ -89,16 +89,19 @@ if (!input[0]) {
     const downloadLoop = async (listData, dir) => {
       const tracks = listData.tracks;
       const remainingTracks = tracks.filter(track => !track.cached);
-      const currentCount = tracks.length - remainingTracks.length;
-      if (!remainingTracks.length) {
+      const tracksCount = tracks.length;
+      const remainingTracksCount = remainingTracks.length;
+      const currentCount = tracksCount - remainingTracksCount + 1;
+      if (!remainingTracksCount) {
         spinner.succeed(`All songs already downloaded for ${dir}!\n`);
       } else {
         const trackId = remainingTracks[0].id;
         const songInfo = await spotifyExtractor.extractTrack(
           trackId,
         );
+        spinner.info(`Folder: ${listData.name}`);
         spinner.info(
-          `${currentCount + 1}. Song: ${songInfo.name}` +
+          `${currentCount}/${tracksCount} Song: ${songInfo.name}` +
           ` - ${songInfo.artists[0]}`,
         );
         const ytLink = await getLink(
@@ -111,7 +114,6 @@ if (!input[0]) {
             `${songInfo.name} - ${songInfo.artists[0]}.mp3`,
           ),
         );
-        spinner.info(`DIR: ${listData.name}`);
         await downloader(ytLink, output, spinner);
         await cache.write(path.join(dir, '.spdlcache'), trackId);
         await mergeMetadata(output, songInfo, spinner);
