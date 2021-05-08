@@ -22,7 +22,7 @@ const SpotifyExtractor = require('./util/get-songdata');
 const urlParser = require('./util/url-parser');
 const filter = require('./util/filters');
 
-const download = require('./lib/downloader');
+const downloader = require('./lib/downloader');
 const cache = require('./lib/cache');
 const mergeMetadata = require('./lib/metadata');
 const setup = require('./lib/setup');
@@ -112,18 +112,16 @@ if (!input[0]) {
           ),
         );
         spinner.info(`DIR: ${listData.name}`);
-        await download(ytLink, output, spinner, async () => {
-          await cache.write(path.join(dir, '.spdlcache'), trackId);
-          await mergeMetadata(output, songInfo, spinner, async () => {
-            listData.tracks = listData.tracks.map(track => {
-              if (track.id == trackId) {
-                track.cached = true;
-              }
-              return track;
-            });
-            await downloadLoop(listData, dir);
-          });
+        await downloader(ytLink, output, spinner);
+        await cache.write(path.join(dir, '.spdlcache'), trackId);
+        await mergeMetadata(output, songInfo, spinner);
+        listData.tracks = listData.tracks.map(track => {
+          if (track.id == trackId) {
+            track.cached = true;
+          }
+          return track;
         });
+        await downloadLoop(listData, dir);
       }
     };
 
@@ -206,9 +204,8 @@ if (!input[0]) {
               `${cleanedURL}.mp3`,
             );
 
-            await download(URL, output, spinner, async () => {
-              await cache.write(path.join(dir, '.spdlcache'), URL);
-            });
+            await downloader(URL, output, spinner);
+            await cache.write(path.join(dir, '.spdlcache'), URL);
           } else {
             spinner.succeed(`All songs already downloaded for ${URL}!\n`);
           }
