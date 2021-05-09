@@ -7,10 +7,10 @@ const checkVersion = async () => {
   const latestVersion = res.data[0].name;
   if (pkg.version !== latestVersion) {
     console.log([
-      '========Update Available========',
+      '\n========Update Available========',
       'Use npm install -g spotify-dl',
       'to update the package.',
-      '================================',
+      '================================\n',
     ].join('\n'));
   }
 };
