@@ -16,67 +16,22 @@
 
 const path = require('path');
 const ora = require('ora');
-const meow = require('meow');
 const getLink = require('./util/get-link');
 const SpotifyExtractor = require('./util/get-songdata');
-const urlParser = require('./util/url-parser');
 const filter = require('./util/filters');
 
 const downloader = require('./lib/downloader');
 const cache = require('./lib/cache');
 const mergeMetadata = require('./lib/metadata');
-const setup = require('./lib/setup');
+const { ffmpegSetup, cliInputs } = require('./lib/setup');
 const versionChecker = require('./util/versionChecker');
 // set to 55 minutes expires every 60 minutes
 const REFRESH_ACCESS_TOKEN_SECONDS = 55 * 60;
 
 // setup ffmpeg
-setup.ffmpeg(process.platform);
+ffmpegSetup(process.platform);
 
-const cli = meow(
-  `
-  Usage
-      $ spotifydl [Options] <link> …
-
-  Examples
-      $ spotifydl https://open.spotify.com/track/5tz69p7tJuGPeMGwNTxYuV
-      $ spotifydl https://open.spotify.com/playlist/4hOKQuZbraPDIfaGbM3lKI
-
-  Options
-    --output "<path>"            -takes valid path argument 
-        or                         eg. $ spotifydl -o ~/songs https://open.spotify.com/playlist/3PrZvfOSNShOC2JxgIhvL1
-    -o "<path>"
-
-    --extra-search "<term>"      -takes string for extra search term which gets contcated to song search on youtube
-          or                       eg. $ spotifydl <url> --extra-search "lyrics"
-    --es "<term>"                -with playlist and albums it will concat with each song.
-`,
-  {
-    flags: {
-      help: {
-        alias: 'h',
-      },
-      version: {
-        alias: 'v',
-      },
-      output: {
-        alias: 'o',
-        type: 'string',
-      },
-      extraSearch: {
-        alias: 'es',
-        type: 'string',
-      },
-    },
-  },
-);
-
-const { input } = cli;
-
-if (!input[0]) {
-  console.log('See spotifydl --help for instructions');
-  process.exit(1);
-}
+const { inputs, extraSearch, output } = cliInputs();
 
 let outputDir;
 let nextTokenRefreshTime;
@@ -114,8 +69,7 @@ const downloadLoop = async (listData, dir) => {
       ` - ${songInfo.artists[0]}`,
     );
     const ytLink = await getLink(
-      `${songInfo.name} ${songInfo.artists[0]}` +
-      (cli.flags.extraSearch ? ` ${cli.flags.extraSearch}` : ''),
+      `${songInfo.name} ${songInfo.artists[0]} ${extraSearch}`,
     );
     const output = path.resolve(
       dir,
@@ -157,16 +111,11 @@ const downloadSongList = async listData => {
 };
 
 const run = async () => {
-  for (const link of input) {
-    const cleanedURL = await filter.removeQuery(link);
-    const urlType = await urlParser(cleanedURL);
-    // only use cleaned url for spotify to not break youtube support
-    const URL = link.includes('spotify') ? cleanedURL : link;
-    outputDir = path.normalize(
-      (cli.flags.output != null) ? cli.flags.output : process.cwd(),
-    );
+  for (const input of inputs) {
+    const URL = input.url;
+    outputDir = path.normalize(output);
     await verifyCredentials();
-    switch (urlType) {
+    switch (input.type) {
       case 'song': {
         const songData = await spotifyExtractor.getTrack(URL);
         const listData = {
@@ -223,6 +172,15 @@ const run = async () => {
           spinner.succeed(`All songs already downloaded for ${URL}!\n`);
         }
         break;
+      }
+      case 'savedAlbums': {
+        throw new Error('Not supported yet');
+      }
+      case 'savedPlaylists': {
+        throw new Error('Not supported yet');
+      }
+      case 'savedTracks': {
+        throw new Error('Not supported yet');
       }
       default: {
         throw new Error('Invalid URL type');

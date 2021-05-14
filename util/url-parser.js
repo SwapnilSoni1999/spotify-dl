@@ -1,5 +1,5 @@
 'use strict';
-const parser = async inputUrl => {
+const parser = inputUrl => {
   if (inputUrl.includes('youtube')) {
     return 'youtube';
   }
