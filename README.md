@@ -67,9 +67,9 @@ $ spotifydl https://open.spotify.com/track/xyz
 ```
 
 #### Options
-| Flag | Usage | 
-| ------ | ------ | 
-| -o | takes valid output path argument |
+| Flag | Usage                                                        |
+| ---- | ------------------------------------------------------------ |
+| -o   | takes valid output path argument                             |
 | --es | takes extra search string/term to be used for youtube search |
 
 <hr>

@@ -5,33 +5,32 @@ const youtubeSearch = require('yt-search');
 const search = promisify(youtubeSearch);
 
 function buildUrl(topResult) {
-  return (topResult.url.includes('https://youtube.com')) ? topResult.url : 'https://youtube.com' + topResult.url;
+  return (topResult.url.includes('https://youtube.com')) ?
+    topResult.url : 'https://youtube.com' + topResult.url;
 }
 
 /**
- * This function searches youtube for given songname and returns the link of topmost result
+ * This function searches youtube for given songname 
+ * and returns the link of topmost result
  *
  * @param {String} songName name of song
  * @returns {Promise<String>} youtube link of music video
  */
-const getLink = async (songName) => {
-  try {
+// this roughly equates to a max of 120mb
+const MAX_MINUTES = 60;
+const getLink = async songName => {
+  const tryLink = async () => {
     const result = await search(songName);
-    
-    const [topResult] = result.videos;
-
-    const youtubeLink = buildUrl(topResult)
-
+    const topResult = result.videos
+      .find(video => video.seconds < (MAX_MINUTES * 60));
+    const youtubeLink = buildUrl(topResult);
     return youtubeLink;
+  };
+  try {
+    return await tryLink(songName);
   } catch (_) {
     try {
-      const result = await search(songName.replace('-', ' '))
-
-      const [topResult] = result.videos
-
-      const youtubeLink = buildUrl(topResult)
-
-      return youtubeLink
+      return await tryLink(songName.replace('-', ' '));
     } catch (error) {
       return error;
     }

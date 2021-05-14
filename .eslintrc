@@ -1,0 +1,16 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "rules": {
+        "no-console": 0,
+        "semi": 1,
+        "comma-dangle": [1, "always-multiline"],
+        "quotes": ["error", "single"],
+        "arrow-parens": ["error", "as-needed"],
+        "no-tabs": 1,
+        "array-bracket-spacing": 1,
+        "max-len": [1, 80]
+    }
+}
