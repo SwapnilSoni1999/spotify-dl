@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*
-  Copyright (c) 2019 Swapnil Soni
+  Copyright (c) 2021 Swapnil Soni
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -78,7 +78,7 @@ const downloadLoop = async (listData, dir) => {
       ),
     );
     await downloader(ytLink, output, spinner);
-    await cache.write(path.join(dir, '.spdlcache'), trackId);
+    await cache.write(dir, trackId);
     await mergeMetadata(output, songInfo, spinner);
     listData.tracks = listData.tracks.map(track => {
       if (track.id == trackId) {
@@ -101,7 +101,8 @@ const downloadSongList = async listData => {
   spinner.info(`Saving: ${dir}`);
 
   const cacheFile = await cache.read(dir, spinner);
-  const cachedIds = (cacheFile && cacheFile.split('\n')) || [];
+  const cachedIds = (cacheFile && cacheFile.split('\n')
+    .map(line => line.replace('spotify ', ''))) || [];
 
   listData.tracks = listData.tracks.map(track => ({
     id: track,
@@ -167,7 +168,7 @@ const run = async () => {
           );
 
           await downloader(URL, output, spinner);
-          await cache.write(path.join(dir, '.spdlcache'), URL);
+          await cache.write(dir, URL);
         } else {
           spinner.succeed(`All songs already downloaded for ${URL}!\n`);
         }
