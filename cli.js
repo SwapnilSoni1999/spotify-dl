@@ -72,7 +72,7 @@ const downloadLoop = async (listData, dir) => {
       `${songInfo.name} ${songInfo.artists[0]} ${extraSearch}`,
     );
     const output = path.resolve(
-      dir,
+      filter.validateDirSync(dir),
       filter.validateOutputSync(
         `${songInfo.name} - ${songInfo.artists[0]}.mp3`,
       ),
