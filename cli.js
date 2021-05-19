@@ -39,7 +39,7 @@ const { inputs, extraSearch, output } = cliInputs();
 let outputDir;
 let nextTokenRefreshTime;
 const spotifyExtractor = new SpotifyExtractor();
-const spinner = ora('Searching…').start();
+const spinner = ora('Searching…\n').start();
 
 const verifyCredentials = async () => {
   if (!nextTokenRefreshTime || (nextTokenRefreshTime < new Date())) {
@@ -47,7 +47,7 @@ const verifyCredentials = async () => {
     nextTokenRefreshTime.setSeconds(
       nextTokenRefreshTime.getSeconds() + REFRESH_ACCESS_TOKEN_SECONDS,
     );
-    await spotifyExtractor.checkCredentials(URL);
+    await spotifyExtractor.checkCredentials();
   }
 };
 
