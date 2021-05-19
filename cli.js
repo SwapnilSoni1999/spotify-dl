@@ -19,6 +19,9 @@ const ora = require('ora');
 const getLink = require('./util/get-link');
 const SpotifyExtractor = require('./util/get-songdata');
 const filter = require('./util/filters');
+const {
+  INPUT_TYPES,
+} = require('./util/constants');
 
 const downloader = require('./lib/downloader');
 const cache = require('./lib/cache');
@@ -117,7 +120,7 @@ const run = async () => {
     outputDir = path.normalize(output);
     await verifyCredentials();
     switch (input.type) {
-      case 'song': {
+      case INPUT_TYPES.SONG: {
         const songData = await spotifyExtractor.getTrack(URL);
         const listData = {
           total_tracks: 1,
@@ -129,19 +132,19 @@ const run = async () => {
         await downloadSongList(listData);
         break;
       }
-      case 'playlist': {
+      case INPUT_TYPES.PLAYLIST: {
         await downloadSongList(
           await spotifyExtractor.getPlaylist(URL),
         );
         break;
       }
-      case 'album': {
+      case INPUT_TYPES.ALBUM: {
         await downloadSongList(
           await spotifyExtractor.getAlbum(URL),
         );
         break;
       }
-      case 'artist': {
+      case INPUT_TYPES.ARTIST: {
         const artistAlbumInfos = await spotifyExtractor
           .getArtistAlbums(URL);
         const artist = artistAlbumInfos.artist;
@@ -153,7 +156,27 @@ const run = async () => {
         }
         break;
       }
-      case 'youtube': {
+      case INPUT_TYPES.SAVED_ALBUMS: {
+        const savedAlbumsInfo = await spotifyExtractor
+          .getSavedAlbums(URL);
+        // const artist = artistAlbumInfos.artist;
+        // const albums = artistAlbumInfos.albums;
+        // outputDir = path.join(outputDir, artist.name);
+        // for (let x = 0; x < albums.length; x++) {
+        //   spinner.info(`Starting album ${x + 1}/${albums.length}`);
+        //   await downloadSongList(albums[x]);
+        // }
+        break;
+      }
+      case INPUT_TYPES.SAVED_PLAYLISTS: {
+        const savedPlaylistsInfo = await spotifyExtractor
+          .getSavedPlaylists(URL);
+      }
+      case INPUT_TYPES.SAVED_TRACKS: {
+        const savedTracksInfo = await spotifyExtractor
+          .getSavedTracks(URL);
+      }
+      case INPUT_TYPES.YOUTUBE: {
         const cleanedURL = filter.validateOutputSync(URL);
         let dir = path.join(
           outputDir,
@@ -173,15 +196,6 @@ const run = async () => {
           spinner.succeed(`All songs already downloaded for ${URL}!\n`);
         }
         break;
-      }
-      case 'savedAlbums': {
-        throw new Error('Not supported yet');
-      }
-      case 'savedPlaylists': {
-        throw new Error('Not supported yet');
-      }
-      case 'savedTracks': {
-        throw new Error('Not supported yet');
       }
       default: {
         throw new Error('Invalid URL type');
