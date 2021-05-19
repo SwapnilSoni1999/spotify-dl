@@ -7,6 +7,6 @@
 * otep 
 * nij4t 
 * josefwells 
-* benthieu a
-* laendle
+* benthieu
+* alaendle
 * phyzical
