@@ -24,9 +24,11 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
+    "express": "^4.17.1",
     "ffmetadata": "^1.7.0",
     "fluent-ffmpeg": "^2.1.2",
     "meow": "^9.0.0",
+    "open": "^8.0.9",
     "ora": "^5.4.0",
     "request": "^2.88.2",
     "spotify-web-api-node": "^5.0.0",
@@ -41,6 +43,7 @@
     ]
   },
   "devDependencies": {
+    "eslint": "^7.26.0",
     "prettier": "^2.2.1",
     "xo": "^0.32.1"
   }

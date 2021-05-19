@@ -60,12 +60,7 @@ const downloadLoop = async (listData, dir) => {
   if (!remainingTracksCount) {
     spinner.succeed(`All songs already downloaded for ${dir}!\n`);
   } else {
-    // check if we need to reverify before each song
-    await verifyCredentials();
     const trackId = remainingTracks[0].id;
-    const songInfo = await spotifyExtractor.extractTrack(
-      trackId,
-    );
     spinner.info(`Folder: ${listData.name}`);
     spinner.info(
       `${currentCount}/${tracksCount} Song: ${songInfo.name}` +
@@ -125,9 +120,9 @@ const run = async () => {
         const listData = {
           total_tracks: 1,
           tracks: [
-            songData.id,
+            songData,
           ],
-          name: songData.name + ' ' + songData.artists[0],
+          name: `${songData.name} ${songData.artists[0]}`,
         };
         await downloadSongList(listData);
         break;
@@ -145,38 +140,54 @@ const run = async () => {
         break;
       }
       case INPUT_TYPES.ARTIST: {
-        const artistAlbumInfos = await spotifyExtractor
-          .getArtistAlbums(URL);
-        const artist = artistAlbumInfos.artist;
-        const albums = artistAlbumInfos.albums;
-        outputDir = path.join(outputDir, artist.name);
-        for (let x = 0; x < albums.length; x++) {
-          spinner.info(`Starting album ${x + 1}/${albums.length}`);
-          await downloadSongList(albums[x]);
+        const artistAlbumInfos = await spotifyExtractor.getArtistAlbums(URL);
+        // TODO: add some sort of downloadSongLists?
+        const baseDir = outputDir;
+        for (let x = 0; x < artistAlbumInfos.length; x++) {
+          const album = artistAlbumInfos[x];
+          outputDir = path.join(baseDir, album.artist.name);
+          spinner.info(`Starting album ${x + 1}/${artistAlbumInfos.length}`);
+          await downloadSongList(album);
         }
         break;
       }
       case INPUT_TYPES.SAVED_ALBUMS: {
-        const savedAlbumsInfo = await spotifyExtractor
-          .getSavedAlbums(URL);
-        // const artist = artistAlbumInfos.artist;
-        // const albums = artistAlbumInfos.albums;
-        // outputDir = path.join(outputDir, artist.name);
-        // for (let x = 0; x < albums.length; x++) {
-        //   spinner.info(`Starting album ${x + 1}/${albums.length}`);
-        //   await downloadSongList(albums[x]);
-        // }
+        const savedAlbumsInfo = await spotifyExtractor.getSavedAlbums();
+        const baseDir = outputDir;
+        for (let x = 0; x < savedAlbumsInfo.length; x++) {
+          const album = savedAlbumsInfo[x];
+          outputDir = path.join(baseDir, album.artist.name);
+          spinner.info(`Starting album ${x + 1}/${savedAlbumsInfo.length}`);
+          await downloadSongList(album);
+        }
         break;
       }
       case INPUT_TYPES.SAVED_PLAYLISTS: {
-        const savedPlaylistsInfo = await spotifyExtractor
-          .getSavedPlaylists(URL);
+        const savedPlaylistsInfo = await spotifyExtractor.getSavedPlaylists();
+        const baseDir = outputDir;
+        for (let x = 0; x < savedPlaylistsInfo.length; x++) {
+          const playlist = savedPlaylistsInfo[x];
+          outputDir = path.join(baseDir, playlist.name);
+          spinner.info(
+            `Starting playlist ${x + 1}/${savedPlaylistsInfo.length}`,
+          );
+          await downloadSongList(playlist);
+        }
+        break;
       }
       case INPUT_TYPES.SAVED_TRACKS: {
-        const savedTracksInfo = await spotifyExtractor
-          .getSavedTracks(URL);
+        const savedTracksInfo = await spotifyExtractor.getSavedTracks();
+        const baseDir = outputDir;
+        for (let x = 0; x < savedTracksInfo.length; x++) {
+          const track = savedTracksInfo[x];
+          outputDir = path.join(baseDir, track.artist.name);
+          spinner.info(`Starting playlist ${x + 1}/${savedTracksInfo.length}`);
+          await downloadSongList(playlist);
+        }
+        break;
       }
       case INPUT_TYPES.YOUTUBE: {
+        // TODO: im pretty sure this can now go to the generic download song list
         const cleanedURL = filter.validateOutputSync(URL);
         let dir = path.join(
           outputDir,
