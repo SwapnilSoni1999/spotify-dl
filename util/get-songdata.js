@@ -43,12 +43,25 @@ class SpotifyExtractor {
     return splits[splits.length - 1];
   }
 
+  async getSavedAlbums() {
+    console.log(await this.extractSavedAlbums());
+  }
+
+  async getSavedPlaylists() {
+    console.log(await this.extractSavedPlaylists());
+  }
+
+  async getSavedTracks() {
+    console.log(await this.extractSavedTracks());
+  }
+
   async extractTrack(trackId) {
     const trackData = await spotify.extractTrack(trackId);
     trackData.id = trackId;
     return trackData;
   }
 
+  //todo ditch these
   async extractPlaylist(playlistId) {
     return await spotify.extractPlaylist(playlistId);
   }
@@ -63,6 +76,18 @@ class SpotifyExtractor {
 
   async extractArtistAlbums(artistId) {
     return await spotify.extractArtistAlbums(artistId);
+  }
+
+  async extractSavedAlbums() {
+    return await spotify.extractSavedAlbums();
+  }
+
+  async extractSavedPlaylists() {
+    return await spotify.extractSavedPlaylists();
+  }
+
+  async extractSavedTracks() {
+    return await spotify.extractSavedTracks();
   }
 }
 
