@@ -16,7 +16,7 @@
 
 const path = require('path');
 const ora = require('ora');
-const getLink = require('./util/get-link');
+const getLinks = require('./util/get-link');
 const SpotifyExtractor = require('./util/get-songdata');
 const filter = require('./util/filters');
 const {
@@ -39,7 +39,7 @@ const { inputs, extraSearch, output } = cliInputs();
 let outputDir;
 let nextTokenRefreshTime;
 const spotifyExtractor = new SpotifyExtractor();
-const spinner = ora('Searching…\n').start();
+const spinner = ora('Searching… Please be patient :)\n').start();
 
 const verifyCredentials = async () => {
   if (!nextTokenRefreshTime || (nextTokenRefreshTime < new Date())) {
@@ -51,62 +51,66 @@ const verifyCredentials = async () => {
   }
 };
 
-const downloadLoop = async (listData, dir) => {
-  const tracks = listData.tracks;
+const trackOutputDir = track => {
+  return path.join(
+    outputDir,
+    filter.cleanOutputPath(track.artist_name),
+    filter.cleanOutputPath(track.album_name),
+  );
+};
+
+const downloadLoop = async list => {
+  const tracks = list.tracks;
   const remainingTracks = tracks.filter(track => !track.cached);
   const tracksCount = tracks.length;
   const remainingTracksCount = remainingTracks.length;
   const currentCount = tracksCount - remainingTracksCount + 1;
   if (!remainingTracksCount) {
-    spinner.succeed(`All songs already downloaded for ${dir}!\n`);
+    spinner.succeed(`All songs already downloaded for ${list.name}!\n`);
   } else {
-    const trackId = remainingTracks[0].id;
-    spinner.info(`Folder: ${listData.name}`);
+    const nextTrack = remainingTracks[0];
+    const trackDir = trackOutputDir(nextTrack);
+    const trackId = nextTrack.id;
+    const trackName = nextTrack.name;
+    const artistName = nextTrack.artist_name;
     spinner.info(
-      `${currentCount}/${tracksCount} Song: ${songInfo.name}` +
-      ` - ${songInfo.artists[0]}`,
+      [
+        `${currentCount}/${tracksCount}`,
+        `Artist: ${artistName}`,
+        `Album: ${nextTrack.album_name}`,
+        `Song: ${trackName}`,
+      ].join('\n'),
     );
-    const ytLink = await getLink(
-      `${songInfo.name} ${songInfo.artists[0]} ${extraSearch}`,
+    // use provided URL or find list of urls given info provided
+    const ytLinks = nextTrack.URL ? [nextTrack.URL] : await getLinks(
+      `${trackName} ${artistName} ${extraSearch}`,
     );
     const output = path.resolve(
-      dir,
-      filter.validateOutputSync(
-        `${songInfo.name} - ${songInfo.artists[0]}.mp3`,
-      ),
+      trackDir,
+      `${filter.cleanOutputPath(trackName)}.mp3`,
     );
-    await downloader(ytLink, output, spinner);
-    await cache.write(dir, trackId);
-    await mergeMetadata(output, songInfo, spinner);
-    listData.tracks = listData.tracks.map(track => {
+    await downloader(ytLinks, output, spinner);
+    cache.writeId(trackDir, trackId);
+    await mergeMetadata(output, nextTrack, spinner);
+    list.tracks = list.tracks.map(track => {
       if (track.id == trackId) {
         track.cached = true;
       }
       return track;
     });
-    await downloadLoop(listData, dir);
+    await downloadLoop(list);
   }
 };
 
-const downloadSongList = async listData => {
-  listData.name = listData.name.replace('/', '-');
-  var dir = path.join(
-    outputDir,
-    filter.validateOutputSync(listData.name),
-  );
-
-  spinner.info(`Total Songs: ${listData.total_tracks}`);
-  spinner.info(`Saving: ${dir}`);
-
-  const cacheFile = await cache.read(dir, spinner);
-  const cachedIds = (cacheFile && cacheFile.split('\n')
-    .map(line => line.replace('spotify ', ''))) || [];
-
-  listData.tracks = listData.tracks.map(track => ({
-    id: track,
-    cached: cachedIds.find(id => id == track) && true,
-  }));
-  await downloadLoop(listData, dir);
+const downloadList = async list => {
+  list.name = list.name.replace('/', '-');
+  spinner.info(`Downloading: ${list.name}`);
+  spinner.info(`Total Songs: ${list.tracks.length}`);
+  list.tracks = list.tracks.map(track => {
+    track.cached = cache.findId(track.id, trackOutputDir(track));
+    return track;
+  });
+  await downloadLoop(list);
 };
 
 const run = async () => {
@@ -116,96 +120,73 @@ const run = async () => {
     await verifyCredentials();
     switch (input.type) {
       case INPUT_TYPES.SONG: {
-        const songData = await spotifyExtractor.getTrack(URL);
-        const listData = {
-          total_tracks: 1,
+        const track = await spotifyExtractor.getTrack(URL);
+        await downloadList({
           tracks: [
-            songData,
+            track,
           ],
-          name: `${songData.name} ${songData.artists[0]}`,
-        };
-        await downloadSongList(listData);
+          name: `${track.name} ${track.artist_name}`,
+        });
         break;
       }
       case INPUT_TYPES.PLAYLIST: {
-        await downloadSongList(
+        await downloadList(
           await spotifyExtractor.getPlaylist(URL),
         );
         break;
       }
       case INPUT_TYPES.ALBUM: {
-        await downloadSongList(
+        await downloadList(
           await spotifyExtractor.getAlbum(URL),
         );
         break;
       }
       case INPUT_TYPES.ARTIST: {
         const artistAlbumInfos = await spotifyExtractor.getArtistAlbums(URL);
-        // TODO: add some sort of downloadSongLists?
-        const baseDir = outputDir;
         for (let x = 0; x < artistAlbumInfos.length; x++) {
-          const album = artistAlbumInfos[x];
-          outputDir = path.join(baseDir, album.artist.name);
           spinner.info(`Starting album ${x + 1}/${artistAlbumInfos.length}`);
-          await downloadSongList(album);
+          await downloadList(artistAlbumInfos[x]);
         }
         break;
       }
       case INPUT_TYPES.SAVED_ALBUMS: {
         const savedAlbumsInfo = await spotifyExtractor.getSavedAlbums();
-        const baseDir = outputDir;
         for (let x = 0; x < savedAlbumsInfo.length; x++) {
-          const album = savedAlbumsInfo[x];
-          outputDir = path.join(baseDir, album.artist.name);
           spinner.info(`Starting album ${x + 1}/${savedAlbumsInfo.length}`);
-          await downloadSongList(album);
+          await downloadList(savedAlbumsInfo[x]);
         }
         break;
       }
       case INPUT_TYPES.SAVED_PLAYLISTS: {
         const savedPlaylistsInfo = await spotifyExtractor.getSavedPlaylists();
-        const baseDir = outputDir;
         for (let x = 0; x < savedPlaylistsInfo.length; x++) {
-          const playlist = savedPlaylistsInfo[x];
-          outputDir = path.join(baseDir, playlist.name);
           spinner.info(
             `Starting playlist ${x + 1}/${savedPlaylistsInfo.length}`,
           );
-          await downloadSongList(playlist);
+          await downloadList(savedPlaylistsInfo[x]);
         }
         break;
       }
       case INPUT_TYPES.SAVED_TRACKS: {
-        const savedTracksInfo = await spotifyExtractor.getSavedTracks();
-        const baseDir = outputDir;
-        for (let x = 0; x < savedTracksInfo.length; x++) {
-          const track = savedTracksInfo[x];
-          outputDir = path.join(baseDir, track.artist.name);
-          spinner.info(`Starting playlist ${x + 1}/${savedTracksInfo.length}`);
-          await downloadSongList(playlist);
-        }
+        await downloadList(await spotifyExtractor.getSavedTracks());
         break;
       }
       case INPUT_TYPES.YOUTUBE: {
-        // TODO: im pretty sure this can now go to the generic download song list
-        const cleanedURL = filter.validateOutputSync(URL);
-        let dir = path.join(
-          outputDir,
-          cleanedURL,
-        );
-        const cacheFile = await cache.read(dir, spinner);
-        //assume if cache file then it was downloaded
-        if (!cacheFile) {
-          const output = path.join(
-            dir,
-            `${cleanedURL}.mp3`,
-          );
-
-          await downloader(URL, output, spinner);
-          await cache.write(dir, URL);
-        } else {
-          spinner.succeed(`All songs already downloaded for ${URL}!\n`);
-        }
+        await downloadList({
+          tracks: [
+            {
+              name: URL,
+              artist_name: '',
+              album_name: URL,
+              release_date: null,
+              //todo can we get the youtube image?
+              cover_url: 'https://lh3.googleusercontent.com/z6Sl4j9zQ88oUKNy0G3PAMiVwy8DzQLh_ygyvBXv0zVNUZ_wQPN_n7EAR2By3dhoUpX7kTpaHjRPni1MHwKpaBJbpNqdEsHZsH4q',
+              id: URL,
+              URL: URL,
+            },
+          ],
+          name: URL,
+        });
         break;
       }
       default: {
