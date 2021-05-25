@@ -18,13 +18,12 @@ function buildUrl(topResult) {
  */
 // this roughly equates to a max of 120mb
 const MAX_MINUTES = 60;
-const getLink = async songName => {
+const getLinks = async songName => {
   const tryLink = async () => {
     const result = await search(songName);
-    const topResult = result.videos
-      .find(video => video.seconds < (MAX_MINUTES * 60));
-    const youtubeLink = buildUrl(topResult);
-    return youtubeLink;
+    return result.videos.slice(0, 10)
+      .filter(video => video.seconds < (MAX_MINUTES * 60))
+      .map(video => buildUrl(video));
   };
   try {
     return await tryLink(songName);
@@ -37,4 +36,4 @@ const getLink = async songName => {
   }
 };
 
-module.exports = getLink;
+module.exports = getLinks;
