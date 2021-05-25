@@ -41,11 +41,10 @@ class SpotifyExtractor {
   }
 
   async getSavedAlbums() {
-    const albumsResult = await spotify.extractSavedAlbums();
-    const albumIds = albumsResult.map(album => album.id);
+    const albums = await spotify.extractSavedAlbums();
     let albumInfos = [];
-    for (let x = 0; x < albumIds.length; x++) {
-      albumInfos.push(await spotify.extractAlbum(albumIds[x]));
+    for (let x = 0; x < albums.length; x++) {
+      albumInfos.push(await spotify.extractAlbum(albums[x].id));
     }
     return albumInfos;
   }
