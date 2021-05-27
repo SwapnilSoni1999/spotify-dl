@@ -4,7 +4,7 @@ module.exports = {
   },
   flags: {
     cacheFile: '.spdlcache',
-    output: './',
+    output: process.cwd(),
     extraSearch: '',
     password: '',
     username: '',
