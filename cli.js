@@ -34,7 +34,7 @@ const REFRESH_ACCESS_TOKEN_SECONDS = 55 * 60;
 // setup ffmpeg
 ffmpegSetup(process.platform);
 
-const { inputs, extraSearch, output } = cliInputs();
+const { inputs, extraSearch, output, outputOnly } = cliInputs();
 
 let outputDir;
 let nextTokenRefreshTime;
@@ -52,7 +52,7 @@ const verifyCredentials = async () => {
 };
 
 const trackOutputDir = track => {
-  return path.join(
+  return outputOnly ? outputDir : path.join(
     outputDir,
     filter.cleanOutputPath(track.artist_name),
     filter.cleanOutputPath(track.album_name),
@@ -180,7 +180,9 @@ const run = async () => {
               album_name: URL,
               release_date: null,
               //todo can we get the youtube image?
-              cover_url: 'https://lh3.googleusercontent.com/z6Sl4j9zQ88oUKNy0G3PAMiVwy8DzQLh_ygyvBXv0zVNUZ_wQPN_n7EAR2By3dhoUpX7kTpaHjRPni1MHwKpaBJbpNqdEsHZsH4q',
+              cover_url: 'https://lh3.googleusercontent.com/z6Sl4j9zQ88oUKN \
+              y0G3PAMiVwy8DzQLh_ygyvBXv0zVNUZ_wQPN_n7EAR2By3dhoUpX7kTpaHjRP \
+              ni1MHwKpaBJbpNqdEsHZsH4q',
               id: URL,
               URL: URL,
             },
