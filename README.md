@@ -71,7 +71,15 @@ $ spotifydl https://open.spotify.com/track/xyz
 | ---- | ------------------------------------------------------------ |
 | -o   | takes valid output path argument                             |
 | --es | takes extra search string/term to be used for youtube search |
-
+| --oo | enforces all downloaded songs in the output dir              |
+| --st | download spotify saved tracks                                |
+| --sp | download spotify saved playlists                             |
+| --sa | download spotify saved albums                                |
+| -u   | spotify username (only needed in non tty)                    |
+| -p   | spotify password (only needed in non tty)                    |
+| -cf  | takes valid output file name path argument                   |
+| -v   | returns current version                                      |
+| -h   | outputs help text                                            |
 <hr>
 
 ## Docker
