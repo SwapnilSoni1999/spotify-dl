@@ -90,8 +90,8 @@ const downloadLoop = async list => {
       `${filter.cleanOutputPath(trackName)}.mp3`,
     );
     await downloader(ytLinks, output, spinner);
-    cache.writeId(trackDir, trackId);
     await mergeMetadata(output, nextTrack, spinner);
+    cache.writeId(trackDir, trackId);
     list.tracks = list.tracks.map(track => {
       if (track.id == trackId) {
         track.cached = true;
