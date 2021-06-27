@@ -205,7 +205,9 @@ process.on('SIGINT', () => {
 versionChecker();
 
 try {
-  run();
+  run().then(() =>
+    process.exit(0),
+  );
 } catch (error) {
   spinner.fail('Something went wrong!');
   console.log(error);
