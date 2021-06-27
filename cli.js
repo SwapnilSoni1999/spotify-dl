@@ -15,7 +15,6 @@
 */
 
 const path = require('path');
-const ora = require('ora');
 const getLinks = require('./util/get-link');
 const SpotifyExtractor = require('./util/get-songdata');
 const filter = require('./util/filters');
@@ -26,7 +25,7 @@ const {
 const downloader = require('./lib/downloader');
 const cache = require('./lib/cache');
 const mergeMetadata = require('./lib/metadata');
-const { ffmpegSetup, cliInputs } = require('./lib/setup');
+const { ffmpegSetup, cliInputs, getSpinner } = require('./lib/setup');
 const versionChecker = require('./util/versionChecker');
 // set to 55 minutes expires every 60 minutes
 const REFRESH_ACCESS_TOKEN_SECONDS = 55 * 60;
@@ -39,7 +38,7 @@ const { inputs, extraSearch, output, outputOnly } = cliInputs();
 let outputDir;
 let nextTokenRefreshTime;
 const spotifyExtractor = new SpotifyExtractor();
-const spinner = ora('Searching… Please be patient :)\n').start();
+const spinner = getSpinner();
 
 const verifyCredentials = async () => {
   if (!nextTokenRefreshTime || (nextTokenRefreshTime < new Date())) {
@@ -89,8 +88,8 @@ const downloadLoop = async list => {
       trackDir,
       `${filter.cleanOutputPath(trackName)}.mp3`,
     );
-    await downloader(ytLinks, output, spinner);
-    await mergeMetadata(output, nextTrack, spinner);
+    await downloader(ytLinks, output);
+    await mergeMetadata(output, nextTrack);
     cache.writeId(trackDir, trackId);
     list.tracks = list.tracks.map(track => {
       if (track.id == trackId) {
