@@ -89,13 +89,16 @@ const downloadLoop = async list => {
         extraSearch,
       },
     );
-    const output = path.resolve(
-      trackDir,
-      `${filter.cleanOutputPath(trackName)}.mp3`,
-    );
-    await downloader(ytLinks, output);
-    await mergeMetadata(output, nextTrack);
-    cache.writeId(trackDir, trackId);
+    if (ytLinks.length) {
+      const output = path.resolve(
+        trackDir,
+        `${filter.cleanOutputPath(trackName)}.mp3`,
+      );
+      await downloader(ytLinks, output);
+      await mergeMetadata(output, nextTrack);
+      cache.writeId(trackDir, trackId);
+    }
+    // we mark as cached to continue
     list.tracks = list.tracks.map(track => {
       if (track.id == trackId) {
         track.cached = true;
