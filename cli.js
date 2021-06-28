@@ -71,18 +71,23 @@ const downloadLoop = async list => {
     const trackDir = trackOutputDir(nextTrack);
     const trackId = nextTrack.id;
     const trackName = nextTrack.name;
+    const albumName = nextTrack.album_name;
     const artistName = nextTrack.artist_name;
     spinner.info(
       [
         `${currentCount}/${tracksCount}`,
         `Artist: ${artistName}`,
-        `Album: ${nextTrack.album_name}`,
+        `Album: ${albumName}`,
         `Song: ${trackName}`,
       ].join('\n'),
     );
-    // use provided URL or find list of urls given info provided
     const ytLinks = nextTrack.URL ? [nextTrack.URL] : await getLinks(
-      `${trackName} ${artistName} ${extraSearch}`,
+      {
+        trackName,
+        albumName,
+        artistName,
+        extraSearch,
+      },
     );
     const output = path.resolve(
       trackDir,
