@@ -15,7 +15,6 @@
 */
 
 const path = require('path');
-const ora = require('ora');
 const getLinks = require('./util/get-link');
 const SpotifyExtractor = require('./util/get-songdata');
 const filter = require('./util/filters');
@@ -26,7 +25,7 @@ const {
 const downloader = require('./lib/downloader');
 const cache = require('./lib/cache');
 const mergeMetadata = require('./lib/metadata');
-const { ffmpegSetup, cliInputs } = require('./lib/setup');
+const { ffmpegSetup, cliInputs, getSpinner } = require('./lib/setup');
 const versionChecker = require('./util/versionChecker');
 // set to 55 minutes expires every 60 minutes
 const REFRESH_ACCESS_TOKEN_SECONDS = 55 * 60;
@@ -39,7 +38,7 @@ const { inputs, extraSearch, output, outputOnly } = cliInputs();
 let outputDir;
 let nextTokenRefreshTime;
 const spotifyExtractor = new SpotifyExtractor();
-const spinner = ora('Searching… Please be patient :)\n').start();
+const spinner = getSpinner();
 
 const verifyCredentials = async () => {
   if (!nextTokenRefreshTime || (nextTokenRefreshTime < new Date())) {
@@ -72,26 +71,34 @@ const downloadLoop = async list => {
     const trackDir = trackOutputDir(nextTrack);
     const trackId = nextTrack.id;
     const trackName = nextTrack.name;
+    const albumName = nextTrack.album_name;
     const artistName = nextTrack.artist_name;
     spinner.info(
       [
         `${currentCount}/${tracksCount}`,
         `Artist: ${artistName}`,
-        `Album: ${nextTrack.album_name}`,
+        `Album: ${albumName}`,
         `Song: ${trackName}`,
       ].join('\n'),
     );
-    // use provided URL or find list of urls given info provided
     const ytLinks = nextTrack.URL ? [nextTrack.URL] : await getLinks(
-      `${trackName} ${artistName} ${extraSearch}`,
+      {
+        trackName,
+        albumName,
+        artistName,
+        extraSearch,
+      },
     );
-    const output = path.resolve(
-      trackDir,
-      `${filter.cleanOutputPath(trackName)}.mp3`,
-    );
-    await downloader(ytLinks, output, spinner);
-    cache.writeId(trackDir, trackId);
-    await mergeMetadata(output, nextTrack, spinner);
+    if (ytLinks.length) {
+      const output = path.resolve(
+        trackDir,
+        `${filter.cleanOutputPath(trackName)}.mp3`,
+      );
+      await downloader(ytLinks, output);
+      await mergeMetadata(output, nextTrack);
+      cache.writeId(trackDir, trackId);
+    }
+    // we mark as cached to continue
     list.tracks = list.tracks.map(track => {
       if (track.id == trackId) {
         track.cached = true;
@@ -205,7 +212,9 @@ process.on('SIGINT', () => {
 versionChecker();
 
 try {
-  run();
+  run().then(() =>
+    process.exit(0),
+  );
 } catch (error) {
   spinner.fail('Something went wrong!');
   console.log(error);

@@ -1,7 +1,8 @@
 'use strict';
 const { promisify } = require('util');
 const youtubeSearch = require('yt-search');
-
+const { YOUTUBE_SEARCH: { MAX_MINUTES } } = require('./constants');
+const stringSimilarity = require('string-similarity');
 const search = promisify(youtubeSearch);
 
 function buildUrl(topResult) {
@@ -13,27 +14,29 @@ function buildUrl(topResult) {
  * This function searches youtube for given songname 
  * and returns the link of topmost result
  *
- * @param {String} songName name of song
- * @returns {Promise<String>} youtube link of music video
+ * @param {String} trackName name of song
+ * @param {String} albumName name of album
+ * @param {String} artistName name of artist
+ * @param {String} extraSearch extra search terms
+ * @returns {String[]} youtube links
  */
-// this roughly equates to a max of 120mb
-const MAX_MINUTES = 60;
-const getLinks = async songName => {
-  const tryLink = async () => {
-    const result = await search(songName);
+const getLinks = async ({ trackName, albumName, artistName, extraSearch }) => {
+  const tryLink = async searchTerms => {
+    const result = await search(searchTerms);
     return result.videos.slice(0, 10)
       .filter(video => video.seconds < (MAX_MINUTES * 60))
       .map(video => buildUrl(video));
   };
-  try {
-    return await tryLink(songName);
-  } catch (_) {
-    try {
-      return await tryLink(songName.replace('-', ' '));
-    } catch (error) {
-      return error;
-    }
+  const similarity = stringSimilarity.compareTwoStrings(trackName, albumName);
+  let links = [];
+  // to avoid duplicate song downloads
+  if (similarity < 0.5) {
+    links = await tryLink(`${trackName} - ${albumName} ${extraSearch}`);
   }
+  if (!links.length) {
+    links = await tryLink(`${trackName} - ${artistName} ${extraSearch}`);
+  }
+  return links;
 };
 
 module.exports = getLinks;
