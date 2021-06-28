@@ -18,7 +18,7 @@ module.exports = {
     SAVED_PLAYLISTS: 'savedPlaylists',
   },
   FFMPEG: {
-    ASET: 'asetpts=PTS-STARTPTS'
+    ASET: 'asetpts=PTS-STARTPTS',
   },
   MAX_LIMIT_DEFAULT: 50,
   SERVER: {
@@ -35,5 +35,9 @@ module.exports = {
       SELF_PROMO: 'selfpromo',
       MUSIC_OFF_TOPIC: 'music_offtopic',
     },
+  },
+  YOUTUBE_SEARCH: {
+    // this roughly equates to a max of 30mb
+    MAX_MINUTES: 15,
   },
 };
