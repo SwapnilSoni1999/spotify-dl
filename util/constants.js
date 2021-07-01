@@ -6,6 +6,8 @@ module.exports = {
       USERS_SAVED_TRACKS_ALBUMS: 'user-library-read',
     },
     STATE: 'some-random-state',
+    // set to 55 minutes expires every 60 minutes
+    REFRESH_ACCESS_TOKEN_SECONDS: 55 * 60,
   },
   INPUT_TYPES: {
     SONG: 'song',
