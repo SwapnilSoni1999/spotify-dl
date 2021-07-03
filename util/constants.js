@@ -8,6 +8,8 @@ module.exports = {
     STATE: 'some-random-state',
     // set to 55 minutes expires every 60 minutes
     REFRESH_ACCESS_TOKEN_SECONDS: 55 * 60,
+    // default timeout of 5 minutes when spotify api fails
+    TIMEOUT_RETRY: 5 * 60,
   },
   INPUT_TYPES: {
     SONG: 'song',
