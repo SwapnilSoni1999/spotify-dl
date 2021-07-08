@@ -13,7 +13,11 @@ Get [FFMPEG](https://ffmpeg.org/download.html)
 
 #### spotifydl
 
-A simple commandline utility that allows you to download Spotify Songs,Playlist and Albums from Youtube.
+A simple commandline utility that allows you to download Spotify Songs, Shows, Episodes, Playlists and Albums from Youtube.
+
+PLEASE NOTE: 
+* The ability to find a video is dependent on the fact it is hosted on youtube, and even then there is a chance it is still incorrectly matched
+* Some items may only be available to spotify premium users, please be sure to provide a username and password when this is the case
 
 <hr>
 
@@ -73,6 +77,7 @@ $ spotifydl https://open.spotify.com/track/xyz
 | --es | takes extra search string/term to be used for youtube search |
 | --oo | enforces all downloaded songs in the output dir              |
 | --st | download spotify saved tracks                                |
+| --ss | download spotify saved shows                                 |
 | --sp | download spotify saved playlists                             |
 | --sa | download spotify saved albums                                |
 | -u   | spotify username (only needed in non tty)                    |

@@ -7,7 +7,7 @@ class SpotifyExtractor {
   }
 
   async getTrack(url) {
-    return await spotify.extractTrack(this.getID(url));
+    return (await spotify.extractTracks([this.getID(url)]))[0];
   }
 
   async getAlbum(url) {
@@ -38,6 +38,23 @@ class SpotifyExtractor {
   getID(url) {
     const splits = url.split('/');
     return splits[splits.length - 1];
+  }
+
+  async getEpisode(url) {
+    return (await spotify.extractEpisodes([this.getID(url)]))[0];
+  }
+
+  async getShowEpisodes(url) {
+    return await spotify.extractShowEpisodes(this.getID(url));
+  }
+
+  async getSavedShows() {
+    const shows = await spotify.extractSavedShows();
+    let episodes = [];
+    for (let x = 0; x < shows.length; x++) {
+      episodes.push(await spotify.extractShowEpisodes(shows[x].id));
+    }
+    return episodes;
   }
 
   async getSavedAlbums() {
