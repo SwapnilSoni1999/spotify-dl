@@ -5,6 +5,7 @@ const getLinks = require('./get-link');
 const filter = require('./filters');
 const {
   INPUT_TYPES,
+  YOUTUBE_SEARCH: { GENERIC_IMAGE },
 } = require('./constants');
 const downloader = require('../lib/downloader');
 const cache = require('../lib/cache');
@@ -186,9 +187,7 @@ module.exports = {
                 album_name: URL,
                 release_date: null,
                 //todo can we get the youtube image?
-                cover_url: 'https://lh3.googleusercontent.com/z6Sl4j9zQ88oUKN \
-                y0G3PAMiVwy8DzQLh_ygyvBXv0zVNUZ_wQPN_n7EAR2By3dhoUpX7kTpaHjRP \
-                ni1MHwKpaBJbpNqdEsHZsH4q',
+                cover_url: GENERIC_IMAGE,
                 id: URL,
                 URL: URL,
               },
