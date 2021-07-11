@@ -12,9 +12,8 @@ const cache = require('../lib/cache');
 const mergeMetadata = require('../lib/metadata');
 const { cliInputs } = require('../lib/setup');
 const SpotifyExtractor = require('./get-songdata');
-const { logSuccess, logInfo } = require('./log-helper');
+const { logSuccess, logInfo, logFailure } = require('./log-helper');
 const { inputs, extraSearch, output, outputOnly } = cliInputs();
-
 module.exports = {
   itemOutputDir: item => {
     const outputDir = path.normalize(output);
@@ -31,7 +30,8 @@ module.exports = {
     const remainingItemsCount = remainingItems.length;
     const currentCount = itemsCount - remainingItemsCount + 1;
     if (!remainingItemsCount) {
-      logSuccess(`All items already downloaded for ${list.name}!\n`);
+      logSuccess(`Finished processing ${list.name}!\n`);
+      return list;
     } else {
       const nextItem = remainingItems[0];
       const itemDir = this.itemOutputDir(nextItem);
@@ -57,23 +57,25 @@ module.exports = {
           type: list.type,
         },
       );
-      if (ytLinks.length) {
-        const output = path.resolve(
-          itemDir,
-          `${filter.cleanOutputPath(itemName)}.mp3`,
-        );
-        await downloader(ytLinks, output);
+
+      const output = path.resolve(
+        itemDir,
+        `${filter.cleanOutputPath(itemName)}.mp3`,
+      );
+      const downloadSuccessful = await downloader(ytLinks, output);
+      if (downloadSuccessful) {
         await mergeMetadata(output, nextItem);
         cache.writeId(itemDir, itemId);
       }
-      // we mark as cached to continue
-      list.items = list.items.map(item => {
+
+      for (const item of list.items) {
         if (item.id == itemId) {
           item.cached = true;
+          item.failed = !downloadSuccessful;
+          break;
         }
-        return item;
-      });
-      await this.downloadLoop(list);
+      };
+      return await this.downloadLoop(list);
     }
   },
   downloadList: async function (list) {
@@ -84,17 +86,55 @@ module.exports = {
       item.cached = cache.findId(item.id, this.itemOutputDir(item));
       return item;
     });
-    await this.downloadLoop(list);
+    return await this.downloadLoop(list);
+  },
+  downloadLists: async function (lists) {
+    const listResults = [];
+    for (const [x, list] of lists.entries()) {
+      logInfo(`Starting download of list ${x + 1}/${lists.length}`);
+      listResults.push(await this.downloadList(list));
+    }
+    logInfo('Download Report:');
+    listResults.forEach(result => {
+      const listItems = result.items;
+      const itemLength = listItems.length;
+      const failedItems = listItems.filter(item => item.failed);
+      const failedItemLength = failedItems.length;
+      logInfo(
+        [
+          'Successfully downloaded',
+          `${itemLength - failedItemLength}/${itemLength}`,
+          `for ${result.name} (${result.type})`,
+        ].join(' '),
+      );
+      if (failedItemLength) {
+        logFailure(
+          [
+            'Failed items:',
+            ...failedItems.map(item => {
+              return [
+                `Item: (${item.name})`,
+                `Album: ${item.album_name}`,
+                `Artist: ${item.artist_name}`,
+                `ID: (${item.id})`,
+              ].join(' ');
+            }),
+          ].join('\n'),
+        );
+      }
+    });
+    logSuccess('Finished!');
   },
   run: async function () {
     const spotifyExtractor = new SpotifyExtractor();
+    const lists = [];
     for (const input of inputs) {
       logInfo(`Starting processing of ${input.type} (${input.url})`);
       const URL = input.url;
       switch (input.type) {
         case INPUT_TYPES.SONG.SONG: {
           const track = await spotifyExtractor.getTrack(URL);
-          await this.downloadList({
+          lists.push({
             items: [
               track,
             ],
@@ -106,28 +146,26 @@ module.exports = {
         case INPUT_TYPES.SONG.PLAYLIST: {
           const list = await spotifyExtractor.getPlaylist(URL);
           list.type = input.type;
-          await this.downloadList(list);
+          lists.push(list);
           break;
         }
         case INPUT_TYPES.SONG.ALBUM: {
           const list = await spotifyExtractor.getAlbum(URL);
           list.type = input.type;
-          await this.downloadList(await this.downloadList(list));
+          lists.push(list);
           break;
         }
         case INPUT_TYPES.SONG.ARTIST: {
           const artistAlbumInfos = await spotifyExtractor.getArtistAlbums(URL);
-          for (let x = 0; x < artistAlbumInfos.length; x++) {
-            const list = artistAlbumInfos[x];
+          lists.push(...artistAlbumInfos.map(list => {
             list.type = input.type;
-            logInfo(`Starting album ${x + 1}/${artistAlbumInfos.length}`);
-            await this.downloadList(list);
-          }
+            return list;
+          }));
           break;
         }
         case INPUT_TYPES.EPISODE.EPISODE: {
           const episode = await spotifyExtractor.getEpisode(URL);
-          await this.downloadList({
+          lists.push({
             items: [
               episode,
             ],
@@ -139,47 +177,41 @@ module.exports = {
         case INPUT_TYPES.EPISODE.SHOW: {
           const list = await spotifyExtractor.getShowEpisodes(URL);
           list.type = input.type;
-          await this.downloadList(list);
+          lists.push(list);
           break;
         }
         case INPUT_TYPES.EPISODE.SAVED_SHOWS: {
           const savedShowsInfo = await spotifyExtractor.getSavedShows();
-          for (let x = 0; x < savedShowsInfo.length; x++) {
-            logInfo(`Starting show ${x + 1}/${savedShowsInfo.length}`);
-            await this.downloadList(savedShowsInfo[x]);
-          }
+          lists.push(...savedShowsInfo.map(list => {
+            list.type = input.type;
+            return list;
+          }));
           break;
         }
         case INPUT_TYPES.SONG.SAVED_ALBUMS: {
           const savedAlbumsInfo = await spotifyExtractor.getSavedAlbums();
-          for (let x = 0; x < savedAlbumsInfo.length; x++) {
-            const list = savedAlbumsInfo[x];
+          lists.push(...savedAlbumsInfo.map(list => {
             list.type = input.type;
-            logInfo(`Starting album ${x + 1}/${savedAlbumsInfo.length}`);
-            await this.downloadList(list);
-          }
+            return list;
+          }));
           break;
         }
         case INPUT_TYPES.SONG.SAVED_PLAYLISTS: {
           const savedPlaylistsInfo = await spotifyExtractor.getSavedPlaylists();
-          for (let x = 0; x < savedPlaylistsInfo.length; x++) {
-            const list = savedPlaylistsInfo[x];
+          lists.push(...savedPlaylistsInfo.map(list => {
             list.type = input.type;
-            logInfo(
-              `Starting playlist ${x + 1}/${savedPlaylistsInfo.length}`,
-            );
-            await this.downloadList(list);
-          }
+            return list;
+          }));
           break;
         }
         case INPUT_TYPES.SONG.SAVED_TRACKS: {
           const list = await spotifyExtractor.getSavedTracks();
           list.type = input.type;
-          await this.downloadList(list);
+          lists.push(list);
           break;
         }
         case INPUT_TYPES.YOUTUBE: {
-          await this.downloadList({
+          lists.push({
             items: [
               {
                 name: URL,
@@ -203,5 +235,6 @@ module.exports = {
         }
       }
     }
+    await this.downloadLists(lists);
   },
 };
