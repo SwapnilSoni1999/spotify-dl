@@ -11,6 +11,7 @@ module.exports = {
     savedAlbums: false,
     savedPlaylists: false,
     savedTracks: false,
+    savedShows: false,
     outputOnly: false,
   },
 };

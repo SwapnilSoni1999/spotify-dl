@@ -15,6 +15,12 @@ const parser = inputUrl => {
   else if (inputUrl.includes('/artist/')) {
     return 'artist';
   }
+  else if (inputUrl.includes('/show/')) {
+    return 'show';
+  }
+  else if (inputUrl.includes('/episode/')) {
+    return 'episode';
+  }
   else {
     return new Error('Invalid spotify URL');
   }
