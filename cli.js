@@ -14,9 +14,10 @@
   copies or substantial portions of the Software.
 */
 
-const { ffmpegSetup, getSpinner } = require('./lib/setup');
+const { ffmpegSetup, getSpinner, cliInputs } = require('./lib/setup');
 const Runner = require('./util/runner');
 const versionChecker = require('./util/version-checker');
+const { inputs, extraSearch, output, outputOnly } = cliInputs();
 
 // setup ffmpeg
 ffmpegSetup(process.platform);
@@ -29,7 +30,12 @@ process.on('SIGINT', () => {
 versionChecker();
 
 try {
-  Runner.run().then(() =>
+  Runner.run({ 
+    inputs, 
+    extraSearch, 
+    output, 
+    outputOnly, 
+  }).then(() =>
     process.exit(0),
   );
 } catch (error) {

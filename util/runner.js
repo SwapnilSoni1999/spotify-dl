@@ -9,12 +9,11 @@ const {
 const downloader = require('../lib/downloader');
 const cache = require('../lib/cache');
 const mergeMetadata = require('../lib/metadata');
-const { cliInputs, getSpinner } = require('../lib/setup');
+const { getSpinner } = require('../lib/setup');
 const SpotifyExtractor = require('./get-songdata');
-const { inputs, extraSearch, output, outputOnly } = cliInputs();
 
 module.exports = {
-  run: async function () {
+  run: async function ({ inputs, extraSearch, output, outputOnly }) {
 
     const trackOutputDir = track => {
       const outputDir = path.normalize(output);
