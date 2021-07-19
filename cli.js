@@ -14,14 +14,14 @@
   copies or substantial portions of the Software.
 */
 
-const { ffmpegSetup, getSpinner, cliInputs } = require('./lib/setup');
+const { ffmpegSetup, getSpinner, initSpinner, cliInputs } = require('./lib/setup');
 const Runner = require('./util/runner');
 const versionChecker = require('./util/version-checker');
 const { inputs, extraSearch, output, outputOnly } = cliInputs();
 
 // setup ffmpeg
 ffmpegSetup(process.platform);
-const spinner = getSpinner();
+const spinner = initSpinner();
 
 process.on('SIGINT', () => {
   process.exit(1);
