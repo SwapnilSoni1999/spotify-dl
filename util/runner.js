@@ -3,6 +3,7 @@
 const path = require('path');
 const getLinks = require('./get-link');
 const filter = require('./filters');
+const urlParser = require('./url-parser');
 const {
   INPUT_TYPES,
 } = require('./constants');
@@ -13,7 +14,15 @@ const { getSpinner } = require('../lib/setup');
 const SpotifyExtractor = require('./get-songdata');
 
 module.exports = {
-  run: async function ({ inputs, extraSearch, output, outputOnly }) {
+  run: async function ({ 
+    inputs, 
+    extraSearch, 
+    output, 
+    outputOnly,
+    savedAlbums,
+    savedTracks,
+    savedPlaylists,
+  }) {
 
     const trackOutputDir = track => {
       const outputDir = path.normalize(output);
@@ -91,6 +100,27 @@ module.exports = {
 
     const spotifyExtractor = new SpotifyExtractor();
     const spinner = getSpinner();
+
+    inputs = inputs.map(link => {
+      const cleanedURL = filter.removeQuery(link);
+      return {
+        type: urlParser(cleanedURL),
+        // only use cleaned url for spotify to not break youtube support
+        url: link.includes('spotify') ? cleanedURL : link,
+      };
+    });
+
+    if (savedAlbums) {
+      inputs.push({ type: INPUT_TYPES.SAVED_ALBUMS, url: null });
+    }
+    if (savedTracks) {
+      inputs.push({ type: INPUT_TYPES.SAVED_TRACKS, url: null });
+    }
+    if (savedPlaylists) {
+      inputs.push({ type: INPUT_TYPES.SAVED_PLAYLISTS, url: null });
+    }
+
+
     for (const input of inputs) {
       const URL = input.url;
       switch (input.type) {
