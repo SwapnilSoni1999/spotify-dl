@@ -90,7 +90,7 @@ module.exports = {
     };
 
 
-    const spotifyExtractor = new SpotifyExtractor();
+    const spotifyExtractor = new SpotifyExtractor(options);
     const spinner = getSpinner();
 
     inputs = inputs.map(link => {
