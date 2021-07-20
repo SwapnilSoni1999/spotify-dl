@@ -14,19 +14,11 @@ const { getSpinner } = require('../lib/setup');
 const SpotifyExtractor = require('./get-songdata');
 
 module.exports = {
-  run: async function ({ 
-    inputs, 
-    extraSearch, 
-    output, 
-    outputOnly,
-    savedAlbums,
-    savedTracks,
-    savedPlaylists,
-  }) {
+  run: async function (inputs, options) {
 
     const trackOutputDir = track => {
-      const outputDir = path.normalize(output);
-      return outputOnly ? outputDir : path.join(
+      const outputDir = path.normalize(options.output);
+      return options.outputOnly ? outputDir : path.join(
         outputDir,
         filter.cleanOutputPath(track.artist_name),
         filter.cleanOutputPath(track.album_name),
@@ -62,7 +54,7 @@ module.exports = {
             trackName,
             albumName,
             artistName,
-            extraSearch,
+            extraSearch: options.extraSearch,
           },
         );
         if (ytLinks.length) {
@@ -110,13 +102,13 @@ module.exports = {
       };
     });
 
-    if (savedAlbums) {
+    if (options.savedAlbums) {
       inputs.push({ type: INPUT_TYPES.SAVED_ALBUMS, url: null });
     }
-    if (savedTracks) {
+    if (options.savedTracks) {
       inputs.push({ type: INPUT_TYPES.SAVED_TRACKS, url: null });
     }
-    if (savedPlaylists) {
+    if (options.savedPlaylists) {
       inputs.push({ type: INPUT_TYPES.SAVED_PLAYLISTS, url: null });
     }
 

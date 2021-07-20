@@ -17,7 +17,7 @@
 const { ffmpegSetup, getSpinner, initSpinner, cliInputs } = require('./lib/setup');
 const Runner = require('./util/runner');
 const versionChecker = require('./util/version-checker');
-const { inputs, extraSearch, output, outputOnly } = cliInputs();
+const { inputs, ...options } = cliInputs();
 
 // setup ffmpeg
 ffmpegSetup(process.platform);
@@ -30,12 +30,7 @@ process.on('SIGINT', () => {
 versionChecker();
 
 try {
-  Runner.run({ 
-    inputs, 
-    extraSearch, 
-    output, 
-    outputOnly, 
-  }).then(() =>
+  Runner.run(inputs, options).then(() =>
     process.exit(0),
   );
 } catch (error) {
