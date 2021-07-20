@@ -15,7 +15,8 @@ const SpotifyExtractor = require('./get-songdata');
 
 module.exports = {
   run: async function (inputs, options) {
-
+    const cacheInstance = cache(options)
+    
     const trackOutputDir = track => {
       const outputDir = path.normalize(options.output);
       return options.outputOnly ? outputDir : path.join(
@@ -64,7 +65,7 @@ module.exports = {
           );
           await downloader(ytLinks, output);
           await mergeMetadata(output, nextTrack);
-          cache.writeId(trackDir, trackId);
+          cacheInstance.writeId(trackDir, trackId);
         }
         // we mark as cached to continue
         list.tracks = list.tracks.map(track => {
@@ -83,7 +84,7 @@ module.exports = {
       spinner.info(`Downloading: ${list.name}`);
       spinner.info(`Total Songs: ${list.tracks.length}`);
       list.tracks = list.tracks.map(track => {
-        track.cached = cache.findId(track.id, trackOutputDir(track));
+        track.cached = cacheInstance.findId(track.id, trackOutputDir(track));
         return track;
       });
       await downloadLoop(list);
@@ -92,7 +93,7 @@ module.exports = {
 
     const spotifyExtractor = new SpotifyExtractor(options);
     const spinner = getSpinner();
-
+    
     inputs = inputs.map(link => {
       const cleanedURL = filter.removeQuery(link);
       return {
