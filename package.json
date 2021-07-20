@@ -3,7 +3,7 @@
   "productName": "Spotify Downloader",
   "version": "1.0.2",
   "description": "Spotify Songs, Playlist & Album Downloader",
-  "main": "app.js",
+  "main": "nodeApi.js",
   "bin": {
     "spotifydl": "cli.js"
   },
