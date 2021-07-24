@@ -24,7 +24,10 @@ const getLinks = async ({ trackName, albumName, artistName, extraSearch }) => {
   const tryLink = async searchTerms => {
     const result = await search(searchTerms);
     return result.videos.slice(0, 10)
-      .filter(video => video.seconds < (MAX_MINUTES * 60))
+      .filter(video => (
+        video.seconds < (MAX_MINUTES * 60)) &&
+        (video.seconds > 0),
+      )
       .map(video => buildUrl(video));
   };
   const similarity = stringSimilarity.compareTwoStrings(trackName, albumName);
