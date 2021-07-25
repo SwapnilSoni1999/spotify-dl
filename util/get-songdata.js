@@ -29,7 +29,7 @@ class SpotifyExtractor {
       const albumInfo = await spotify.extractAlbum(albumIds[x]);
       // hardcode to artist being requested
       albumInfo.items.forEach(item => {
-        item.artist_name = artistResult.name;
+        item.artists = [artistResult.name, ...item.artists];
       });
       albumInfos.push(albumInfo);
     }

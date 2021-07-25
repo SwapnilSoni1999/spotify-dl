@@ -71,20 +71,22 @@ $ spotifydl https://open.spotify.com/track/xyz
 ```
 
 #### Options
-| Flag | Usage                                                        |
-| ---- | ------------------------------------------------------------ |
-| -o   | takes valid output path argument                             |
-| --es | takes extra search string/term to be used for youtube search |
-| --oo | enforces all downloaded songs in the output dir              |
-| --st | download spotify saved tracks                                |
-| --ss | download spotify saved shows                                 |
-| --sp | download spotify saved playlists                             |
-| --sa | download spotify saved albums                                |
-| -u   | spotify username (only needed in non tty)                    |
-| -p   | spotify password (only needed in non tty)                    |
-| -cf  | takes valid output file name path argument                   |
-| -v   | returns current version                                      |
-| -h   | outputs help text                                            |
+| Flag | Long Flag         | Usage                                                                 |
+| ---- | ----------------- | --------------------------------------------------------------------- |
+| -o   | --output          | takes valid output path argument                                      |
+| --es | --extra-search    | takes extra search string/term to be used for youtube search          |
+| --oo | --output-only     | enforces all downloaded songs in the output dir                       |
+| --st | --saved-tracks    | download spotify saved tracks                                         |
+| --ss | --saved-songs     | download spotify saved shows                                          |
+| --sp | --saved-playlists | download spotify saved playlists                                      |
+| --sa | --saved-albums    | download spotify saved albums                                         |
+| -u   | --username        | spotify username (only needed in non tty)                             |
+| -p   | --password        | spotify password (only needed in non tty)                             |
+| -cf  | --cache-file      | takes valid output file name path argument                            |
+| -dr  | --download-report | output a download report of what files failed                         |
+| -cof | --cookie-file     | takes valid file name path argument to a txt file for youtube cookies |
+| -v   | --version         | returns current version                                               |
+| -h   | --help            | outputs help text                                                     |
 <hr>
 
 ## Docker

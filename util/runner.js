@@ -13,13 +13,13 @@ const mergeMetadata = require('../lib/metadata');
 const { cliInputs } = require('../lib/setup');
 const SpotifyExtractor = require('./get-songdata');
 const { logSuccess, logInfo, logFailure } = require('./log-helper');
-const { inputs, extraSearch, output, outputOnly } = cliInputs();
+const { inputs, extraSearch, output, outputOnly, downloadReport } = cliInputs();
 module.exports = {
   itemOutputDir: item => {
     const outputDir = path.normalize(output);
     return outputOnly ? outputDir : path.join(
       outputDir,
-      filter.cleanOutputPath(item.artist_name),
+      filter.cleanOutputPath(item.artists[0]),
       filter.cleanOutputPath(item.album_name),
     );
   },
@@ -38,7 +38,7 @@ module.exports = {
       const itemId = nextItem.id;
       const itemName = nextItem.name;
       const albumName = nextItem.album_name;
-      const artistName = nextItem.artist_name;
+      const artistName = nextItem.artists[0];
       logInfo(
         [
           `${currentCount}/${itemsCount}`,
@@ -88,47 +88,46 @@ module.exports = {
     });
     return await this.downloadLoop(list);
   },
-  downloadLists: async function (lists) {
-    const listResults = [];
-    for (const [x, list] of lists.entries()) {
-      logInfo(`Starting download of list ${x + 1}/${lists.length}`);
-      listResults.push(await this.downloadList(list));
-    }
-    logInfo('Download Report:');
-    listResults.forEach(result => {
-      const listItems = result.items;
-      const itemLength = listItems.length;
-      const failedItems = listItems.filter(item => item.failed);
-      const failedItemLength = failedItems.length;
-      logInfo(
-        [
-          'Successfully downloaded',
-          `${itemLength - failedItemLength}/${itemLength}`,
-          `for ${result.name} (${result.type})`,
-        ].join(' '),
-      );
-      if (failedItemLength) {
-        logFailure(
+  generateReport: async function (listResults) {
+    if (listResults.length) {
+      logInfo('Download Report:');
+      listResults.forEach(result => {
+        const listItems = result.items;
+        const itemLength = listItems.length;
+        const failedItems = listItems.filter(item => item.failed);
+        const failedItemLength = failedItems.length;
+        logInfo(
           [
-            'Failed items:',
-            ...failedItems.map(item => {
-              return [
-                `Item: (${item.name})`,
-                `Album: ${item.album_name}`,
-                `Artist: ${item.artist_name}`,
-                `ID: (${item.id})`,
-              ].join(' ');
-            }),
-          ].join('\n'),
+            'Successfully downloaded',
+            `${itemLength - failedItemLength}/${itemLength}`,
+            `for ${result.name} (${result.type})`,
+          ].join(' '),
         );
-      }
-    });
-    logSuccess('Finished!');
+        if (failedItemLength) {
+          logFailure(
+            [
+              'Failed items:',
+              ...failedItems.map(item => {
+                return [
+                  `Item: (${item.name})`,
+                  `Album: ${item.album_name}`,
+                  `Artist: ${item.artists[0]}`,
+                  `ID: (${item.id})`,
+                ].join(' ');
+              }),
+            ].join('\n'),
+          );
+        }
+      });
+    }
   },
   run: async function () {
     const spotifyExtractor = new SpotifyExtractor();
+    const listResults = [];
     const lists = [];
     for (const input of inputs) {
+      // reset array to avoid memory issues 
+      lists.splice(0, lists.length);
       logInfo(`Starting processing of ${input.type} (${input.url})`);
       const URL = input.url;
       switch (input.type) {
@@ -138,7 +137,7 @@ module.exports = {
             items: [
               track,
             ],
-            name: `${track.name} ${track.artist_name}`,
+            name: `${track.name} ${track.artists[0]}`,
             type: input.type,
           });
           break;
@@ -215,7 +214,7 @@ module.exports = {
             items: [
               {
                 name: URL,
-                artist_name: '',
+                artists: [''],
                 album_name: URL,
                 release_date: null,
                 //todo can we get the youtube image?
@@ -234,7 +233,16 @@ module.exports = {
             'Please visit github and make a request to support this type');
         }
       }
+
+      for (const [x, list] of lists.entries()) {
+        logInfo(`Starting download of list ${x + 1}/${lists.length}`);
+        const downloadResult = await this.downloadList(list);
+        if (downloadReport) {
+          listResults.push(downloadResult);
+        }
+      }
     }
-    await this.downloadLists(lists);
+    await this.generateReport(listResults);
+    logSuccess('Finished!');
   },
 };
