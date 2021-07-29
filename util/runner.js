@@ -124,10 +124,8 @@ module.exports = {
   run: async function () {
     const spotifyExtractor = new SpotifyExtractor();
     const listResults = [];
-    const lists = [];
     for (const input of inputs) {
-      // reset array to avoid memory issues 
-      lists.splice(0, lists.length);
+      const lists = [];
       logInfo(`Starting processing of ${input.type} (${input.url})`);
       const URL = input.url;
       switch (input.type) {
