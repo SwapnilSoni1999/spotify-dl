@@ -58,9 +58,11 @@ module.exports = {
         },
       );
 
+      const fileNameCleaned = filter.cleanOutputPath(itemName) || '_';
+
       const output = path.resolve(
         itemDir,
-        `${filter.cleanOutputPath(itemName)}.mp3`,
+        `${fileNameCleaned}.mp3`,
       );
       const downloadSuccessful = await downloader(ytLinks, output);
       if (downloadSuccessful) {
