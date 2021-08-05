@@ -30,6 +30,7 @@ module.exports = {
   },
   FFMPEG: {
     ASET: 'asetpts=PTS-STARTPTS',
+    TIMEOUT_MINUTES: 30,
   },
   MAX_LIMIT_DEFAULT: 50,
   SERVER: {
