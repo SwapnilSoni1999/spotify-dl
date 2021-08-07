@@ -12,14 +12,21 @@ module.exports = {
     TIMEOUT_RETRY: 5 * 60,
   },
   INPUT_TYPES: {
-    SONG: 'song',
-    PLAYLIST: 'playlist',
-    ALBUM: 'album',
-    ARTIST: 'artist',
+    SONG: {
+      SONG: 'song',
+      PLAYLIST: 'playlist',
+      ALBUM: 'album',
+      ARTIST: 'artist',
+      SAVED_ALBUMS: 'savedAlbums',
+      SAVED_TRACKS: 'savedTracks',
+      SAVED_PLAYLISTS: 'savedPlaylists',
+    },
+    EPISODE: {
+      SHOW: 'show',
+      EPISODE: 'episode',
+      SAVED_SHOWS: 'savedShows',
+    },
     YOUTUBE: 'youtube',
-    SAVED_ALBUMS: 'savedAlbums',
-    SAVED_TRACKS: 'savedTracks',
-    SAVED_PLAYLISTS: 'savedPlaylists',
   },
   FFMPEG: {
     ASET: 'asetpts=PTS-STARTPTS',
