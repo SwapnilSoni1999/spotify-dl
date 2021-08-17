@@ -4,6 +4,8 @@ module.exports = {
   },
   flags: {
     cacheFile: '.spdlcache',
+    cookieFile: 'cookies.txt',
+    downloadReport: true,
     output: process.cwd(),
     extraSearch: '',
     password: '',
