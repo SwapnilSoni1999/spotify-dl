@@ -14,26 +14,15 @@
   copies or substantial portions of the Software.
 */
 
-const { ffmpegSetup, getSpinner } = require('./lib/setup');
+const { startup } = require('./lib/setup');
+const { logFailure } = require('./util/log-helper');
 const Runner = require('./util/runner');
-const versionChecker = require('./util/version-checker');
 
-// setup ffmpeg
-ffmpegSetup(process.platform);
-const spinner = getSpinner();
-
-process.on('SIGINT', () => {
-  process.exit(1);
-});
-
-versionChecker();
-
+startup();
 try {
-  Runner.run().then(() =>
-    process.exit(0),
-  );
+  Runner.run().then(() => process.exit(0));
 } catch (error) {
-  spinner.fail('Something went wrong!');
+  logFailure('Something went wrong!');
   console.log(error);
   process.exit(1);
 }

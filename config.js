@@ -4,6 +4,8 @@ module.exports = {
   },
   flags: {
     cacheFile: '.spdlcache',
+    cookieFile: 'cookies.txt',
+    downloadReport: true,
     output: process.cwd(),
     extraSearch: '',
     password: '',
@@ -11,6 +13,7 @@ module.exports = {
     savedAlbums: false,
     savedPlaylists: false,
     savedTracks: false,
+    savedShows: false,
     outputOnly: false,
   },
 };
