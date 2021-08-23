@@ -14,13 +14,13 @@
   copies or substantial portions of the Software.
 */
 
-const { startup } = require('./lib/setup');
-const { logFailure } = require('./util/log-helper');
-const Runner = require('./util/runner');
+import { startup } from './lib/setup.js';
+import { logFailure } from './util/log-helper.js';
+import Runner from './util/runner.js';
 
 startup();
 try {
-  Runner.run().then(() => process.exit(0));
+  Runner().then(() => process.exit(0));
 } catch (error) {
   logFailure('Something went wrong!');
   console.log(error);

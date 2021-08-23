@@ -1,13 +1,14 @@
-'use strict';
-const { promisify } = require('util');
-const youtubeSearch = require('yt-search');
+import { promisify } from 'util';
+import YoutubeSearch from 'yt-search';
+import StringSimilarity from 'string-similarity';
+import Constants from './constants.js';
+import { logInfo } from './log-helper.js';
+
 const {
   YOUTUBE_SEARCH: { MAX_MINUTES },
   INPUT_TYPES: { SONG },
-} = require('./constants');
-const stringSimilarity = require('string-similarity');
-const { logInfo } = require('./log-helper');
-const search = promisify(youtubeSearch);
+} = Constants;
+const search = promisify(YoutubeSearch);
 
 function buildUrl(topResult) {
   return (topResult.url.includes('https://youtube.com')) ?
@@ -41,7 +42,7 @@ const getLinks = async ({
         (video.seconds > 0)),
       ).map(video => buildUrl(video));
   };
-  const similarity = stringSimilarity.compareTwoStrings(itemName, albumName);
+  const similarity = StringSimilarity.compareTwoStrings(itemName, albumName);
   let links = [];
   // to avoid duplicate song downloads
   extraSearch = extraSearch ? ` ${extraSearch}` : '';
@@ -54,4 +55,4 @@ const getLinks = async ({
   return links;
 };
 
-module.exports = getLinks;
+export default getLinks;

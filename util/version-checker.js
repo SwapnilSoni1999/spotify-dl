@@ -3,7 +3,9 @@ const pkg = require('../package.json');
 
 const checkVersion = async () => {
   const res =
-    await axios('https://api.github.com/repos/SwapnilSoni1999/spotify-dl/tags');
+    await axios.default(
+      'https://api.github.com/repos/SwapnilSoni1999/spotify-dl/tags',
+    );
   const latestVersion = res.data[0].name;
   if (pkg.version !== latestVersion) {
     console.log([
@@ -15,4 +17,4 @@ const checkVersion = async () => {
   }
 };
 
-module.exports = checkVersion;
+export default checkVersion;

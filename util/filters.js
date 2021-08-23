@@ -1,10 +1,7 @@
-'use strict';
+export function cleanOutputPath(output) {
+  return output ? output.replace(/[&\/\\#+$!"~.%:*?<>{}\|]/g, '') : '';
+}
 
-module.exports = {
-  cleanOutputPath: function (output) {
-    return output ? output.replace(/[&\/\\#+$!"~.%:*?<>{}\|]/g, '') : '';
-  },
-  removeQuery: function (url) {
-    return url.split('?')[0];
-  },
-};
+export function removeQuery(url) {
+  return url.split('?')[0];
+}

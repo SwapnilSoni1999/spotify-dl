@@ -1,5 +1,4 @@
-'use strict';
-const parser = inputUrl => {
+export default inputUrl => {
   if (inputUrl.includes('youtube')) {
     return 'youtube';
   }
@@ -25,5 +24,3 @@ const parser = inputUrl => {
     return new Error('Invalid spotify URL');
   }
 };
-
-module.exports = parser;

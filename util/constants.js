@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   AUTH: {
     SCOPES: {
       USERS_SAVED_PLAYLISTS: 'playlist-read-private',
