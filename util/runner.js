@@ -158,13 +158,20 @@ const run = async () => {
       }
       case INPUT_TYPES.EPISODE.EPISODE: {
         const episode = await getEpisode(URL);
-        lists.push({
-          items: [
-            episode,
-          ],
-          name: `${episode.name} ${episode.album_name}`,
-          type: input.type,
-        });
+        if (episode) {
+          lists.push({
+            items: [
+              episode,
+            ],
+            name: `${episode.name} ${episode.album_name}`,
+            type: input.type,
+          });
+        } else {
+          logFailure(
+            'Failed to find episode, you may need to use auth',
+          );
+        }
+
         break;
       }
       case INPUT_TYPES.EPISODE.SHOW: {
