@@ -1,4 +1,5 @@
 import ora from 'ora';
+import Config from '../config.js';
 
 const spinner = ora('Searching… Please be patient :)\n').start();
 
@@ -19,7 +20,7 @@ export function logFailure(message) {
 }
 
 export function updateSpinner(message) {
-  if (process.stdout.isTTY) {
+  if (Config.isTTY) {
     spinner.text = message;
   } else {
     spinner.info(message);

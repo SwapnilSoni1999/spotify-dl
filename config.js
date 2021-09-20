@@ -8,6 +8,7 @@ export default {
     downloadReport: true,
     output: process.cwd(),
     extraSearch: '',
+    login: false,
     password: '',
     username: '',
     savedAlbums: false,
@@ -16,4 +17,9 @@ export default {
     savedShows: false,
     outputOnly: false,
   },
+  spotifyApi: {
+    clientId: 'acc6302297e040aeb6e4ac1fbdfd62c3',
+    clientSecret: '0e8439a1280a43aba9a5bc0a16f3f009',
+  },
+  isTTY: process.stdout.isTTY,
 };

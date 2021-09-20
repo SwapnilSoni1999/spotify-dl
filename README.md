@@ -71,22 +71,23 @@ $ spotifydl https://open.spotify.com/track/xyz
 ```
 
 #### Options
-| Flag  | Long Flag         | Usage                                                                 |
-| ----- | ----------------- | --------------------------------------------------------------------- |
-| --o   | --output          | takes valid output path argument                                      |
-| --es  | --extra-search    | takes extra search string/term to be used for youtube search          |
-| --oo  | --output-only     | enforces all downloaded songs in the output dir                       |
-| --st  | --saved-tracks    | download spotify saved tracks                                         |
-| --ss  | --saved-songs     | download spotify saved shows                                          |
-| --sp  | --saved-playlists | download spotify saved playlists                                      |
-| --sa  | --saved-albums    | download spotify saved albums                                         |
-| --u   | --username        | spotify username (only needed in non tty)                             |
-| --p   | --password        | spotify password (only needed in non tty)                             |
-| --cf  | --cache-file      | takes valid output file name path argument                            |
-| --dr  | --download-report | output a download report of what files failed                         |
-| --cof | --cookie-file     | takes valid file name path argument to a txt file for youtube cookies |
-| --v   | --version         | returns current version                                               |
-| --h   | --help            | outputs help text                                                     |
+| Flag  | Long Flag         | Usage                                                                   |
+| ----- | ----------------- | ----------------------------------------------------------------------- |
+| --o   | --output          | takes valid output path argument                                        |
+| --es  | --extra-search    | takes extra search string/term to be used for youtube search            |
+| --oo  | --output-only     | enforces all downloaded songs in the output dir                         |
+| --st  | --saved-tracks    | download spotify saved tracks                                           |
+| --ss  | --saved-songs     | download spotify saved shows                                            |
+| --sp  | --saved-playlists | download spotify saved playlists                                        |
+| --sa  | --saved-albums    | download spotify saved albums                                           |
+| --l   | --login           | Requests a login in an external window (non tty should use --u and --p) |
+| --u   | --username        | spotify username for headless long                                      |
+| --p   | --password        | spotify password                                                        |
+| --cf  | --cache-file      | takes valid output file name path argument                              |
+| --dr  | --download-report | output a download report of what files failed                           |
+| --cof | --cookie-file     | takes valid file name path argument to a txt file for youtube cookies   |
+| --v   | --version         | returns current version                                                 |
+| --h   | --help            | outputs help text                                                       |
 <hr>
 
 ## Notes
