@@ -92,6 +92,9 @@ $ spotifydl https://open.spotify.com/track/xyz
 
 ## Notes
 
+if you receive 'Got a spotify api error WebapiRegularError: An error occurred while communicating with Spotify's Web API
+Details: non existing id'  you may need to provide auth either use `--l` for manual login prompt or `--u username --p password` for headless login
+
 If you receive a 429 error please provide a cookies file given the `--cof` flag, to generate a cookies file please refer to [Chrome](https://chrome.google.com/webstore/detail/njabckikapfpffapmjgojcnbfjonfjfg) or [Firefox](https://github.com/rotemdan/ExportCookies)
 
 ## Docker
