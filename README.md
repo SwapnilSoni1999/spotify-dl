@@ -1,6 +1,6 @@
 # Spotify Downloader 
 <p align="center">
-  <img src="./hero.png" height="200px"/>
+  <img src="./logo.png" height="200px"/>
   <br><br>
   <b>Download audio files from spotify links</b>
   <br>
