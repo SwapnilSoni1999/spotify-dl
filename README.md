@@ -71,25 +71,29 @@ $ spotifydl https://open.spotify.com/track/xyz
 ```
 
 #### Options
-| Flag  | Long Flag         | Usage                                                                 |
-| ----- | ----------------- | --------------------------------------------------------------------- |
-| --o   | --output          | takes valid output path argument                                      |
-| --es  | --extra-search    | takes extra search string/term to be used for youtube search          |
-| --oo  | --output-only     | enforces all downloaded songs in the output dir                       |
-| --st  | --saved-tracks    | download spotify saved tracks                                         |
-| --ss  | --saved-songs     | download spotify saved shows                                          |
-| --sp  | --saved-playlists | download spotify saved playlists                                      |
-| --sa  | --saved-albums    | download spotify saved albums                                         |
-| --u   | --username        | spotify username (only needed in non tty)                             |
-| --p   | --password        | spotify password (only needed in non tty)                             |
-| --cf  | --cache-file      | takes valid output file name path argument                            |
-| --dr  | --download-report | output a download report of what files failed                         |
-| --cof | --cookie-file     | takes valid file name path argument to a txt file for youtube cookies |
-| --v   | --version         | returns current version                                               |
-| --h   | --help            | outputs help text                                                     |
+| Flag  | Long Flag         | Usage                                                                   |
+| ----- | ----------------- | ----------------------------------------------------------------------- |
+| --o   | --output          | takes valid output path argument                                        |
+| --es  | --extra-search    | takes extra search string/term to be used for youtube search            |
+| --oo  | --output-only     | enforces all downloaded songs in the output dir                         |
+| --st  | --saved-tracks    | download spotify saved tracks                                           |
+| --ss  | --saved-songs     | download spotify saved shows                                            |
+| --sp  | --saved-playlists | download spotify saved playlists                                        |
+| --sa  | --saved-albums    | download spotify saved albums                                           |
+| --l   | --login           | Requests a login in an external window (non tty should use --u and --p) |
+| --u   | --username        | spotify username for headless long                                      |
+| --p   | --password        | spotify password                                                        |
+| --cf  | --cache-file      | takes valid output file name path argument                              |
+| --dr  | --download-report | output a download report of what files failed                           |
+| --cof | --cookie-file     | takes valid file name path argument to a txt file for youtube cookies   |
+| --v   | --version         | returns current version                                                 |
+| --h   | --help            | outputs help text                                                       |
 <hr>
 
 ## Notes
+
+if you receive 'Got a spotify api error WebapiRegularError: An error occurred while communicating with Spotify's Web API
+Details: non existing id'  you may need to provide auth either use `--l` for manual login prompt or `--u username --p password` for headless login
 
 If you receive a 429 error please provide a cookies file given the `--cof` flag, to generate a cookies file please refer to [Chrome](https://chrome.google.com/webstore/detail/njabckikapfpffapmjgojcnbfjonfjfg) or [Firefox](https://github.com/rotemdan/ExportCookies)
 
