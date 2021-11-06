@@ -1,7 +1,7 @@
 {
   "name": "spotify-dl",
   "productName": "Spotify Downloader",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Spotify Songs, Playlist & Album Downloader",
   "main": "app.js",
   "bin": {
@@ -36,7 +36,7 @@
     "sponsorblock-api": "^0.2.2",
     "spotify-web-api-node": "^5.0.0",
     "string-similarity": "^4.0.4",
-    "yt-search": "^2.7.5",
+    "yt-search": "^0.1.1",
     "ytdl-core": "^4.9.1"
   },
   "xo": {
