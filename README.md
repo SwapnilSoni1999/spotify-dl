@@ -12,6 +12,8 @@
 Get [FFMPEG](https://ffmpeg.org/download.html)
 (Node.js 14)[https://nodejs.org/en/download/package-manager/]
 
+Note: if you run into issues related to puppeteer chromium download p[lease pretend install with `PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true `
+
 #### spotifydl
 
 A simple commandline utility that allows you to download Spotify Songs, Shows, Episodes, Playlists and Albums from Youtube.
