@@ -10,6 +10,7 @@
 
 #### Required
 Get [FFMPEG](https://ffmpeg.org/download.html)
+(Node.js 14)[https://nodejs.org/en/download/package-manager/]
 
 #### spotifydl
 
