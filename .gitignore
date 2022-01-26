@@ -1,5 +1,5 @@
 node_modules/
-*.mp3
+./**/*.mp3
 .vscode/
 Makefile
 .DS_STORE
