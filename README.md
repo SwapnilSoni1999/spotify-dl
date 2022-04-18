@@ -10,9 +10,10 @@
 
 #### Required
 Get [FFMPEG](https://ffmpeg.org/download.html)
+
 (Node.js 14)[https://nodejs.org/en/download/package-manager/]
 
-Note: if you run into issues related to puppeteer chromium download p[lease pretend install with `PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true `
+Note: if you run into issues related to puppeteer chromium download please try `PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install -g spotify-dl`
 
 #### spotifydl
 
