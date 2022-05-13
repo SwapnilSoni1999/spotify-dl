@@ -2,7 +2,7 @@
 <p align="center">
   <img src="./logo.png" height="200px"/>
   <br><br>
-  <b>Download audio files from spotify links</b>
+  <b>Download audio files from spotify links(Based on: youtube-dl)</b>
   <br>
 </p>
 
