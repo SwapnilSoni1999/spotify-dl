@@ -5,7 +5,7 @@ import Constants from './constants.js';
 import { logInfo } from './log-helper.js';
 
 const {
-  YOUTUBE_SEARCH: { MAX_MINUTES },
+  YOUTUBE_SEARCH: { MAX_MINUTES, VALID_CONTEXTS },
   INPUT_TYPES: { SONG },
 } = Constants;
 const search = promisify(YoutubeSearch);
@@ -31,6 +31,7 @@ const getLinks = async ({
   albumName,
   artistName,
   extraSearch,
+  searchFormat,
   type,
 }) => {
   const tryLink = async searchTerms => {
@@ -42,15 +43,32 @@ const getLinks = async ({
         (video.seconds > 0)),
       ).map(video => buildUrl(video));
   };
-  const similarity = StringSimilarity.compareTwoStrings(itemName, albumName);
   let links = [];
-  // to avoid duplicate song downloads
-  extraSearch = extraSearch ? ` ${extraSearch}` : '';
-  if (similarity < 0.5) {
-    links = await tryLink(`${itemName} - ${albumName}${extraSearch}`);
+
+  if (searchFormat.length) {
+    const contexts = searchFormat.match(/(?<=\{).+?(?=\})/g);
+    const invalidContexts = contexts.filter(
+      context => !VALID_CONTEXTS.includes(context),
+    );
+    if (invalidContexts.length > 0 || !contexts.length) {
+      throw new Error(`Invalid search contexts: ${invalidContexts}`);
+    }
+
+    contexts.forEach(context =>
+      searchFormat = searchFormat.replace(`{${context}}`, eval(context)),
+    );
+    links = await tryLink(searchFormat);
   }
   if (!links.length) {
-    links = await tryLink(`${itemName} - ${artistName}${extraSearch}`);
+    const similarity = StringSimilarity.compareTwoStrings(itemName, albumName);
+    // to avoid duplicate song downloads
+    extraSearch = extraSearch ? ` ${extraSearch}` : '';
+    if (similarity < 0.5) {
+      links = await tryLink(`${albumName} - ${itemName}${extraSearch}`);
+    }
+    if (!links.length) {
+      links = await tryLink(`${artistName} - ${itemName}${extraSearch}`);
+    }
   }
   return links;
 };

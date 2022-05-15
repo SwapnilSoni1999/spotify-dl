@@ -16,6 +16,7 @@ export default {
     savedTracks: false,
     savedShows: false,
     outputOnly: false,
+    searchFormat: '',
   },
   spotifyApi: {
     clientId: 'acc6302297e040aeb6e4ac1fbdfd62c3',

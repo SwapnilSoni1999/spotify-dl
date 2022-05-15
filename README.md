@@ -80,6 +80,8 @@ $ spotifydl https://open.spotify.com/track/xyz
 | --o   | --output          | takes valid output path argument                                                     |
 | --es  | --extra-search    | takes extra search string/term to be used for youtube search                         |
 | --oo  | --output-only     | enforces all downloaded songs in the output dir                                      |
+| --sf  | --search-format   | provide template for youtube api, supports `albumName`, `artistName`,`itemName`      |
+|       |                   | "something {itemName} - {albumName} anyrandomextrastring"                            |
 | --st  | --saved-tracks    | download spotify saved tracks                                                        |
 | --ss  | --saved-songs     | download spotify saved shows                                                         |
 | --sp  | --saved-playlists | download spotify saved playlists                                                     |
