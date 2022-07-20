@@ -10,6 +10,14 @@ const {
 } = Constants;
 const search = promisify(YoutubeSearch);
 
+/**
+ * This function does the actual api calls to youtube
+ *
+ * @param {String} searchTerms string to search on youtube with
+ * @param {String} type the type of item being searched 
+ * @param {String[]} exclusionFilters exclusion texts for description, title
+ * @returns {String[]} youtube links
+ */
 const findLinks = async (searchTerms, type, exclusionFilters) => {
   logInfo(`searching youtube with keywords "${searchTerms}"`);
   const result = await search(searchTerms);
