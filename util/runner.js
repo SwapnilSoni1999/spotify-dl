@@ -19,7 +19,8 @@ const {
   YOUTUBE_SEARCH: { GENERIC_IMAGE },
 } = Constants;
 const {
-  inputs, extraSearch, searchFormat, output, outputOnly, downloadReport,
+  inputs, extraSearch, searchFormat,
+  exclusionFilters, output, outputOnly, downloadReport,
 } = cliInputs();
 
 const itemOutputDir = item => {
@@ -63,6 +64,7 @@ const downloadList = async list => {
           extraSearch,
           searchFormat,
           type: list.type,
+          exclusionFilters,
         },
       );
 

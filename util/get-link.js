@@ -10,10 +10,30 @@ const {
 } = Constants;
 const search = promisify(YoutubeSearch);
 
-function buildUrl(topResult) {
-  return (topResult.url.includes('https://youtube.com')) ?
-    topResult.url : 'https://youtube.com' + topResult.url;
-}
+const findLinks = async (searchTerms, type, exclusionFilters) => {
+  logInfo(`searching youtube with keywords "${searchTerms}"`);
+  const result = await search(searchTerms);
+  const isSong = Object.values(SONG).includes(type);
+  return result.videos
+    .filter(video =>
+      !exclusionFilters ||
+      !(
+        exclusionFilters.some(
+          exclusionFilter => video.title.includes(exclusionFilter),
+        ) ||
+        exclusionFilters.some(
+          exclusionFilter => video.description.includes(exclusionFilter),
+        )
+      ),
+    )
+    .filter(video => (
+      (!isSong || (video.seconds < (MAX_MINUTES * 60))) &&
+      (video.seconds > 0)
+    ))
+    .slice(0, 10)
+    .map(video => (video.url.includes('https://youtube.com')) ?
+      video.url : 'https://youtube.com' + video.url);
+};
 
 /**
  * This function searches youtube for given songname 
@@ -24,6 +44,7 @@ function buildUrl(topResult) {
  * @param {String} artistName name of artist
  * @param {String} extraSearch extra search terms
  * @param {String} type type of download being requested
+ * @param {String[]} exclusionFilters exclusion texts for description, title
  * @returns {String[]} youtube links
  */
 const getLinks = async ({
@@ -33,18 +54,9 @@ const getLinks = async ({
   extraSearch,
   searchFormat,
   type,
+  exclusionFilters,
 }) => {
-  const tryLink = async searchTerms => {
-    logInfo(`searching youtube with keywords "${searchTerms}"`);
-    const result = await search(searchTerms);
-    const isSong = Object.values(SONG).includes(type);
-    return result.videos.slice(0, 10)
-      .filter(video => ((!isSong || (video.seconds < (MAX_MINUTES * 60))) &&
-        (video.seconds > 0)),
-      ).map(video => buildUrl(video));
-  };
   let links = [];
-
   if (searchFormat.length) {
     const contexts = searchFormat.match(/(?<=\{).+?(?=\})/g);
     const invalidContexts = contexts.filter(
@@ -57,17 +69,23 @@ const getLinks = async ({
     contexts.forEach(context =>
       searchFormat = searchFormat.replace(`{${context}}`, eval(context)),
     );
-    links = await tryLink(searchFormat);
+    links = await findLinks(searchFormat, type, exclusionFilters);
   }
   if (!links.length) {
     const similarity = StringSimilarity.compareTwoStrings(itemName, albumName);
     // to avoid duplicate song downloads
     extraSearch = extraSearch ? ` ${extraSearch}` : '';
     if (similarity < 0.5) {
-      links = await tryLink(`${albumName} - ${itemName}${extraSearch}`);
+      links = await findLinks(
+        `${albumName} - ${itemName}${extraSearch}`,
+        type,
+        exclusionFilters,
+      );
     }
     if (!links.length) {
-      links = await tryLink(`${artistName} - ${itemName}${extraSearch}`);
+      links = await findLinks(
+        `${artistName} - ${itemName}${extraSearch}`, type, exclusionFilters,
+      );
     }
   }
   return links;
