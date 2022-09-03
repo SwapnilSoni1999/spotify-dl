@@ -18,7 +18,10 @@ const {
   INPUT_TYPES,
   YOUTUBE_SEARCH: { GENERIC_IMAGE },
 } = Constants;
-const { inputs, extraSearch, output, outputOnly, downloadReport } = cliInputs();
+const {
+  inputs, extraSearch, searchFormat,
+  exclusionFilters, output, outputOnly, downloadReport,
+} = cliInputs();
 
 const itemOutputDir = item => {
   const outputDir = path.normalize(output);
@@ -59,7 +62,9 @@ const downloadList = async list => {
           albumName,
           artistName,
           extraSearch,
+          searchFormat,
           type: list.type,
+          exclusionFilters,
         },
       );
 
