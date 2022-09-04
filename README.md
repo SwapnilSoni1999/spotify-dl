@@ -75,23 +75,27 @@ $ spotifydl https://open.spotify.com/track/xyz
 ```
 
 #### Options
-| Flag  | Long Flag         | Usage                                                                                                   |
-| ----- | ----------------- | ------------------------------------------------------------------------------------------------------- |
-| --o   | --output          | takes valid output path argument                                                                        |
-| --es  | --extra-search    | takes extra search string/term to be used for youtube search                                            |
-| --oo  | --output-only     | enforces all downloaded songs in the output dir                                                         |
-| --st  | --saved-tracks    | download spotify saved tracks                                                                           |
-| --ss  | --saved-songs     | download spotify saved shows                                                                            |
-| --sp  | --saved-playlists | download spotify saved playlists                                                                        |
-| --sa  | --saved-albums    | download spotify saved albums                                                                           |
-| --l   | --login           | Requests a login in an external window (non tty should use --u and --p) (Docker without -it is non tty) |
-| --u   | --username        | spotify username for headless long (Note: you must use --login once to grant access)                    |
-| --p   | --password        | spotify password                                                                                        |
-| --cf  | --cache-file      | takes valid output file name path argument                                                              |
-| --dr  | --download-report | output a download report of what files failed                                                           |
-| --cof | --cookie-file     | takes valid file name path argument to a txt file for youtube cookies                                   |
-| --v   | --version         | returns current version                                                                                 |
-| --h   | --help            | outputs help text                                                                                       |
+| Flag  | Long Flag           | Usage                                                                                                   |
+| ----- | ------------------- | ------------------------------------------------------------------------------------------------------- |
+| --o   | --output            | takes valid output path argument                                                                        |
+| --es  | --extra-search      | takes extra search string/term to be used for youtube search                                            |
+| --oo  | --output-only       | enforces all downloaded songs in the output dir                                                         |
+| --sf  | --search-format     | provide template for youtube api, supports `albumName`, `artistName`,`itemName`                         |
+|       |                     | "something {itemName} - {albumName} anyrandomextrastring"                                               |
+| --ef  | --exclusion-filters | comma separated string of exclusion filters                                                             |
+|       |                     | each filter will be checked against the description and title if found the link will be ignored         |
+| --st  | --saved-tracks      | download spotify saved tracks                                                                           |
+| --ss  | --saved-songs       | download spotify saved shows                                                                            |
+| --sp  | --saved-playlists   | download spotify saved playlists                                                                        |
+| --sa  | --saved-albums      | download spotify saved albums                                                                           |
+| --l   | --login             | Requests a login in an external window (non tty should use --u and --p) (Docker without -it is non tty) |
+| --u   | --username          | spotify username for headless long (Note: you must use --login once to grant access)                    |
+| --p   | --password          | spotify password                                                                                        |
+| --cf  | --cache-file        | takes valid output file name path argument                                                              |
+| --dr  | --download-report   | output a download report of what files failed                                                           |
+| --cof | --cookie-file       | takes valid file name path argument to a txt file for youtube cookies                                   |
+| --v   | --version           | returns current version                                                                                 |
+| --h   | --help              | outputs help text                                                                                       |
 <hr>
 
 ## Notes
