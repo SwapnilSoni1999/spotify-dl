@@ -92,6 +92,7 @@ $ spotifydl https://open.spotify.com/track/xyz
 | --cof | --cookie-file     | takes valid file name path argument to a txt file for youtube cookies                |
 | --v   | --version         | returns current version                                                              |
 | --h   | --help            | outputs help text                                                                    |
+| --dl  | --download-lyrics | enables downloading of lyrics                                                        |
 <hr>
 
 ## Notes

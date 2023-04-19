@@ -13,12 +13,20 @@ import {
   getSavedAlbums, getSavedPlaylists, getSavedTracks, getAlbum,
 } from './get-songdata.js';
 import { logSuccess, logInfo, logFailure } from './log-helper.js';
+import downloadSubtitles from '../lib/subtitle-downloader.js';
 
 const {
   INPUT_TYPES,
   YOUTUBE_SEARCH: { GENERIC_IMAGE },
 } = Constants;
-const { inputs, extraSearch, output, outputOnly, downloadReport } = cliInputs();
+const {
+  inputs,
+  extraSearch,
+  output,
+  outputOnly,
+  downloadReport,
+  downloadLyrics,
+} = cliInputs();
 
 const itemOutputDir = item => {
   const outputDir = path.normalize(output);
@@ -52,6 +60,19 @@ const downloadList = async list => {
           `Item: ${itemName}`,
         ].join('\n'),
       );
+      const fileNameCleaned = cleanOutputPath(itemName) || '_';
+
+      const outputSubtitleFilePath = path.resolve(
+        itemDir,
+        `${fileNameCleaned}-lyrics.txt`,
+      );
+
+      //create the dir if it doesn't exist
+      fs.mkdirSync(itemDir, { recursive: true });
+
+      if (downloadLyrics) {
+        await downloadSubtitles(itemName, artistName, outputSubtitleFilePath);
+      }
 
       const ytLinks = nextItem.URL ? [nextItem.URL] : await getLinks(
         {
@@ -63,15 +84,16 @@ const downloadList = async list => {
         },
       );
 
-      const fileNameCleaned = cleanOutputPath(itemName) || '_';
-
       const outputFilePath = path.resolve(
         itemDir,
         `${fileNameCleaned}.mp3`,
       );
-      //create the dir if it doesn't exist
-      fs.mkdirSync(itemDir, { recursive: true });
-      const downloadSuccessful = await downloader(ytLinks, outputFilePath);
+
+      const downloadSuccessful = await downloader(
+        ytLinks,
+        outputFilePath,
+      );
+
       if (downloadSuccessful) {
         await mergeMetadata(outputFilePath, nextItem);
         writeId(itemDir, itemId);
