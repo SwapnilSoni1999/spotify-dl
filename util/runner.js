@@ -26,6 +26,8 @@ const {
   outputOnly,
   downloadReport,
   downloadLyrics,
+  searchFormat,
+  exclusionFilters,
 } = cliInputs();
 
 const itemOutputDir = item => {
@@ -80,7 +82,9 @@ const downloadList = async list => {
           albumName,
           artistName,
           extraSearch,
+          searchFormat,
           type: list.type,
+          exclusionFilters,
         },
       );
 
