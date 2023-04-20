@@ -16,6 +16,7 @@ export default {
     savedTracks: false,
     savedShows: false,
     outputOnly: false,
+    downloadLyrics: false,
     searchFormat: '',
     exclusionFilters: '',
   },
