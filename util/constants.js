@@ -31,6 +31,7 @@ export default {
   FFMPEG: {
     ASET: 'asetpts=PTS-STARTPTS',
     TIMEOUT_MINUTES: 30,
+    RATING_CONSTANT: 255 / 100,
   },
   MAX_LIMIT_DEFAULT: 50,
   SERVER: {

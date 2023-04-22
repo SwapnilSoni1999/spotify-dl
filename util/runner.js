@@ -64,16 +64,11 @@ const downloadList = async list => {
       );
       const fileNameCleaned = cleanOutputPath(itemName) || '_';
 
-      const outputSubtitleFilePath = path.resolve(
-        itemDir,
-        `${fileNameCleaned}-lyrics.txt`,
-      );
-
       //create the dir if it doesn't exist
       fs.mkdirSync(itemDir, { recursive: true });
 
       if (downloadLyrics) {
-        await downloadSubtitles(itemName, artistName, outputSubtitleFilePath);
+        nextItem.lyrics = await downloadSubtitles(itemName, artistName);
       }
 
       const ytLinks = nextItem.URL ? [nextItem.URL] : await getLinks(
