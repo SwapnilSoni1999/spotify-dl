@@ -50,6 +50,6 @@
   "devDependencies": {
     "eslint": "^8.20.0",
     "prettier": "^2.7.1",
-    "xo": "^0.47.0"
+    "xo": "^0.54.1"
   }
 }
