@@ -47,6 +47,9 @@ const downloadList = async list => {
   let currentCount = 0;
   for (const nextItem of list.items) {
     currentCount++;
+    if (!nextItem) {
+      continue;
+    }
     const itemDir = itemOutputDir(nextItem);
     const cached = findId(nextItem.id, itemOutputDir(nextItem));
     if (!cached) {
@@ -111,7 +114,7 @@ const generateReport = async listResults => {
     listResults.forEach(result => {
       const listItems = result.items;
       const itemLength = listItems.length;
-      const failedItems = listItems.filter(item => item.failed);
+      const failedItems = listItems.filter(item => item && item.failed);
       const failedItemLength = failedItems.length;
       logInfo(
         [
@@ -256,7 +259,9 @@ const run = async () => {
       }
     }
 
-    for (const [x, list] of lists.entries()) {
+    for (const [x, list] of lists
+      .filter(list => list !== undefined)
+      .entries()) {
       logInfo(`Starting download of list ${x + 1}/${lists.length}`);
       const downloadResult = await downloadList(list);
       if (downloadReport) {
@@ -264,7 +269,7 @@ const run = async () => {
       }
     }
   }
-  await generateReport(listResults);
+  await generateReport(listResults.filter(result => result !== undefined));
   logSuccess('Finished!');
 };
 
