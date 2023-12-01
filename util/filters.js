@@ -7,7 +7,7 @@ export function removeQuery(url) {
 }
 
 export function splitDates(dateString) {
-  const dateSplits = dateString.split('-');
+  const dateSplits = dateString && dateString.split('-');
   return {
     year: dateSplits && dateSplits.length > 0 ? dateSplits[0] : '',
     month: dateSplits && dateSplits.length > 1 ? dateSplits[1] : '',
