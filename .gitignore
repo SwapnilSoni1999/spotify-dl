@@ -3,3 +3,4 @@ node_modules/
 .vscode/
 Makefile
 .DS_STORE
+*.mp3
