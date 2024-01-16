@@ -18,6 +18,7 @@ export default {
     outputOnly: false,
     downloadLyrics: false,
     searchFormat: '',
+    outputFormat: '{artistName}___{albumName}___{itemName}',
     exclusionFilters: '',
   },
   spotifyApi: {

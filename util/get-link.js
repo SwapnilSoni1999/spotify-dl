@@ -3,9 +3,10 @@ import YoutubeSearch from 'yt-search';
 import StringSimilarity from 'string-similarity';
 import Constants from './constants.js';
 import { logInfo } from './log-helper.js';
+import { generateTemplateString } from './format-generators.js';
 
 const {
-  YOUTUBE_SEARCH: { MAX_MINUTES, VALID_CONTEXTS },
+  YOUTUBE_SEARCH: { MAX_MINUTES },
   INPUT_TYPES: { SONG },
 } = Constants;
 const search = promisify(YoutubeSearch);
@@ -66,19 +67,13 @@ const getLinks = async ({
 }) => {
   let links = [];
   if (searchFormat.length) {
-    const contexts = searchFormat.match(/(?<=\{).+?(?=\})/g);
-    const invalidContexts = contexts.filter(
-      context => !VALID_CONTEXTS.includes(context),
+    links = await findLinks(
+      generateTemplateString(itemName, albumName, artistName, searchFormat),
+      type,
+      exclusionFilters,
     );
-    if (invalidContexts.length > 0 || !contexts.length) {
-      throw new Error(`Invalid search contexts: ${invalidContexts}`);
-    }
-
-    contexts.forEach(context =>
-      searchFormat = searchFormat.replace(`{${context}}`, eval(context)),
-    );
-    links = await findLinks(searchFormat, type, exclusionFilters);
   }
+  // custom search format failed or was never provided try the generic way
   if (!links.length) {
     const similarity = StringSimilarity.compareTwoStrings(itemName, albumName);
     // to avoid duplicate song downloads
