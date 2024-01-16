@@ -15,7 +15,7 @@ const search = promisify(YoutubeSearch);
  * This function does the actual api calls to youtube
  *
  * @param {String} searchTerms string to search on youtube with
- * @param {String} type the type of item being searched 
+ * @param {String} type the type of item being searched
  * @param {String[]} exclusionFilters exclusion texts for description, title
  * @returns {String[]} youtube links
  */
@@ -24,28 +24,32 @@ const findLinks = async (searchTerms, type, exclusionFilters) => {
   const result = await search(searchTerms);
   const isSong = Object.values(SONG).includes(type);
   return result.videos
-    .filter(video =>
-      !exclusionFilters ||
-      !(
-        exclusionFilters.some(
-          exclusionFilter => video.title.includes(exclusionFilter),
-        ) ||
-        exclusionFilters.some(
-          exclusionFilter => video.description.includes(exclusionFilter),
-        )
-      ),
+    .filter(
+      video =>
+        !exclusionFilters ||
+        !(
+          exclusionFilters.some(exclusionFilter =>
+            video.title.includes(exclusionFilter),
+          ) ||
+          exclusionFilters.some(exclusionFilter =>
+            video.description.includes(exclusionFilter),
+          )
+        ),
     )
-    .filter(video => (
-      (!isSong || (video.seconds < (MAX_MINUTES * 60))) &&
-      (video.seconds > 0)
-    ))
+    .filter(
+      video =>
+        (!isSong || video.seconds < MAX_MINUTES * 60) && video.seconds > 0,
+    )
     .slice(0, 10)
-    .map(video => (video.url.includes('https://youtube.com')) ?
-      video.url : 'https://youtube.com' + video.url);
+    .map(video =>
+      video.url.includes('https://youtube.com')
+        ? video.url
+        : 'https://youtube.com' + video.url,
+    );
 };
 
 /**
- * This function searches youtube for given songname 
+ * This function searches youtube for given songname
  * and returns the link of topmost result
  *
  * @param {String} itemName name of song
@@ -87,7 +91,9 @@ const getLinks = async ({
     }
     if (!links.length) {
       links = await findLinks(
-        `${artistName} - ${itemName}${extraSearch}`, type, exclusionFilters,
+        `${artistName} - ${itemName}${extraSearch}`,
+        type,
+        exclusionFilters,
       );
     }
   }
