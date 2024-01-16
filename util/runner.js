@@ -8,9 +8,16 @@ import { writeId, findId } from '../lib/cache.js';
 import mergeMetadata from '../lib/metadata.js';
 import { cliInputs } from '../lib/setup.js';
 import {
-  getTrack, getPlaylist, getArtistAlbums,
-  getEpisode, getShowEpisodes, getSavedShows,
-  getSavedAlbums, getSavedPlaylists, getSavedTracks, getAlbum,
+  getTrack,
+  getPlaylist,
+  getArtistAlbums,
+  getEpisode,
+  getShowEpisodes,
+  getSavedShows,
+  getSavedAlbums,
+  getSavedPlaylists,
+  getSavedTracks,
+  getAlbum,
 } from './get-songdata.js';
 import { logSuccess, logInfo, logFailure } from './log-helper.js';
 import downloadSubtitles from '../lib/subtitle-downloader.js';
@@ -51,10 +58,10 @@ const downloadList = async list => {
   let currentCount = 0;
   for (const nextItem of list.items) {
     currentCount++;
-      const itemId = nextItem.id;
-      const itemName = nextItem.name;
-      const albumName = nextItem.album_name;
-      const artistName = nextItem.artists[0];
+    const itemId = nextItem.id;
+    const itemName = nextItem.name;
+    const albumName = nextItem.album_name;
+    const artistName = nextItem.artists[0];
     const fullItemPath = itemOutputPath(itemName, albumName, artistName);
     const itemDir = fullItemPath.substr(0, fullItemPath.lastIndexOf('/'));
     const cached = findId(nextItem.id, itemDir);
@@ -75,17 +82,17 @@ const downloadList = async list => {
         nextItem.lyrics = await downloadSubtitles(itemName, artistName);
       }
 
-      const ytLinks = nextItem.URL ? [nextItem.URL] : await getLinks(
-        {
-          itemName,
-          albumName,
-          artistName,
-          extraSearch,
-          searchFormat,
-          type: list.type,
-          exclusionFilters,
-        },
-      );
+      const ytLinks = nextItem.URL
+        ? [nextItem.URL]
+        : await getLinks({
+            itemName,
+            albumName,
+            artistName,
+            extraSearch,
+            searchFormat,
+            type: list.type,
+            exclusionFilters,
+          });
 
       const outputFilePath = path.resolve(fullItemPath);
 
@@ -147,9 +154,7 @@ const run = async () => {
       case INPUT_TYPES.SONG.SONG: {
         const track = await getTrack(URL);
         lists.push({
-          items: [
-            track,
-          ],
+          items: [track],
           name: `${track.name} ${track.artists[0]}`,
           type: input.type,
         });
@@ -169,26 +174,24 @@ const run = async () => {
       }
       case INPUT_TYPES.SONG.ARTIST: {
         const artistAlbumInfos = await getArtistAlbums(URL);
-        lists.push(...artistAlbumInfos.map(list => {
-          list.type = input.type;
-          return list;
-        }));
+        lists.push(
+          ...artistAlbumInfos.map(list => {
+            list.type = input.type;
+            return list;
+          }),
+        );
         break;
       }
       case INPUT_TYPES.EPISODE.EPISODE: {
         const episode = await getEpisode(URL);
         if (episode) {
           lists.push({
-            items: [
-              episode,
-            ],
+            items: [episode],
             name: `${episode.name} ${episode.album_name}`,
             type: input.type,
           });
         } else {
-          logFailure(
-            'Failed to find episode, you may need to use auth',
-          );
+          logFailure('Failed to find episode, you may need to use auth');
         }
 
         break;
@@ -201,26 +204,32 @@ const run = async () => {
       }
       case INPUT_TYPES.EPISODE.SAVED_SHOWS: {
         const savedShowsInfo = await getSavedShows();
-        lists.push(...savedShowsInfo.map(list => {
-          list.type = input.type;
-          return list;
-        }));
+        lists.push(
+          ...savedShowsInfo.map(list => {
+            list.type = input.type;
+            return list;
+          }),
+        );
         break;
       }
       case INPUT_TYPES.SONG.SAVED_ALBUMS: {
         const savedAlbumsInfo = await getSavedAlbums();
-        lists.push(...savedAlbumsInfo.map(list => {
-          list.type = input.type;
-          return list;
-        }));
+        lists.push(
+          ...savedAlbumsInfo.map(list => {
+            list.type = input.type;
+            return list;
+          }),
+        );
         break;
       }
       case INPUT_TYPES.SONG.SAVED_PLAYLISTS: {
         const savedPlaylistsInfo = await getSavedPlaylists();
-        lists.push(...savedPlaylistsInfo.map(list => {
-          list.type = input.type;
-          return list;
-        }));
+        lists.push(
+          ...savedPlaylistsInfo.map(list => {
+            list.type = input.type;
+            return list;
+          }),
+        );
         break;
       }
       case INPUT_TYPES.SONG.SAVED_TRACKS: {
@@ -249,8 +258,10 @@ const run = async () => {
         break;
       }
       default: {
-        throw new Error(`Invalid URL type (${input.type}), ` +
-          'Please visit github and make a request to support this type');
+        throw new Error(
+          `Invalid URL type (${input.type}), ` +
+            'Please visit github and make a request to support this type',
+        );
       }
     }
 
