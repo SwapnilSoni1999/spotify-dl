@@ -1,4 +1,5 @@
-# Spotify Downloader 
+# Spotify Downloader
+
 <p align="center">
   <img src="./logo.png" height="200px"/>
   <br><br>
@@ -9,9 +10,10 @@
 &nbsp;
 
 #### Required
+
 Get [FFMPEG](https://ffmpeg.org/download.html)
 
-(Node.js 14)[https://nodejs.org/en/download/package-manager/]
+[Node.js 14](https://nodejs.org/en/download/package-manager/)
 
 Note: if you run into issues related to puppeteer chromium download please try `PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install -g spotify-dl`
 
@@ -19,7 +21,8 @@ Note: if you run into issues related to puppeteer chromium download please try `
 
 A simple commandline utility that allows you to download Spotify Songs, Shows, Episodes, Playlists and Albums from Youtube.
 
-PLEASE NOTE: 
+PLEASE NOTE:
+
 * The ability to find a video is dependent on the fact it is hosted on youtube, and even then there is a chance it is still incorrectly matched
 * Some items may only be available to spotify premium users, please be sure to provide a username and password when this is the case
 
@@ -34,7 +37,9 @@ Install from [npm](https://www.npmjs.com/package/spotify-dl) registry
 ```sh
 npm install -g spotify-dl
 ```
+
 or You can do manually
+
 ```sh
 git clone https://github.com/SwapnilSoni1999/spotify-dl
 cd spotify-dl
@@ -43,7 +48,9 @@ npm link
 ```
 
 #### Android (Termux)
+
 PS: You may need to type `termux-setup-storage` first and allow storage permission
+
 ```sh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/SwapnilSoni1999/spotify-dl/master/tools/termux.sh)"
 ```
@@ -51,6 +58,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/SwapnilSoni1999/spotify-dl
 #### Docker
 
 Build docker image:
+
 ```sh
 git clone https://github.com/SwapnilSoni1999/spotify-dl
 cd spotify-dl
@@ -62,6 +70,7 @@ docker build -t spotify-dl .
 # Usage
 
 To download highest quality audio file
+
 ```sh
 spotifydl <spotify track/album/playlist link> ...
 ```
@@ -69,12 +78,14 @@ spotifydl <spotify track/album/playlist link> ...
 &nbsp;
 
 Example
+
 ```sh
-$ spotifydl https://open.spotify.com/track/xyz
+spotifydl https://open.spotify.com/track/xyz
 
 ```
 
 #### Options
+
 | Flag  | Long Flag           | Usage                                                                                                   |
 | ----- | ------------------- | ------------------------------------------------------------------------------------------------------- |
 | --o   | --output            | takes valid output path argument                                                                        |
@@ -82,6 +93,9 @@ $ spotifydl https://open.spotify.com/track/xyz
 | --oo  | --output-only       | enforces all downloaded songs in the output dir                                                         |
 | --sf  | --search-format     | provide template for youtube api, supports `albumName`, `artistName`,`itemName`                         |
 |       |                     | "something {itemName} - {albumName} anyrandomextrastring"                                               |
+| --of  | --output-format     | provide template for output of filenames, supports `albumName`, `artistName`,`itemName`                 |
+|       |                     | 3 x _  are used to signify directories                                                                  |
+|       |                     | "something___{artistName}___{albumName}___{itemName}"                                                   |
 | --ef  | --exclusion-filters | comma separated string of exclusion filters                                                             |
 |       |                     | each filter will be checked against the description and title if found the link will be ignored         |
 | --st  | --saved-tracks      | download spotify saved tracks                                                                           |
@@ -109,6 +123,7 @@ Details: non existing id'  you may need to provide auth either use `--l` for man
 If you receive a 429 error please provide a cookies file given the `--cof` flag, to generate a cookies file please refer to [Chrome](https://chrome.google.com/webstore/detail/njabckikapfpffapmjgojcnbfjonfjfg) or [Firefox](https://github.com/rotemdan/ExportCookies)
 
 ## Docker
+
 ```sh
 docker run -it --user=$(id -u):$(id -g) -v $(pwd):/download --rm spotify-dl <options-to-spotify-dl defaults to --help>
 docker run -it --user=$(id -u):$(id -g) -v $(pwd):/download --rm spotify-dl "https://open.spotify.com/...."
