@@ -14,6 +14,7 @@ import {
 } from './get-songdata.js';
 import { logSuccess, logInfo, logFailure } from './log-helper.js';
 import downloadSubtitles from '../lib/subtitle-downloader.js';
+import { generateTemplateString } from './format-generators.js';
 
 const {
   INPUT_TYPES,
@@ -28,15 +29,18 @@ const {
   downloadLyrics,
   searchFormat,
   exclusionFilters,
+  outputFormat,
 } = cliInputs();
 
-const itemOutputDir = item => {
-  const outputDir = path.normalize(output);
-  return outputOnly ? outputDir : path.join(
-    outputDir,
-    cleanOutputPath(item.artists[0]),
-    cleanOutputPath(item.album_name),
-  );
+const itemOutputPath = (itemName, albumName, artistName) => {
+  itemName = cleanOutputPath(itemName || '_');
+  const generatedPathSegments = cleanOutputPath(
+    generateTemplateString(itemName, albumName, artistName, outputFormat),
+  ).split('___');
+  return `${path.join(
+    path.normalize(output),
+    ...(outputOnly ? [itemName] : generatedPathSegments),
+  )}.mp3`;
 };
 
 const downloadList = async list => {
@@ -47,13 +51,15 @@ const downloadList = async list => {
   let currentCount = 0;
   for (const nextItem of list.items) {
     currentCount++;
-    const itemDir = itemOutputDir(nextItem);
-    const cached = findId(nextItem.id, itemOutputDir(nextItem));
-    if (!cached) {
       const itemId = nextItem.id;
       const itemName = nextItem.name;
       const albumName = nextItem.album_name;
       const artistName = nextItem.artists[0];
+    const fullItemPath = itemOutputPath(itemName, albumName, artistName);
+    const itemDir = fullItemPath.substr(0, fullItemPath.lastIndexOf('/'));
+    const cached = findId(nextItem.id, itemDir);
+
+    if (!cached) {
       logInfo(
         [
           `${currentCount}/${totalItems}`,
@@ -62,8 +68,6 @@ const downloadList = async list => {
           `Item: ${itemName}`,
         ].join('\n'),
       );
-      const fileNameCleaned = cleanOutputPath(itemName) || '_';
-
       //create the dir if it doesn't exist
       fs.mkdirSync(itemDir, { recursive: true });
 
@@ -83,15 +87,9 @@ const downloadList = async list => {
         },
       );
 
-      const outputFilePath = path.resolve(
-        itemDir,
-        `${fileNameCleaned}.mp3`,
-      );
+      const outputFilePath = path.resolve(fullItemPath);
 
-      const downloadSuccessful = await downloader(
-        ytLinks,
-        outputFilePath,
-      );
+      const downloadSuccessful = await downloader(ytLinks, outputFilePath);
 
       if (downloadSuccessful) {
         await mergeMetadata(outputFilePath, nextItem);
