@@ -93,7 +93,7 @@ spotifydl https://open.spotify.com/track/xyz
 | --oo  | --output-only       | enforces all downloaded songs in the output dir                                                         |
 | --sf  | --search-format     | provide template for youtube api, supports `albumName`, `artistName`,`itemName`                         |
 |       |                     | "something {itemName} - {albumName} anyrandomextrastring"                                               |
-| --of  | --output-format     | provide template for youtube api, supports `albumName`, `artistName`,`itemName`                         |
+| --of  | --output-format     | provide template for output of filenames, supports `albumName`, `artistName`,`itemName`                 |
 |       |                     | 3 x _  are used to signify directories                                                                  |
 |       |                     | "something___{artistName}___{albumName}___{itemName}"                                                   |
 | --ef  | --exclusion-filters | comma separated string of exclusion filters                                                             |
