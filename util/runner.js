@@ -63,7 +63,7 @@ const downloadList = async list => {
     const albumName = nextItem.album_name;
     const artistName = nextItem.artists[0];
     const fullItemPath = itemOutputPath(itemName, albumName, artistName);
-    const itemDir = fullItemPath.substr(0, fullItemPath.lastIndexOf('/'));
+    const itemDir = fullItemPath.substr(0, fullItemPath.lastIndexOf(path.sep));
     const cached = findId(nextItem.id, itemDir);
 
     if (!cached) {
