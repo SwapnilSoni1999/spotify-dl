@@ -111,6 +111,7 @@ spotifydl https://open.spotify.com/track/xyz
 | --v   | --version           | returns current version                                                                                 |
 | --h   | --help              | outputs help text                                                                                       |
 | --dl  | --download-lyrics   | enables downloading of lyrics                                                                           |
+| --oft | --output-file-type  | choose which type of file to be output as                                                               |
 <hr>
 
 ## Notes
