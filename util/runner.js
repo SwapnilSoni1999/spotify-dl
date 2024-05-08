@@ -37,6 +37,7 @@ const {
   searchFormat,
   exclusionFilters,
   outputFormat,
+  outputFileType
 } = cliInputs();
 
 const itemOutputPath = (itemName, albumName, artistName) => {
@@ -47,7 +48,7 @@ const itemOutputPath = (itemName, albumName, artistName) => {
   return `${path.join(
     path.normalize(output),
     ...(outputOnly ? [itemName] : generatedPathSegments),
-  )}.mp3`;
+  )}.${outputFileType}`;
 };
 
 const downloadList = async list => {

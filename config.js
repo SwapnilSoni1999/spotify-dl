@@ -20,6 +20,7 @@ export default {
     searchFormat: '',
     outputFormat: '{artistName}___{albumName}___{itemName}',
     exclusionFilters: '',
+    outputFileType: 'mp3'
   },
   spotifyApi: {
     clientId: 'acc6302297e040aeb6e4ac1fbdfd62c3',
