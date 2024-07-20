@@ -24,7 +24,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ghcr.io/swapnilsoni1999/spotify_dl:latest
+          tags: ghcr.io/swapnilsoni1999/spotify-dl:latest
           platforms: linux/amd64,linux/arm64
   npm:
     runs-on: ubuntu-latest
