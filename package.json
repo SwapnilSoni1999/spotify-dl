@@ -48,7 +48,7 @@
     ]
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/phyzical"
+    "registry": "https://npm.pkg.github.com/SwapnilSoni1999"
   },
   "devDependencies": {
     "eslint": "^8.20.0",
