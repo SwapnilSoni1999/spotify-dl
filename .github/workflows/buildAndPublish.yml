@@ -24,7 +24,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ghcr.io/SwapnilSoni1999/spotify_dl:latest
+          tags: ghcr.io/swapnilsoni1999/spotify_dl:latest
           platforms: linux/amd64,linux/arm64
   npm:
     runs-on: ubuntu-latest
@@ -36,7 +36,7 @@ jobs:
         with:
           node-version: '18'
           registry-url: 'https://npm.pkg.github.com'
-          scope: 'SwapnilSoni1999'
+          scope: 'swapnilsoni1999'
       - name: Install dependencies
         run: npm ci
       - name: Publish to GitHub Packages
