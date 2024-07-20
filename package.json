@@ -38,7 +38,7 @@
     "spotify-web-api-node": "^5.0.0",
     "string-similarity": "^4.0.4",
     "yt-search": "^2.10.3",
-    "ytdl-core": "4.10.0"
+    "@distube/ytdl-core": "^4.13.5"
   },
   "xo": {
     "space": true,
