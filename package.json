@@ -47,6 +47,9 @@
       "node"
     ]
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/SwapnilSoni1999"
+  },
   "devDependencies": {
     "eslint": "^8.20.0",
     "prettier": "^2.7.1",
