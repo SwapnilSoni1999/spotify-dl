@@ -35,7 +35,7 @@ PLEASE NOTE:
 Install from [npm](https://www.npmjs.com/package/spotify-dl) registry
 
 ```sh
-npm install -g spotify-dl
+npm install -g https://github.com/swapnilsoni1999/spotify-dl
 ```
 
 or You can do manually
@@ -57,13 +57,20 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/SwapnilSoni1999/spotify-dl
 
 #### Docker
 
-Build docker image:
+
+
+```sh
+docker run ghcr.io/swapnilsoni1999/spotify-dl
+```
+
+or Build docker image:
 
 ```sh
 git clone https://github.com/SwapnilSoni1999/spotify-dl
 cd spotify-dl
 docker build -t spotify-dl .
 ```
+
 
 <hr>
 
