@@ -48,7 +48,7 @@
     ]
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/SwapnilSoni1999"
+    "registry": "https://npm.pkg.github.com/swapnilsoni1999"
   },
   "devDependencies": {
     "eslint": "^8.20.0",
