@@ -1,7 +1,7 @@
 name: build and publish
 on:
   push:
-    branches: [build-branch]
+    branches: [master]
   workflow_dispatch:
   permissions:
     content: read
