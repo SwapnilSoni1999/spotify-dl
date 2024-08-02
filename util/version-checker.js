@@ -8,6 +8,7 @@ const checkVersion = async () => {
     );
   } catch (_e) {
      console.log("Could not check current version, have checked too many times skipping");
+     return;
   }
   const latestVersion = res.data[0].name;
   const pkg = meow('', { importMeta: import.meta }).pkg;
