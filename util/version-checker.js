@@ -2,9 +2,14 @@ import axios from 'axios';
 import meow from 'meow';
 
 const checkVersion = async () => {
-  const res = await axios.default(
-    'https://api.github.com/repos/SwapnilSoni1999/spotify-dl/tags'
-  );
+  try {
+    const res = await axios.default(
+      'https://api.github.com/repos/SwapnilSoni1999/spotify-dl/tags'
+    );
+  } catch (_e) {
+     console.log("Could not check current version, have checked too many times skipping");
+     return;
+  }
   const latestVersion = res.data[0].name;
   const pkg = meow('', { importMeta: import.meta }).pkg;
 
