@@ -1,7 +1,7 @@
 {
   "name": "@swapnilsoni1999/spotify-dl",
   "productName": "Spotify Downloader",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Spotify Songs, Playlist & Album Downloader",
   "main": "app.js",
   "bin": {
