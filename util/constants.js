@@ -1,4 +1,7 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default {
   AUTH: {
@@ -54,7 +57,7 @@ export default {
   YOUTUBE_SEARCH: {
     // this roughly equates to a max of 30mb
     MAX_MINUTES: 15,
-    GENERIC_IMAGE: path.join(process.cwd(), "logo.png"),
+    GENERIC_IMAGE: path.join(__dirname, "logo.png"),
     VALID_CONTEXTS: ['itemName', 'albumName', 'artistName'],
   },
 };
