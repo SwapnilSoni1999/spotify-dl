@@ -15,6 +15,10 @@ Get [FFMPEG](https://ffmpeg.org/download.html)
 
 [Node.js 18](https://nodejs.org/en/download/package-manager/)
 
+[git not windows](https://formulae.brew.sh/formula/git)
+or
+[git for windows](https://git-scm.com/download/win)
+
 Note: if you run into issues related to puppeteer chromium download please try `PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install -g spotify-dl`
 
 #### spotifydl
@@ -31,8 +35,6 @@ PLEASE NOTE:
 # Installation
 
 #### NPM
-
-Install from [npm](https://www.npmjs.com/package/spotify-dl) registry
 
 ```sh
 npm install -g https://github.com/swapnilsoni1999/spotify-dl
@@ -57,8 +59,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/SwapnilSoni1999/spotify-dl
 
 #### Docker
 
-
-
 ```sh
 docker run ghcr.io/swapnilsoni1999/spotify-dl
 ```
@@ -70,7 +70,6 @@ git clone https://github.com/SwapnilSoni1999/spotify-dl
 cd spotify-dl
 docker build -t spotify-dl .
 ```
-
 
 <hr>
 
