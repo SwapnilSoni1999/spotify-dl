@@ -8,8 +8,8 @@ const checkVersion = async () => {
     );
     const latestVersion = res.data[0].name;
     const pkg = meow('', { importMeta: import.meta }).pkg;
-  
-    if (pkg.version !== latestVersion) {
+
+    if (pkg.version < latestVersion) {
       console.log(
         [
           '\n========Update Available========',
@@ -20,8 +20,8 @@ const checkVersion = async () => {
       );
     }
   } catch (_e) {
-     console.log("Could not check current version, have checked too many times skipping");
-     return;
+    console.log("Could not check current version, have checked too many times skipping");
+    return;
   }
 };
 

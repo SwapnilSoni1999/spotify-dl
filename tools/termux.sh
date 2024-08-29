@@ -3,11 +3,11 @@
 echo "[ spotifydl ] Installing required packages..."
 
 # Install packages
-pkg install -y nodejs ffmpeg
+pkg install -y nodejs ffmpeg git
 
 # Get spotify-dl from npmjs
 echo "[ spotifydl ] Installing spotify-dl"
-npm install -g spotify-dl
+npm install -g https://github.com/swapnilsoni1999/spotify-dl
 
 # Setup app sharing script
 echo "[ spotifydl ] Setting up scripts..."
@@ -16,7 +16,7 @@ if [ ! -d "$HOME/bin" ]; then
     mkdir "$HOME/bin"
 fi
 
-curl https://gist.githubusercontent.com/SwapnilSoni1999/e163a8c380e1cdfa65cecbf71972a579/raw/c270edd7634a88f710a735f4a5ac4cb93ad50b11/termux-url-opener-spotifydl > "$HOME/bin/termux-url-opener"
+curl https://gist.githubusercontent.com/SwapnilSoni1999/e163a8c380e1cdfa65cecbf71972a579/raw/c270edd7634a88f710a735f4a5ac4cb93ad50b11/termux-url-opener-spotifydl >"$HOME/bin/termux-url-opener"
 
 echo "[ spotifydl ] Setting up storage..."
 termux-setup-storage
