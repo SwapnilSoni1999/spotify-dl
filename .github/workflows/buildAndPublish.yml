@@ -1,7 +1,7 @@
 name: build and publish
 on:
   push:
-     branches: [master]
+    branches: [master]
   workflow_dispatch:
 permissions:
   contents: read
@@ -24,7 +24,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ghcr.io/swapnilsoni1999/spotify-dl:latest
+          tags: ghcr.io/${{ github.repository }}:latest
           platforms: linux/amd64,linux/arm64
   npm:
     runs-on: ubuntu-latest

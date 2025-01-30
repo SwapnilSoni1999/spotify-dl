@@ -1,0 +1,49 @@
+name: 'Renovate Dependency Check'
+on:
+  workflow_dispatch:
+    inputs:
+      forceRecreate:
+        description: 'If you should crecreate all prs (this is break glass)'
+        type: boolean
+        required: false
+        default: false
+      logLevel:
+        description: 'Log level'
+        type: choice
+        default: 'info'
+        options:
+          - info
+          - debug
+  schedule:
+    - cron: '0 */12 * * *'
+jobs:
+  renovate:
+    permissions:
+      id-token: write
+      contents: write
+      statuses: write
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: vars
+        id: vars
+        run: |
+          RECREATE_PRS=$([ "${{ inputs.forceRecreate }}" == "true" ] && echo "always" || echo "auto")
+          echo "RECREATE_PRS=$RECREATE_PRS" >> $GITHUB_OUTPUT
+
+          LOG_LEVEL=$([ "${{ inputs.logLevel }}" == "" ] && echo "info" || echo "${{ inputs.logLevel }}")
+          echo "LOG_LEVEL=$LOG_LEVEL" >> $GITHUB_OUTPUT
+
+      - name: Renovate
+        uses: renovatebot/github-action@3f10d7a25cf0aa7b37519aa771ed9143fcbb5da5 # v41.0.10
+        with:
+          configurationFile: .github/renovate-config.js
+          token: ${{ secrets.REPO_SCOPED_TOKEN }}
+        env:
+          LOG_LEVEL: '${{ steps.vars.outputs.LOG_LEVEL }}'
+          RENOVATE_RECREATE_WHEN: '${{ steps.vars.outputs.RECREATE_PRS }}'
+          RENOVATE_REPOSITORIES: 'phyzical/spotify-dl'
