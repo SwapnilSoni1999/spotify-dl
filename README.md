@@ -19,7 +19,7 @@ Get [FFMPEG](https://ffmpeg.org/download.html)
 or
 [git for windows](https://git-scm.com/download/win)
 
-Note: if you run into issues related to puppeteer chromium download please try `PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install -g spotify-dl`
+Note: if you run into issues related to puppeteer chromium download please try `PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install -g https://github.com/swapnilsoni1999/spotify-dl`
 
 #### spotifydl
 
