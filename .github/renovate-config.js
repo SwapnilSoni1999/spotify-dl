@@ -7,7 +7,7 @@ module.exports = {
   automerge: false,
   ignoreTests: false,
   platform: 'github',
-  forkProcessing: 'disabled',
+  forkProcessing: 'enabled',
   labels: ['dependencies'],
   ignorePaths: [
     '**/node_modules/**',
