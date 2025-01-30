@@ -32,7 +32,7 @@
     "node-id3": "^0.2.6",
     "open": "^8.0.9",
     "ora": "^6.1.2",
-    "puppeteer": "^13.7.0",
+    "puppeteer": "^24.1.1",
     "request": "^2.88.2",
     "sponsorblock-api": "^0.2.2",
     "spotify-web-api-node": "^5.0.0",
