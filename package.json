@@ -28,7 +28,7 @@
     "express": "^4.18.1",
     "fluent-ffmpeg": "^2.1.2",
     "genius-lyrics": "^4.4.3",
-    "meow": "^10.1.3",
+    "meow": "^13.0.0",
     "node-id3": "^0.2.6",
     "open": "^8.0.9",
     "ora": "^6.1.2",
