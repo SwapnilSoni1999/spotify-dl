@@ -41,7 +41,7 @@ module.exports = {
       datasourceTemplate: 'github-releases',
       matchStrings: [
         '\\s*#\\s*renovate:\\s*datasource=(?<datasource>[^\\s]+)' +
-        '\\s*depName=(?<depName>.*?)\\s*ARG\\s.*?_VERSION\\s*=\\s*"*(?<currentValue>.*)"*',
+          '\\s*depName=(?<depName>.*?)\\s*ARG\\s.*?_VERSION\\s*=\\s*"*(?<currentValue>.*)"*',
       ],
     },
     {
@@ -49,19 +49,20 @@ module.exports = {
       fileMatch: ['Dockerfile'],
       matchStrings: [
         '\\s*#\\s*renovate:\\s*datasource=(?<datasource>[^\\s]+)' +
-        '\\s*repo=(?<registryUrl>[^\\s]+)\\s+(?<depName>[^\\s]+)-(?<currentValue>[^\\s-]+-[^\\s-]+)',
+          '\\s*repo=(?<registryUrl>[^\\s]+)\\s+(?<depName>[^\\s]+)-(?<currentValue>[^\\s-]+-[^\\s-]+)',
       ],
       datasourceTemplate: 'npm',
       depTypeTemplate: 'yum',
       versioningTemplate: 'loose',
-      registryUrlTemplate: 'https://yum2npm.io/repos/{{replace \'/\' \'/modules/\' registryUrl}}/packages',
+      registryUrlTemplate:
+        'https://yum2npm.io/repos/{{replace \'/\' \'/modules/\' registryUrl}}/packages',
     },
   ],
   packageRules: [
     {
       matchDatasources: ['docker'],
       matchPackageNames: ['rockylinux'],
-      versioning: 'semver'
+      versioning: 'semver',
     },
     {
       matchDatasources: ['github-releases'],

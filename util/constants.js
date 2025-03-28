@@ -57,7 +57,7 @@ export default {
   YOUTUBE_SEARCH: {
     // this roughly equates to a max of 30mb
     MAX_MINUTES: 15,
-    GENERIC_IMAGE: path.join(__dirname, "..", "logo.png"),
+    GENERIC_IMAGE: path.join(__dirname, '..', 'logo.png'),
     VALID_CONTEXTS: ['itemName', 'albumName', 'artistName'],
   },
 };

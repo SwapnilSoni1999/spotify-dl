@@ -1,6 +1,8 @@
 import { promisify } from 'util';
+
 import YoutubeSearch from 'yt-search';
 import StringSimilarity from 'string-similarity';
+
 import Constants from './constants.js';
 import { logInfo } from './log-helper.js';
 import { generateTemplateString } from './format-generators.js';
@@ -23,28 +25,29 @@ const findLinks = async (searchTerms, type, exclusionFilters) => {
   logInfo(`searching youtube with keywords "${searchTerms}"`);
   const result = await search(searchTerms);
   const isSong = Object.values(SONG).includes(type);
-  return result.videos
+  
+return result.videos
     .filter(
       video =>
         !exclusionFilters ||
         !(
           exclusionFilters.some(exclusionFilter =>
-            video.title.includes(exclusionFilter),
+            video.title.includes(exclusionFilter)
           ) ||
           exclusionFilters.some(exclusionFilter =>
-            video.description.includes(exclusionFilter),
+            video.description.includes(exclusionFilter)
           )
-        ),
+        )
     )
     .filter(
       video =>
-        (!isSong || video.seconds < MAX_MINUTES * 60) && video.seconds > 0,
+        (!isSong || video.seconds < MAX_MINUTES * 60) && video.seconds > 0
     )
     .slice(0, 10)
     .map(video =>
       video.url.includes('https://youtube.com')
         ? video.url
-        : 'https://youtube.com' + video.url,
+        : 'https://youtube.com' + video.url
     );
 };
 
@@ -74,7 +77,7 @@ const getLinks = async ({
     links = await findLinks(
       generateTemplateString(itemName, albumName, artistName, searchFormat),
       type,
-      exclusionFilters,
+      exclusionFilters
     );
   }
   // custom search format failed or was never provided try the generic way
@@ -86,18 +89,19 @@ const getLinks = async ({
       links = await findLinks(
         `${albumName} - ${itemName}${extraSearch}`,
         type,
-        exclusionFilters,
+        exclusionFilters
       );
     }
     if (!links.length) {
       links = await findLinks(
         `${artistName} - ${itemName}${extraSearch}`,
         type,
-        exclusionFilters,
+        exclusionFilters
       );
     }
   }
-  return links;
+  
+return links;
 };
 
 export default getLinks;

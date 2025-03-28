@@ -9,7 +9,9 @@
   },
   "scripts": {
     "test": "echo \"Type spotifydl for help.\"",
-    "start": "./cli.js"
+    "start": "./cli.js",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix"
   },
   "repository": {
     "type": "git",

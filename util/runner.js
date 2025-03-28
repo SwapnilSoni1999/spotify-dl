@@ -1,12 +1,15 @@
 import path from 'path';
 import fs from 'fs';
-import getLinks from './get-link.js';
-import { cleanOutputPath } from './filters.js';
-import Constants from './constants.js';
+
 import downloader from '../lib/downloader.js';
 import { writeId, findId } from '../lib/cache.js';
 import mergeMetadata from '../lib/metadata.js';
 import { cliInputs } from '../lib/setup.js';
+import downloadSubtitles from '../lib/subtitle-downloader.js';
+
+import getLinks from './get-link.js';
+import { cleanOutputPath } from './filters.js';
+import Constants from './constants.js';
 import {
   getTrack,
   getPlaylist,
@@ -20,7 +23,6 @@ import {
   getAlbum,
 } from './get-songdata.js';
 import { logSuccess, logInfo, logFailure } from './log-helper.js';
-import downloadSubtitles from '../lib/subtitle-downloader.js';
 import { generateTemplateString } from './format-generators.js';
 
 const {
@@ -37,17 +39,18 @@ const {
   searchFormat,
   exclusionFilters,
   outputFormat,
-  outputFileType
+  outputFileType,
 } = cliInputs();
 
 const itemOutputPath = (itemName, albumName, artistName) => {
   itemName = cleanOutputPath(itemName || '_');
   const generatedPathSegments = cleanOutputPath(
-    generateTemplateString(itemName, albumName, artistName, outputFormat),
+    generateTemplateString(itemName, albumName, artistName, outputFormat)
   ).split('___');
-  return `${path.join(
+  
+return `${path.join(
     path.normalize(output),
-    ...(outputOnly ? [itemName] : generatedPathSegments),
+    ...(outputOnly ? [itemName] : generatedPathSegments)
   )}.${outputFileType}`;
 };
 
@@ -74,7 +77,7 @@ const downloadList = async list => {
           `Artist: ${artistName}`,
           `Album: ${albumName}`,
           `Item: ${itemName}`,
-        ].join('\n'),
+        ].join('\n')
       );
       //create the dir if it doesn't exist
       fs.mkdirSync(itemDir, { recursive: true });
@@ -108,7 +111,8 @@ const downloadList = async list => {
     nextItem.cached = true;
   }
   logSuccess(`Finished processing ${list.name}!\n`);
-  return list;
+  
+return list;
 };
 
 const generateReport = async listResults => {
@@ -124,21 +128,19 @@ const generateReport = async listResults => {
           'Successfully downloaded',
           `${itemLength - failedItemLength}/${itemLength}`,
           `for ${result.name} (${result.type})`,
-        ].join(' '),
+        ].join(' ')
       );
       if (failedItemLength) {
         logFailure(
           [
             'Failed items:',
-            ...failedItems.map(item => {
-              return [
+            ...failedItems.map(item => [
                 `Item: (${item.name})`,
                 `Album: ${item.album_name}`,
                 `Artist: ${item.artists[0]}`,
                 `ID: (${item.id})`,
-              ].join(' ');
-            }),
-          ].join('\n'),
+              ].join(' ')),
+          ].join('\n')
         );
       }
     });
@@ -178,8 +180,9 @@ const run = async () => {
         lists.push(
           ...artistAlbumInfos.map(list => {
             list.type = input.type;
-            return list;
-          }),
+            
+return list;
+          })
         );
         break;
       }
@@ -208,8 +211,9 @@ const run = async () => {
         lists.push(
           ...savedShowsInfo.map(list => {
             list.type = input.type;
-            return list;
-          }),
+            
+return list;
+          })
         );
         break;
       }
@@ -218,8 +222,9 @@ const run = async () => {
         lists.push(
           ...savedAlbumsInfo.map(list => {
             list.type = input.type;
-            return list;
-          }),
+            
+return list;
+          })
         );
         break;
       }
@@ -228,8 +233,9 @@ const run = async () => {
         lists.push(
           ...savedPlaylistsInfo.map(list => {
             list.type = input.type;
-            return list;
-          }),
+            
+return list;
+          })
         );
         break;
       }
@@ -261,7 +267,7 @@ const run = async () => {
       default: {
         throw new Error(
           `Invalid URL type (${input.type}), ` +
-            'Please visit github and make a request to support this type',
+            'Please visit github and make a request to support this type'
         );
       }
     }
