@@ -46,4 +46,4 @@ jobs:
         env:
           LOG_LEVEL: '${{ steps.vars.outputs.LOG_LEVEL }}'
           RENOVATE_RECREATE_WHEN: '${{ steps.vars.outputs.RECREATE_PRS }}'
-          RENOVATE_REPOSITORIES: 'phyzical/spotify-dl'
+          RENOVATE_REPOSITORIES: 'SwapnilSoni1999/spotify-dl'
