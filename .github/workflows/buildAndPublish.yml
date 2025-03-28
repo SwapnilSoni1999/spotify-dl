@@ -1,7 +1,6 @@
 name: build and publish
 on:
   push:
-    branches: [master]
   workflow_dispatch:
 permissions:
   contents: read
@@ -29,6 +28,7 @@ jobs:
       - run: |
           docker run ghcr.io/${{ github.repository }}:latest yarn lint
       - name: Build and push
+        if: github.ref == 'refs/heads/master'
         uses: docker/build-push-action@v3
         with:
           push: true
