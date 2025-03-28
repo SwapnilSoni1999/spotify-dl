@@ -27,8 +27,8 @@ A simple commandline utility that allows you to download Spotify Songs, Shows, E
 
 PLEASE NOTE:
 
-* The ability to find a video is dependent on the fact it is hosted on youtube, and even then there is a chance it is still incorrectly matched
-* Some items may only be available to spotify premium users, please be sure to provide a username and password when this is the case
+- The ability to find a video is dependent on the fact it is hosted on youtube, and even then there is a chance it is still incorrectly matched
+- Some items may only be available to spotify premium users, please be sure to provide a username and password when this is the case
 
 <hr>
 
@@ -96,12 +96,12 @@ spotifydl https://open.spotify.com/track/xyz
 | ----- | ------------------- | ------------------------------------------------------------------------------------------------------- |
 | --o   | --output            | takes valid output path argument                                                                        |
 | --es  | --extra-search      | takes extra search string/term to be used for youtube search                                            |
-| --oo  | --output-only       | enforces all downloaded songs in the output dir                                                         |
+| --oo  | --output-only       | enforces all downloaded songs in the output dir f                                                       |
 | --sf  | --search-format     | provide template for youtube api, supports `albumName`, `artistName`,`itemName`                         |
 |       |                     | "something {itemName} - {albumName} anyrandomextrastring"                                               |
 | --of  | --output-format     | provide template for output of filenames, supports `albumName`, `artistName`,`itemName`                 |
-|       |                     | 3 x _  are used to signify directories                                                                  |
-|       |                     | "something___{artistName}___{albumName}___{itemName}"                                                   |
+|       |                     | 3 x \_ are used to signify directories                                                                  |
+|       |                     | "something**_{artistName}_**{albumName}\_\_\_{itemName}"                                                |
 | --ef  | --exclusion-filters | comma separated string of exclusion filters                                                             |
 |       |                     | each filter will be checked against the description and title if found the link will be ignored         |
 | --st  | --saved-tracks      | download spotify saved tracks                                                                           |
@@ -118,6 +118,7 @@ spotifydl https://open.spotify.com/track/xyz
 | --h   | --help              | outputs help text                                                                                       |
 | --dl  | --download-lyrics   | enables downloading of lyrics                                                                           |
 | --oft | --output-file-type  | choose which type of file to be output as                                                               |
+
 <hr>
 
 ## Notes
@@ -125,7 +126,7 @@ spotifydl https://open.spotify.com/track/xyz
 To use --u and --p (headless login) you must do a --l once first to grant required permissions (playlists, saved songs ect.)
 
 if you receive 'Got a spotify api error WebapiRegularError: An error occurred while communicating with Spotify's Web API
-Details: non existing id'  you may need to provide auth either use `--l` for manual login prompt or `--u username --p password` for headless login
+Details: non existing id' you may need to provide auth either use `--l` for manual login prompt or `--u username --p password` for headless login
 
 If you receive a 429 error please provide a cookies file given the `--cof` flag, to generate a cookies file please refer to [Chrome](https://chrome.google.com/webstore/detail/njabckikapfpffapmjgojcnbfjonfjfg) or [Firefox](https://github.com/rotemdan/ExportCookies)
 

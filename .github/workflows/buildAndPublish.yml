@@ -1,7 +1,6 @@
 name: build and publish
 on:
   push:
-    branches: [master]
   workflow_dispatch:
 permissions:
   contents: read
@@ -23,10 +22,20 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
+          push: false
+          tags: ghcr.io/${{ github.repository }}:latest
+          platforms: linux/amd64,linux/arm64
+      - run: |
+          docker run ghcr.io/${{ github.repository }}:latest yarn lint
+      - name: Build and push
+        if: github.ref == 'refs/heads/master'
+        uses: docker/build-push-action@v3
+        with:
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
           platforms: linux/amd64,linux/arm64
   npm:
+    needs: [docker]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

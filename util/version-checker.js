@@ -20,8 +20,11 @@ const checkVersion = async () => {
       );
     }
   } catch (_e) {
-    console.log("Could not check current version, have checked too many times skipping");
-    return;
+    console.log(
+      'Could not check current version, have checked too many times skipping'
+    );
+    
+return;
   }
 };
 

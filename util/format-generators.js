@@ -4,23 +4,23 @@ const {
   YOUTUBE_SEARCH: { VALID_CONTEXTS },
 } = Constants;
 
-export function generateTemplateString(
+export const generateTemplateString = function (
   itemName,
   albumName,
   artistName,
-  format,
+  format
 ) {
   const contexts = format.match(/(?<=\{).+?(?=\})/g);
   const invalidContexts = contexts.filter(
-    context => !VALID_CONTEXTS.includes(context),
+    context => !VALID_CONTEXTS.includes(context)
   );
   if (invalidContexts.length > 0 || !contexts.length) {
     throw new Error(`Invalid search contexts: ${invalidContexts}`);
   }
 
   contexts.forEach(
-    context => (format = format.replace(`{${context}}`, eval(context))),
+    context => (format = format.replace(`{${context}}`, eval(context)))
   );
 
   return format;
-}
+};
