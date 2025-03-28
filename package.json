@@ -33,7 +33,7 @@
     "meow": "13.2.0",
     "node-id3": "0.2.8",
     "open": "10.0.1",
-    "ora": "8.0.0",
+    "ora": "8.2.0",
     "puppeteer": "24.4.0",
     "request": "2.88.2",
     "sponsorblock-api": "0.2.2",
