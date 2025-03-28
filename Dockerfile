@@ -1,4 +1,4 @@
-FROM buildkite/puppeteer
+FROM node:22
 
 RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
 

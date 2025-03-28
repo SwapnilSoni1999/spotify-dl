@@ -13,7 +13,7 @@
 
 Get [FFMPEG](https://ffmpeg.org/download.html)
 
-[Node.js 18](https://nodejs.org/en/download/package-manager/)
+[Node.js 22](https://nodejs.org/en/download/package-manager/)
 
 [git not windows](https://formulae.brew.sh/formula/git)
 or
