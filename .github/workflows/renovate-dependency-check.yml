@@ -42,7 +42,7 @@ jobs:
         uses: renovatebot/github-action@3f10d7a25cf0aa7b37519aa771ed9143fcbb5da5 # v41.0.10
         with:
           configurationFile: .github/renovate-config.js
-          token: ${{ secrets.REPO_SCOPED_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
         env:
           LOG_LEVEL: '${{ steps.vars.outputs.LOG_LEVEL }}'
           RENOVATE_RECREATE_WHEN: '${{ steps.vars.outputs.RECREATE_PRS }}'
