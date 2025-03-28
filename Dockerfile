@@ -7,8 +7,9 @@ RUN apt update && \
     ffmpeg && \
     rm -rf /var/lib/apt/lists/*
 
-## uncomment this for local testing
-COPY ./ /usr/local/lib/node_modules/spotify-dl/ 
-WORKDIR /download
+RUN mkdir /app
+
+WORKDIR /app
+COPY . .
 ENTRYPOINT ["spotifydl"]
 CMD ["--help"]
