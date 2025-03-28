@@ -36,7 +36,7 @@
     "ora": "8.0.0",
     "puppeteer": "24.4.0",
     "request": "2.88.2",
-    "sponsorblock-api": "0.2.2",
+    "sponsorblock-api": "0.2.4",
     "spotify-web-api-node": "5.0.0",
     "string-similarity": "4.0.4",
     "yt-search": "2.10.3",
