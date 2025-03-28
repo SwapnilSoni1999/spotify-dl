@@ -1,6 +1,4 @@
 module.exports = {
-  username: 'phyzical',
-  gitAuthor: 'phyzical <5182053+phyzical@users.noreply.github.com>',
   onboarding: false,
   requireConfig: 'optional',
   // the housekeeping workflow handles this
@@ -41,7 +39,7 @@ module.exports = {
       datasourceTemplate: 'github-releases',
       matchStrings: [
         '\\s*#\\s*renovate:\\s*datasource=(?<datasource>[^\\s]+)' +
-          '\\s*depName=(?<depName>.*?)\\s*ARG\\s.*?_VERSION\\s*=\\s*"*(?<currentValue>.*)"*',
+        '\\s*depName=(?<depName>.*?)\\s*ARG\\s.*?_VERSION\\s*=\\s*"*(?<currentValue>.*)"*',
       ],
     },
     {
@@ -49,7 +47,7 @@ module.exports = {
       fileMatch: ['Dockerfile'],
       matchStrings: [
         '\\s*#\\s*renovate:\\s*datasource=(?<datasource>[^\\s]+)' +
-          '\\s*repo=(?<registryUrl>[^\\s]+)\\s+(?<depName>[^\\s]+)-(?<currentValue>[^\\s-]+-[^\\s-]+)',
+        '\\s*repo=(?<registryUrl>[^\\s]+)\\s+(?<depName>[^\\s]+)-(?<currentValue>[^\\s-]+-[^\\s-]+)',
       ],
       datasourceTemplate: 'npm',
       depTypeTemplate: 'yum',

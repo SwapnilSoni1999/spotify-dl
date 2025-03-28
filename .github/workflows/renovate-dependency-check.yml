@@ -14,8 +14,6 @@ on:
         options:
           - info
           - debug
-  schedule:
-    - cron: '0 */12 * * *'
 jobs:
   renovate:
     permissions:
