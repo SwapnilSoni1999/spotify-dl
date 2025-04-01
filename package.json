@@ -40,7 +40,7 @@
     "spotify-web-api-node": "5.0.2",
     "string-similarity": "4.0.4",
     "yt-search": "2.12.1",
-    "@distube/ytdl-core": "4.16.5"
+    "@distube/ytdl-core": "4.16.6"
   },
   "xo": {
     "space": true,
