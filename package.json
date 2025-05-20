@@ -34,7 +34,7 @@
     "node-id3": "0.2.9",
     "open": "10.1.2",
     "ora": "8.2.0",
-    "puppeteer": "24.8.2",
+    "puppeteer": "24.9.0",
     "request": "2.88.2",
     "sponsorblock-api": "0.2.4",
     "spotify-web-api-node": "5.0.2",
