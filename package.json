@@ -55,6 +55,6 @@
   "devDependencies": {
     "eslint": "9.27.0",
     "prettier": "3.5.3",
-    "xo": "0.60.0"
+    "xo": "1.0.0"
   }
 }
