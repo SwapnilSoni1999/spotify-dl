@@ -1,4 +1,4 @@
-FROM node:22
+FROM node:24
 
 RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
 
