@@ -1,3 +1,16 @@
+# NOTE
+
+```
+Starting March 9, 2026, we will start applying the new restrictions and requirements to all applications in “Development Mode” using Spotify’s Web API. This includes:
+
+A Spotify Premium requirement
+```
+
+given the above i would say this will be the end of this application until things change. (note you can still create an app yourself and update the api key if you continue to use this)
+But it will no longer be a download and use sort of thing, and also will require spotify premium.
+
+If someone would like to offer up an app key for an account feel free to create a pr to change the current key, make sure the app has a redirect uri `https://some-random-host.com:7654`
+
 # Spotify Downloader
 
 <p align="center">
