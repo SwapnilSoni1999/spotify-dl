@@ -10,7 +10,7 @@ Starting March 9, 2026, we will start applying the new restrictions and requirem
 A Spotify Premium requirement
 ```
 
-If someone would like to offer up an app id and key for an account feel free to create a pr to change the current key and id, make sure the app has a redirect uri `https://some-random-host.com:7654`
+If someone would like to offer up an app id and key for an account feel free to create a pr to change the current key and id, make sure the app has a redirect uri `https://some-random-host.com:7654/callback`
 
 # Spotify Downloader
 
@@ -142,7 +142,7 @@ spotifydl https://open.spotify.com/track/xyz
 
 To use --u and --p (headless login) you must do a --l once first to grant required permissions (playlists, saved songs ect.)
 
-- for now until someone donates an app key you will need premium and create a new app with the redirect uri of `https://some-random-host.com:7654`
+- for now until someone donates an app key you will need premium and create a new app with the redirect uri of `https://some-random-host.com:7654/callback`
 - provide your app credentials via `-ak` or `--app-key` in format `client-id:client-secret`
 - you now need to add `127.0.0.1 some-random-host.com` to `/etc/hosts` if linux or `C:\Windows\System32\Drivers\etc\hosts` if windows
 
