@@ -1,3 +1,17 @@
+# NOTE
+
+login logic is currently in a defunct state see below
+
+I do not have access to the currently used App api keys to change the redirect uri to resolve the uri bug.
+
+```
+Starting March 9, 2026, we will start applying the new restrictions and requirements to all applications in “Development Mode” using Spotify’s Web API. This includes:
+
+A Spotify Premium requirement
+```
+
+If someone would like to offer up an app id and key for an account feel free to create a pr to change the current key and id, make sure the app has a redirect uri `https://some-random-host.com:7654`
+
 # Spotify Downloader
 
 <p align="center">
@@ -13,7 +27,7 @@
 
 Get [FFMPEG](https://ffmpeg.org/download.html)
 
-[Node.js 22](https://nodejs.org/en/download/package-manager/)
+[Node.js 24](https://nodejs.org/en/download/package-manager/)
 
 [git not windows](https://formulae.brew.sh/formula/git)
 or
@@ -111,6 +125,7 @@ spotifydl https://open.spotify.com/track/xyz
 | --sp  | --saved-playlists   | download spotify saved playlists                                                                        |
 | --sa  | --saved-albums      | download spotify saved albums                                                                           |
 | --l   | --login             | Requests a login in an external window (non tty should use --u and --p) (Docker without -it is non tty) |
+| --ak  | --app-key           | provide app credentials in format `client-id:client-secret`                                             |
 | --u   | --username          | spotify username for headless long (Note: you must use --login once to grant access)                    |
 | --p   | --password          | spotify password                                                                                        |
 | --cf  | --cache-file        | takes valid output file name path argument                                                              |
@@ -126,6 +141,10 @@ spotifydl https://open.spotify.com/track/xyz
 ## Notes
 
 To use --u and --p (headless login) you must do a --l once first to grant required permissions (playlists, saved songs ect.)
+
+- for now until someone donates an app key you will need premium and create a new app with the redirect uri of `https://some-random-host.com:7654`
+- provide your app credentials via `-ak` or `--app-key` in format `client-id:client-secret`
+- you now need to add `127.0.0.1 some-random-host.com` to `/etc/hosts` if linux or `C:\Windows\System32\Drivers\etc\hosts` if windows
 
 if you receive 'Got a spotify api error WebapiRegularError: An error occurred while communicating with Spotify's Web API
 Details: non existing id' you may need to provide auth either use `--l` for manual login prompt or `--u username --p password` for headless login

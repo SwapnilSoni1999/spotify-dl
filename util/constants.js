@@ -41,7 +41,7 @@ export default {
   MAX_LIMIT_DEFAULT: 50,
   SERVER: {
     PORT: 7654,
-    HOST: 'localhost',
+    HOST: 'some-random-host.com',
     CALLBACK_URI: '/callback',
   },
   SPONSOR_BLOCK: {
