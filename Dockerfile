@@ -8,9 +8,9 @@ RUN apt update && \
     ffmpeg && \
     rm -rf /var/lib/apt/lists/*
 
+RUN npm install -g spotify-dl
 ## uncomment this for local testing
 # COPY ./ /usr/local/lib/node_modules/spotify-dl/ 
-RUN npm install -g spotify-dl
 
 WORKDIR /download
 ENTRYPOINT ["spotifydl"]
