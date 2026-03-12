@@ -22,7 +22,7 @@ export default {
     outputFormat: '{artistName}___{albumName}___{itemName}',
     exclusionFilters: '',
     outputFileType: 'mp3',
-    appKey: 'acc6302297e040aeb6e4ac1fbdfd62c3:0e8439a1280a43aba9a5bc0a16f3f009'
+    appKey: '9450519df94d4e23842fd4cd8bc1eb74:8cceec517caa4e499350ece0ddd167f5'
   },
   isTTY: process.stdout.isTTY,
 };
