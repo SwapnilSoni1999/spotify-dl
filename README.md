@@ -1,14 +1,16 @@
 # NOTE
 
+login logic is currently in a defunct state see below
+
+I do not have access to the currently used App api keys to change the redirect uri to resolve the uri bug.
+
 ```
 Starting March 9, 2026, we will start applying the new restrictions and requirements to all applications in “Development Mode” using Spotify’s Web API. This includes:
 
 A Spotify Premium requirement
 ```
 
-I do not have access to the currently used App api keys to change the redirect uri.
-
-If someone would like to offer up an app key for an account feel free to create a pr to change the current key, make sure the app has a redirect uri `https://some-random-host.com:7654`
+If someone would like to offer up an app id and key for an account feel free to create a pr to change the current key and id, make sure the app has a redirect uri `https://some-random-host.com:7654`
 
 # Spotify Downloader
 
