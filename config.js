@@ -24,8 +24,8 @@ export default {
     outputFileType: 'mp3',
   },
   spotifyApi: {
-    clientId: 'b334016b45e24f7781b0909f24cf2ea7',
-    clientSecret: '96f03b93dda34dee9edc78c76f5ca9c1',
+    clientId: 'acc6302297e040aeb6e4ac1fbdfd62c3',
+    clientSecret: '0e8439a1280a43aba9a5bc0a16f3f009',
   },
   isTTY: process.stdout.isTTY,
 };
