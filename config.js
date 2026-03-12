@@ -22,10 +22,7 @@ export default {
     outputFormat: '{artistName}___{albumName}___{itemName}',
     exclusionFilters: '',
     outputFileType: 'mp3',
-  },
-  spotifyApi: {
-    clientId: 'acc6302297e040aeb6e4ac1fbdfd62c3',
-    clientSecret: '0e8439a1280a43aba9a5bc0a16f3f009',
+    appKey: 'b334016b45e24f7781b0909f24cf2ea7:63af7d80586a425fba4677d9923aae7e'
   },
   isTTY: process.stdout.isTTY,
 };
