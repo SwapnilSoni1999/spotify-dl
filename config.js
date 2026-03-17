@@ -9,7 +9,6 @@ export default {
     output: process.cwd(),
     extraSearch: '',
     login: false,
-    appKey: '',
     password: '',
     username: '',
     savedAlbums: false,
