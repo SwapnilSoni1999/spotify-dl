@@ -9,7 +9,6 @@ export default {
     output: process.cwd(),
     extraSearch: '',
     login: false,
-    appKey: '',
     password: '',
     username: '',
     savedAlbums: false,
@@ -22,7 +21,7 @@ export default {
     outputFormat: '{artistName}___{albumName}___{itemName}',
     exclusionFilters: '',
     outputFileType: 'mp3',
-    appKey: '9450519df94d4e23842fd4cd8bc1eb74:8cceec517caa4e499350ece0ddd167f5'
+    appKey: 'b334016b45e24f7781b0909f24cf2ea7:c4ab0216fae54be2af9c15ce06736b57'
   },
   isTTY: process.stdout.isTTY,
 };
