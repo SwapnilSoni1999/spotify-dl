@@ -1,7 +1,6 @@
 import https from 'https';
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { readFile } from 'node:fs';
 
 import express from 'express';
 
@@ -13,6 +12,19 @@ const {
 } = Constants;
 
 const AUTH_CODE_FILE_PATH = path.resolve(process.cwd(), '.spotify-auth-code.json');
+
+
+const readAuthCodeStore = async () => {
+  try {
+    const fileContent = await readFile(AUTH_CODE_FILE_PATH, 'utf8');
+
+    return JSON.parse(fileContent);
+  } catch (_error) {
+    console.log('Auth code file not found or invalid, initializing new store.');
+
+    return { codesByState: {} };
+  }
+};
 
 const getQueryString = value => {
   if (Array.isArray(value)) {
@@ -27,24 +39,23 @@ app.get(CALLBACK_URI, async (req, res) => {
   const code = getQueryString(req.query.code);
   const state = getQueryString(req.query.state);
 
-  if (!code) {
-    console.log('Received callback without code:', req.query);
+  if (!code || !state) {
+    console.log('Received callback without required code/state:', req.query);
+    res.status(400).send('Missing code or state in callback URL.');
 
     return;
   }
 
   try {
+    const store = await readAuthCodeStore();
+    store.codesByState[state] = {
+      code,
+      receivedAt: new Date().toISOString(),
+    };
+
     await writeFile(
       AUTH_CODE_FILE_PATH,
-      JSON.stringify(
-        {
-          code,
-          state,
-          receivedAt: new Date().toISOString(),
-        },
-        null,
-        2
-      ),
+      JSON.stringify(store, null, 2),
       'utf8'
     );
     console.log('Authorization code received and saved to disk.');
@@ -55,28 +66,36 @@ app.get(CALLBACK_URI, async (req, res) => {
 });
 
 app.get(TOKEN_URI, async (req, res) => {
-  // endpoint takes in a state param and returns the code
-  await readFile(AUTH_CODE_FILE_PATH, 'utf8', (err, data) => {
-    if (err) {
-      console.error('Error reading auth code file:', err);
+  const state = getQueryString(req.query.state);
 
-      return res.status(500).send('Internal Server Error');
+  if (!state) {
+    return res.status(400).send('Invalid state');
+  }
+
+  try {
+    const store = await readAuthCodeStore();
+    const stateEntry = store.codesByState[state];
+
+    if (!stateEntry || typeof stateEntry.code !== 'string' || stateEntry.code.length === 0) {
+      console.warn('State mismatch in token request');
+
+      return res.status(400).send('Invalid state');
     }
 
-    try {
-      const { code, state } = JSON.parse(data);
-      if (state !== req.query.state) {
-        console.warn('State mismatch in token request');
+    delete store.codesByState[state];
 
-        return res.status(400).send('Invalid state');
-      }
-      res.json({ code });
-    } catch (parseErr) {
-      console.error('Error parsing auth code file:', parseErr);
+    await writeFile(
+      AUTH_CODE_FILE_PATH,
+      JSON.stringify(store, null, 2),
+      'utf8'
+    );
 
-      return res.status(500).send('Internal Server Error');
-    }
-  });
+    return res.json({ code: stateEntry.code });
+  } catch (error) {
+    console.error('Error reading auth code file:', error);
+
+    return res.status(500).send('Internal Server Error');
+  }
 });
 
 const { cert, key } = ensureSelfSignedCertificate(HOST);
