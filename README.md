@@ -1,7 +1,3 @@
-# NOTE: >Your application is blocked from accessing the Web API since you do not have a Spotify Premium subscription. Upgrade to Spotify Premium to access the Web API and unlock additional features for your app.
-# At this time Spotify have locked down free accounts further to use the spotify side of things until someone with a premium account can create an app to share, you will need to create your own and provide the appKey, with the redirect uri of https://some-random-host.com:7654/callback
-
-
 # NOTE: Atm youtube has also locked things down and still trying to find a flow that is now compatible for downloads
 
 # Spotify Downloader
