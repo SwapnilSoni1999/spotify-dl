@@ -7,6 +7,7 @@ export default {
   AUTH: {
     SCOPES: {
       USERS_SAVED_PLAYLISTS: 'playlist-read-private',
+      USERS_COLLABORATIVE_PLAYLISTS: 'playlist-read-collaborative',
       USERS_TOP_TRACKS: 'user-top-read',
       USERS_SAVED_TRACKS_ALBUMS: 'user-library-read',
     },
@@ -39,7 +40,7 @@ export default {
   },
   MAX_LIMIT_DEFAULT: 50,
   SERVER: {
-    PORT: 7654,
+    PORT: 443,
     HOST: 'spotify.10xdev.me',
     CALLBACK_URI: '/callback',
     TOKEN_URI: '/tokens',
