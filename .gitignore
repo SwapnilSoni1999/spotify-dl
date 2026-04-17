@@ -7,3 +7,4 @@ Makefile
 .spdlcache
 .spotifydl-*
 cookies.txt
+.spotify-auth-code.json
